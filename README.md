@@ -2,6 +2,8 @@
  Macro Tools VBA - a tool for automating the development of macros in the Visual Basic Editor (VBE) MS Excel and Word
 Add-in home page https://vbatools.ru/macro-tools-vba-addin-excel/
 
+![alt tag](https://vbatools.ru/wp-content/uploads/2019/10/main-macro-tools-vba2.gif "Use Macro Tools VBA Example")
+
 Main functions:
  - removing passwords of VBA projects, workbooks and worksheets in Excel
  - automatic code formatting, placement and removal of the indentation of code
@@ -19,5 +21,3 @@ Main functions:
  - analyzing VBA code deleting unused variables A
  - tool for hiding VBA project modules
  - changing the theme of the VBE code editor - dark and light
-
-![alt tag](https://vbatools.ru/wp-content/uploads/2019/10/main-macro-tools-vba2.gif "Formats Code VBA")
