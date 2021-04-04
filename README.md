@@ -21,3 +21,10 @@ Add-in home page https://vbatools.ru/macro-tools-vba-addin-excel/
  - analyzing VBA code deleting unused variables A
  - tool for hiding VBA project modules
  - changing the theme of the VBE code editor - dark and light
+
+## Zen Macro Tools VBA:
+- do not use third-party dlls,
+- the add-in should only use VBA MS Office
+- installation that does not require the user to have administrator rights
+- open source
+- work in all versions of Excel and Word-32 and 64-bit
