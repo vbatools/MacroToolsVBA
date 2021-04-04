@@ -19,3 +19,5 @@ Main functions:
  - analyzing VBA code deleting unused variables A
  - tool for hiding VBA project modules
  - changing the theme of the VBE code editor - dark and light
+
+![alt tag](https://vbatools.ru/wp-content/uploads/2019/10/main-macro-tools-vba2.gif "Formats Code VBA")
