@@ -30,4 +30,4 @@ Add-in home page https://vbatools.ru/macro-tools-vba-addin-excel/
 - work in all versions of Excel and Word-32 and 64-bit
 
 ## YouTube
-![alt tag](https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd "Use Tools Macto Tools VBA")
+[![Use Tools Macro Tools VBA](https://vbatools.ru/wp-content/uploads/2020/01/macrotoolsvbadocument.gif)](https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd)
