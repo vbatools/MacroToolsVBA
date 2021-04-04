@@ -4,7 +4,7 @@ Add-in home page https://vbatools.ru/macro-tools-vba-addin-excel/
 
 ![alt tag](https://vbatools.ru/wp-content/uploads/2019/10/main-macro-tools-vba2.gif "Use Macro Tools VBA Example")
 
-Main functions:
+h2 Main functions:
  - removing passwords of VBA projects, workbooks and worksheets in Excel
  - automatic code formatting, placement and removal of the indentation of code
  - automatic numbering of lines of code
