@@ -32,4 +32,5 @@ Add-in
 - work in all versions of Excel and Word-32 and 64-bit
 
 ## YouTube - use tools add-in
+https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd
 [![Use Tools Macro Tools VBA](https://vbatools.ru/wp-content/uploads/2020/01/macrotoolsvbadocument.gif)](https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd)
