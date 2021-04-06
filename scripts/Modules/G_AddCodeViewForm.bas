@@ -14,7 +14,7 @@ Option Explicit
 5:    Set frm = New AddEditCode
 6:    With frm
 7:        .Caption = "янгдюрэ SNIPPET:"
-8:        .lbOK.Caption = "янгдюрэ"
+8:        .lbOk.Caption = "янгдюрэ"
 9:        .txtRow = X + 1
 10:        .Show
 11:    End With
@@ -32,7 +32,7 @@ Option Explicit
 23:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
 24:    With frm
 25:        .Caption = "хглемхрэ SNIPPET:"
-26:        .lbOK.Caption = "хглемхрэ"
+26:        .lbOk.Caption = "хглемхрэ"
 27:        st = Split(snippets.ListColumns(3).Range(X, 1), ".")
 28:        .cmbENUM.Style = fmStyleDropDownCombo
 29:        .cmbENUM.Text = st(0)

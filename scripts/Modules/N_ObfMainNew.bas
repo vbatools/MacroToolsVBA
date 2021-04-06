@@ -18,7 +18,7 @@ Option Private Module
 10:    Set Form = New AddStatistic
 11:    With Form
 12:        .Caption = "Обфусцирование кода:"
-13:        .lbOK.Caption = "ОБФУЦИРОВАТЬ"
+13:        .lbOk.Caption = "ОБФУЦИРОВАТЬ"
 14:        .chQuestion.visible = True
 15:        .chQuestion.Value = True
 16:        .Show

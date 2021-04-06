@@ -53,7 +53,7 @@ Public sPassword As String
 39: End Sub
     Private Sub RefreshListBoxSheets()
 41:    Dim n      As Integer
-42:    Dim sh     As Worksheet
+42:    Dim SH     As Worksheet
 43:    n = 0
 44:    With ListBox1
 45:        .Clear
@@ -65,11 +65,11 @@ Public sPassword As String
 51:            .List(n, 3) = "защита есть"
 52:        End If
 53:        n = n + 1
-54:        For Each sh In ActiveWorkbook.Worksheets
-55:            .AddItem sh.Index
+54:        For Each SH In ActiveWorkbook.Worksheets
+55:            .AddItem SH.Index
 56:            .List(n, 2) = "Лист"
-57:            .List(n, 1) = sh.Name
-58:            Select Case sh.ProtectContents
+57:            .List(n, 1) = SH.Name
+58:            Select Case SH.ProtectContents
                 Case True
 60:                    .Selected(n) = True
 61:                    .List(n, 3) = "защита есть"

@@ -34,7 +34,7 @@ End Type
 33:    Set Form = New AddStatistic
 34:    With Form
 35:        .Caption = "Сбор данных кодовой базы:"
-36:        .lbOK.Caption = "Парсить код"
+36:        .lbOk.Caption = "Парсить код"
 37:        .chQuestion.visible = True
 38:        .chQuestion.Value = True
 39:        .chQuestion.Caption = "Собирать строковые значения?"

@@ -48,7 +48,7 @@ Option Explicit
 33:        For i = 0 To .ListCount - 1
 34:            If .Selected(i) Then
 35:                lbMsg.visible = False
-36:                lbOK.Enabled = True
+36:                lbOk.Enabled = True
 37:                Call MsgSaveFile(cmbMain.Value)
 38:                Exit Sub
 39:            End If
@@ -56,7 +56,7 @@ Option Explicit
 41:    End With
 42:
 43:    lbMsg.visible = True
-44:    lbOK.Enabled = False
+44:    lbOk.Enabled = False
 45: End Sub
     Private Sub UserForm_Activate()
 47:    Me.StartUpPosition = 0
@@ -79,7 +79,7 @@ Option Explicit
 64:        Call MsgSaveFile(.Value)
 65:    End With
 66:    Call AddListCode
-67:    lbOK.Enabled = False
+67:    lbOk.Enabled = False
 68:
 69:    Exit Sub
 ErrorHandler:
@@ -98,10 +98,10 @@ ErrorHandler:
 83:    With WB
 84:        If .Path = vbNullString Then
 85:            lbSave.visible = True
-86:            lbOK.Enabled = False
+86:            lbOk.Enabled = False
 87:        Else
 88:            lbSave.visible = False
-89:            lbOK.Enabled = True
+89:            lbOk.Enabled = True
 90:        End If
 91:    End With
 92: End Sub

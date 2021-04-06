@@ -37,20 +37,20 @@ errmsg:
 28:
 29:    Application.ScreenUpdating = False    ' отключаем обновление экрана
 30:    ' создаём новую книгу
-31:    Dim sh     As Worksheet: Set sh = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
+31:    Dim SH     As Worksheet: Set SH = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
 32:    ' формируем заголовки таблицы
-33:    With sh.Range("a1").Resize(, 5)
+33:    With SH.Range("a1").Resize(, 5)
 34:        .Value = Array("№", "Имя файла", "Полный путь", "Размер файла", "Расширение файла")
 35:        .Font.Bold = True: .Interior.ColorIndex = 17
 36:    End With
 37:
 38:    ' выводим результаты на лист
 39:    For i = 1 To coll.Count    ' перебираем все элементы коллекции, содержащей пути к файлам
-40:        sh.Range("a" & sh.Rows.Count).End(xlUp).Offset(1).Resize(, 5).Value = _
+40:        SH.Range("a" & SH.Rows.Count).End(xlUp).Offset(1).Resize(, 5).Value = _
                       Array(i, C_PublicFunctions.sGetFileName(coll(i)), coll(i), C_PublicFunctions.FileSize(coll(i)), C_PublicFunctions.sGetExtensionName(coll(i)))    ' выводим на лист очередную строку
 42:        DoEvents    ' временно передаём управление ОС
 43:    Next
-44:    sh.Range("a:e").EntireColumn.AutoFit    ' автоподбор ширины столбцов
+44:    SH.Range("a:e").EntireColumn.AutoFit    ' автоподбор ширины столбцов
 45:    [a2].Activate: ActiveWindow.FreezePanes = True    ' закрепляем первую строку листа
 46:    Application.ScreenUpdating = True    ' отключаем обновление экрана
 47:    Exit Sub

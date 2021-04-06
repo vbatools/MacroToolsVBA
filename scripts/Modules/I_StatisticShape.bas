@@ -14,7 +14,7 @@ Public Sub AddShapeStatistic()
 5:    Dim fForm  As AddStatistic
 6:    Dim wb_name As String, macro_name As String
 7:    Dim shp    As Shape
-8:    Dim sh     As Worksheet
+8:    Dim SH     As Worksheet
 9:    Dim i      As Integer
 10:    Const SH_SHAPE As String = "Статистика_shape"
 11:
@@ -22,7 +22,7 @@ Public Sub AddShapeStatistic()
 13:
 14:    Set fForm = New AddStatistic
 15:    With fForm
-16:        .lbOK.Caption = "СОЗДАТЬ"
+16:        .lbOk.Caption = "СОЗДАТЬ"
 17:        .Show
 18:        wb_name = .cmbMain.Value
 19:        If wb_name = vbNullString Then Exit Sub
@@ -36,10 +36,10 @@ Public Sub AddShapeStatistic()
 27:        .Cells(1, 3).Value = "Текст фигуры"
 28:        .Cells(1, 4).Value = "Имя макроса"
 29:        i = 1
-30:        For Each sh In Workbooks(wb_name).Worksheets
-31:            For Each shp In sh.Shapes
+30:        For Each SH In Workbooks(wb_name).Worksheets
+31:            For Each shp In SH.Shapes
 32:                i = i + 1
-33:                .Hyperlinks.Add Anchor:=Cells(i, 1), Address:="", SubAddress:=sh.Name & "!A1", TextToDisplay:=sh.Name
+33:                .Hyperlinks.Add Anchor:=Cells(i, 1), Address:="", SubAddress:=SH.Name & "!A1", TextToDisplay:=SH.Name
 34:                .Cells(i, 2).Value = shp.Name
 35:
 36:                Select Case shp.Type

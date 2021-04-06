@@ -94,7 +94,7 @@ Private m_clsAnchors As CAnchors
 79:            txtCode.Text = snippets.ListColumns(4).Range(row_i, 1).Value
 80:            txtCodeBackCap.Text = txtCode.Text
 81:            txtRow.Text = row_i
-82:            lbOK.Enabled = False
+82:            lbOk.Enabled = False
 83:        End If
 84:    End With
 85: End Sub
@@ -107,13 +107,13 @@ Private m_clsAnchors As CAnchors
 92:            row_i = snippets.ListColumns(2).DataBodyRange.Find(What:=.List(.ListIndex, 2), LookIn:=xlValues, LookAt:=xlWhole).Row
 93:            snippets.ListColumns(4).Range(row_i, 1).Value = txtCode.Text
 94:            txtCodeBackCap.Text = txtCode.Text
-95:            lbOK.Enabled = False
+95:            lbOk.Enabled = False
 96:        End If
 97:    End With
 98: End Sub
      Private Sub txtCode_Change()
 100:    If txtCode.Text <> txtCodeBackCap.Text Then
-101:        lbOK.Enabled = True
+101:        lbOk.Enabled = True
 102:    End If
 103: End Sub
      Private Sub txtSerch_Change()

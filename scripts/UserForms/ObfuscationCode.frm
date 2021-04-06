@@ -59,7 +59,7 @@ Option Explicit
 45:    End With
 46:    Call AddListCode
 47:    lbMsg.visible = True
-48:    lbOK.Enabled = False
+48:    lbOk.Enabled = False
 49:
 50:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
 51:    Exit Sub
@@ -111,13 +111,13 @@ ErrorHandler:
 97:        For i = 0 To .ListCount - 1
 98:            If .Selected(i) Then
 99:                lbMsg.visible = False
-100:                lbOK.Enabled = True
+100:                lbOk.Enabled = True
 101:                Exit Sub
 102:            End If
 103:        Next i
 104:    End With
 105:    lbMsg.visible = True
-106:    lbOK.Enabled = False
+106:    lbOk.Enabled = False
 107: End Sub
      Private Sub AddListCode()
 109:    Dim WB          As Workbook
