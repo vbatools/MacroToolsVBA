@@ -21,9 +21,9 @@ End Enum
 12:    Dim strVar As String
 13:    On Error GoTo errmsg
 14:    If Not VBAIsTrusted Then
-15:        Call MsgBox("Предупреждение!" & vbLf & "Отключено: [Доверять доступ к объектной модели VBE]" _
-                   & vbLf & "Для включения перейдите: Файл->Параметры->Центр управления безопасностью->Параметры макросов" _
-                   & vbLf & "И перезапустите Excel", vbCritical, "Отсудствует доступ к объектной модели:")
+15:        Call MsgBox("Warning!" & vbLf & "Disabled: [Trust access to the VBA object model]" _
+                   & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" _
+                   & vbLf & "And restart Excel", vbCritical, "No access to the object model:")
 18:        Exit Sub
 19:    End If
 20:    Application.DisplayAlerts = False
@@ -36,21 +36,21 @@ End Enum
 27:    With ActiveSheet
 28:        .Name = C_Const.SH_STATISTICA
 29:        Set Rng = .Range("A1")
-30:        Rng.Value = "Название модуля"
+30:        Rng.Value = "Module name"
 31:        i = i + 1
-32:        Rng(1, i).Value = "Тип модуля"
+32:        Rng(1, i).Value = "Module type"
 33:        i = i + 1
-34:        Rng(1, i).Value = "Тип модификатора"
+34:        Rng(1, i).Value = "Modifier type"
 35:        i = i + 1
-36:        Rng(1, i).Value = "Тип процедуры"
+36:        Rng(1, i).Value = "Type of procedure"
 37:        i = i + 1
-38:        Rng(1, i).Value = "Название процедуры"
+38:        Rng(1, i).Value = "Name of the procedure"
 39:        i = i + 1
-40:        Rng(1, i).Value = "Начальная строка"
+40:        Rng(1, i).Value = "Start line"
 41:        i = i + 1
-42:        Rng(1, i).Value = "Количество строк"
+42:        Rng(1, i).Value = "Number of rows"
 43:        i = i + 1
-44:        Rng(1, i).Value = "Декларирование процедуры"
+44:        Rng(1, i).Value = "Declaring the procedure"
 45:    End With
 46:    Call AddInfoProject(Workbooks(strVar))
 47:    With ActiveSheet.UsedRange
@@ -66,7 +66,7 @@ errmsg:
 57:        Err.Clear
 58:        Resume Next
 59:    Else
-60:        Call MsgBox("Ошибка в I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+60:        Call MsgBox("Error in I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 61:        Call WriteErrorLog("I_StatisticVBAProj.AddSheetStatistica")
 62:    End If
 63:    Application.DisplayAlerts = True
@@ -80,7 +80,7 @@ errmsg:
 71:        Set VBP = WB.VBProject
 72:    End If
 73:    If VBP.Protection = vbext_pp_locked Then
-74:        Call MsgBox("На VBA проект, [" & VBP.Name & "] установлен пароль!", vbCritical, "Ошибка, проект защищен паролем:")
+74:        Call MsgBox("On a VBA project, [" & VBP.Name & "] password set!", vbCritical, "Error, the project is password protected:")
 75:        Exit Sub
 76:    End If
 77:    For Each vbComp In VBP.VBComponents
@@ -246,11 +246,12 @@ errmsg:
 Err_msg_WSN:
 238:    Select Case Err.Number
         Case 13, 1004:
-240:            Call MsgBox("Веденно не допустимое значение номере столбца или строки: [" & NomerRowOrColumn & "] ", vbCritical, "Ошибка ввода:")
+240:            Call MsgBox("Invalid column or row number value entered: [" & NomerRowOrColumn & "] ", vbCritical, "Input error:")
 241:        Case 9:
-242:            Call MsgBox("Веденно не допустимое значение в имени файла: [" & WorkSheetName & "] ", vbCritical, "Ошибка ввода:")
+242:            Call MsgBox("Invalid value entered in the file name: [" & WorkSheetName & "] ", vbCritical, "Input error:")
 243:        Case Else:
-244:            Call MsgBox("Ошибка в LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+244:            Call MsgBox("Error in LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 245:            Call WriteErrorLog("LastRowOrColumn")
 246:    End Select
 247: End Function
+

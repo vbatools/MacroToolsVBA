@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddCodeView 
-   Caption         =   "База SNIPPET's:"
+   Caption         =   "Snippet'S Database:"
    ClientHeight    =   7140
    ClientLeft      =   45
    ClientTop       =   375
@@ -87,14 +87,14 @@ Private m_clsAnchors As CAnchors
 72:        If .ListIndex > -1 Then
 73:            row_i = snippets.ListColumns(2).DataBodyRange.Find(What:=.List(.ListIndex, 2), LookIn:=xlValues, LookAt:=xlWhole).Row
 74:            If txtCode.Text <> txtCodeBackCap.Text And txtCodeBackCap.Text <> vbNullString Then
-75:                If MsgBox("Сохранить изменения Кода ?", vbYesNo, "Сохранение кода:") = vbYes Then
+75:                If MsgBox("Save Code changes ?", vbYesNo, "Saving the code:") = vbYes Then
 76:                    snippets.ListColumns(4).Range(CLng(txtRow.Text), 1).Value = txtCode.Text
 77:                End If
 78:            End If
 79:            txtCode.Text = snippets.ListColumns(4).Range(row_i, 1).Value
 80:            txtCodeBackCap.Text = txtCode.Text
 81:            txtRow.Text = row_i
-82:            lbOk.Enabled = False
+82:            lbOK.Enabled = False
 83:        End If
 84:    End With
 85: End Sub
@@ -107,13 +107,13 @@ Private m_clsAnchors As CAnchors
 92:            row_i = snippets.ListColumns(2).DataBodyRange.Find(What:=.List(.ListIndex, 2), LookIn:=xlValues, LookAt:=xlWhole).Row
 93:            snippets.ListColumns(4).Range(row_i, 1).Value = txtCode.Text
 94:            txtCodeBackCap.Text = txtCode.Text
-95:            lbOk.Enabled = False
+95:            lbOK.Enabled = False
 96:        End If
 97:    End With
 98: End Sub
      Private Sub txtCode_Change()
 100:    If txtCode.Text <> txtCodeBackCap.Text Then
-101:        lbOk.Enabled = True
+101:        lbOK.Enabled = True
 102:    End If
 103: End Sub
      Private Sub txtSerch_Change()
@@ -166,6 +166,6 @@ Private Sub SerchSnippet()
 151:    Exit Sub
 MyBtnSerch_Err:
 153:    Unload Me
-154:    MsgBox Err.Description & vbCrLf & "в AddCodeView.SerchSnippet " & vbCrLf & "в строке " & Erl, vbExclamation + vbOKOnly, "Ошибка:"
+154:    MsgBox Err.Description & vbCrLf & "в AddCodeView.SerchSnippet " & vbCrLf & "in the line" & Erl, vbExclamation + vbOKOnly, "Error:"
 155:    Call WriteErrorLog("AddCodeView.SerchSnippet")
 End Sub

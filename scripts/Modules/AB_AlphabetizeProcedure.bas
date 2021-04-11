@@ -31,7 +31,7 @@ Const ProcNoUnderscore = "1"
 29:   Dim nI               As Integer
 30:   Dim nIndex           As Integer
 31:
-32:   If MsgBox("Отсортировать процедуры и функции по алфавиту?", vbQuestion + vbYesNo + vbDefaultButton1, "Сортировка:") = vbNo Then
+32:   If MsgBox("Sort procedures and functions alphabetically?", vbQuestion + vbYesNo + vbDefaultButton1, "Sorting:") = vbNo Then
 33:      Exit Sub
 34:   End If
 35:
@@ -41,14 +41,14 @@ Const ProcNoUnderscore = "1"
 39:   ReDim CollectedKeys(0) As String
 40:
 41:   If Application.VBE.ActiveVBProject Is Nothing Then
-42:      Debug.Print "Нет активного проекта VBA"
+42:      Debug.Print "No active VBA project"
 43:      Exit Sub
 44:   End If
 45:
 46:   Set cpCodePane = Application.VBE.ActiveCodePane
 47:
 48:   If cpCodePane Is Nothing Then
-49:      Debug.Print "Нет активного модуля кода VBA"
+49:      Debug.Print "No active VBA code module"
 50:      Exit Sub
 51:   End If
 52:

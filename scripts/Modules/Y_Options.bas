@@ -61,7 +61,7 @@ ErrorHandler:
         Case 91:
 61:            Exit Sub
 62:        Case Else:
-63:            Debug.Print "ќшибка! в addOptions" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+63:            Debug.Print "Error in add Options" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 64:            Call WriteErrorLog("addOptions")
 65:    End Select
 66:    Err.Clear

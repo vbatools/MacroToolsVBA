@@ -48,7 +48,7 @@ Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As
 47:    Dim stxt        As String
 48:    stxt = GetSelectedLineColumnInProcedure
 49:    Call SetClipboard(stxt)
-50:    Debug.Print "Данные скопированы в буфер обмена!"
+50:    Debug.Print "The data is copied to the clipboard!"
 51: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -94,9 +94,9 @@ Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As
 ErrorHandler:
 94:    Select Case Err
         Case 91:
-96:            Debug.Print "Ошибка!, не активирован модуль для вставки кода!" & vbNewLine & Err.Number & vbNewLine & Err.Description
+96:            Debug.Print "Error!, the module for inserting code is not activated!" & vbNewLine & Err.Number & vbNewLine & Err.Description
 97:        Case Else:
-98:            Debug.Print "Произошла ошибка в GetFromCipBoard" & vbNewLine & Err.Number & vbNewLine & Err.Description
+98:            Debug.Print "An error occurred in Getfromclipboard" & vbNewLine & Err.Number & vbNewLine & Err.Description
 99:    End Select
 100: End Sub
 
@@ -123,9 +123,9 @@ ErrorHandler:
 ErrorHandler:
 123:    Select Case Err
         Case 91:
-125:            Debug.Print "Ошибка!, не активирован модуль для вставки кода!" & vbNewLine & Err.Number & vbNewLine & Err.Description
+125:            Debug.Print "Error!, the module for inserting code is not activated!" & vbNewLine & Err.Number & vbNewLine & Err.Description
 126:        Case Else:
-127:            Debug.Print "Произошла ошибка в GESelectedLineColumnInProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
+127:            Debug.Print "An error occurred in GESelectedLineColumnInProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
 128:    End Select
 129: End Function
 

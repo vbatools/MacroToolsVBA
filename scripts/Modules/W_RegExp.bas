@@ -34,12 +34,12 @@ Option Explicit
 33:        bMultiline = VBA.CBool(.Cells(9, 3).Value)
 34:    End With
 35:
-36:    If sPattern = vbNullString Then sMsgErr = "Не указано регулярное выражение!" & vbNewLine
-37:    If sSTR = vbNullString Then sMsgErr = sMsgErr & "Не указан исходный текст!"
+36:    If sPattern = vbNullString Then sMsgErr = "No regular expression specified!" & vbNewLine
+37:    If sSTR = vbNullString Then sMsgErr = sMsgErr & "The source text is not specified!"
 38:
 39:    Call RegExpClearCells
 40:    If sMsgErr <> vbNullString Then
-41:        Call MsgBox(sMsgErr, vbCritical, "Поиск совпадений:")
+41:        Call MsgBox(sMsgErr, vbCritical, "Match search:")
 42:        Exit Sub
 43:    End If
 44:    'сброс форматирования
@@ -72,10 +72,10 @@ Option Explicit
 71:    With ActiveSheet
 72:        Set objMatches = RegExpExecuteCollection(sSTR, sPattern, bGloba1, bIgnoreCase, bMultiline)
 73:        If objMatches Is Nothing Then
-74:            Call MsgBox("Совпадений не найдено!", vbInformation + vbOKOnly, "Поиск совпадений:")
+74:            Call MsgBox("No matches found!", vbInformation + vbOKOnly, "Match search:")
 75:            .Range("M:P").EntireColumn.AutoFit
 76:        ElseIf objMatches.Count = 0 Then
-77:            Call MsgBox("Совпадений не найдено!", vbInformation + vbOKOnly, "Поиск совпадений:")
+77:            Call MsgBox("No matches found!", vbInformation + vbOKOnly, "Match search:")
 78:            .Range("M:P").EntireColumn.AutoFit
 79:        Else
 80:            For Each itemMatch In objMatches
@@ -144,7 +144,7 @@ Option Explicit
 143:        With RegExp
 144:            .Global = bGloba1
 145:            .IgnoreCase = bIgnoreCase
-146:            .Multiline = bMultiline
+146:            .MultiLine = bMultiline
 147:            .Pattern = sPattern
 148:        End With
 149:
@@ -175,7 +175,7 @@ Option Explicit
 174:        With RegExp
 175:            .Global = bGloba1
 176:            .IgnoreCase = bIgnoreCase
-177:            .Multiline = bMultiline
+177:            .MultiLine = bMultiline
 178:            .Pattern = sPattern
 179:        End With
 180:
@@ -260,26 +260,24 @@ Option Explicit
 '* Optional МногоСтроч As Boolean = False : ЛОЖЬ - однострочный объект, ИСТИНА - многострочный
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ(ByVal Текст As String, ByVal Паттерн As String, Optional НомерИскомого As Integer = 0, Optional Разделитель As String = " ", Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As Variant
-Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_Description = "Получает значение соответствующее рег. выражению по его порядковому номеру в тексте"
-Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_ProcData.VB_Invoke_Func = " \n7"
+     Public Function REG_GetValueByNumber(ByVal Text As String, ByVal Pattern As String, Optional NumberOfSearch As Integer = 0, Optional Separator As String = " ", Optional SerchAll As Boolean = True, Optional CaseWord As Boolean = False, Optional MultiLine As Boolean = False) As Variant
 263:    Dim ObjColl     As MatchCollection
 264:    Dim stxt        As String
 265:    Dim i           As Integer
-266:    Set ObjColl = RegExpExecuteCollection(Текст, Паттерн, ИскатьВсе, Регист, МногоСтроч)
+266:    Set ObjColl = RegExpExecuteCollection(Text, Pattern, SerchAll, CaseWord, MultiLine)
 267:    With ObjColl
 268:        If .Count > 0 Then
-269:            If НомерИскомого > 0 Then
-270:                stxt = .Item(НомерИскомого - 1)
+269:            If NumberOfSearch > 0 Then
+270:                stxt = .Item(NumberOfSearch - 1)
 271:            Else
 272:                For i = 0 To .Count - 1
-273:                    stxt = stxt & Разделитель & .Item(i)
+273:                    stxt = stxt & Separator & .Item(i)
 274:                Next i
-275:                stxt = VBA.Right$(stxt, VBA.Len(stxt) - VBA.Len(Разделитель))
+275:                stxt = VBA.Right$(stxt, VBA.Len(stxt) - VBA.Len(Separator))
 276:            End If
 277:        End If
 278:    End With
-279:    РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ = stxt
+279:    REG_GetValueByNumber = stxt
 280: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -297,13 +295,11 @@ Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_ProcData.VB_Invoke_Func = " \n7"
 '* Optional МногоСтроч As Boolean = False : ЛОЖЬ - однострочный объект, ИСТИНА - многострочный
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function РЕГВЫР_СЧЁТ(ByVal Текст As String, ByVal Паттерн As String, Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As LongPtr
-Attribute РЕГВЫР_СЧЁТ.VB_Description = "Подсчитывает количества значений удовлетворяющих паттерну"
-Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
+     Public Function REG_Count(ByVal Text As String, ByVal Pattern As String, Optional SerchAll As Boolean = True, Optional CaseWord As Boolean = False, Optional MultiLine As Boolean = False) As LongPtr
 298:    Dim ObjColl     As MatchCollection
 299:    Dim lCount      As Long
 300:    Dim i           As Integer
-301:    Set ObjColl = RegExpExecuteCollection(Текст, Паттерн, ИскатьВсе, Регист, МногоСтроч)
+301:    Set ObjColl = RegExpExecuteCollection(Text, Pattern, SerchAll, CaseWord, MultiLine)
 302:    With ObjColl
 303:        If .Count > 0 Then
 304:            For i = 0 To .Count - 1
@@ -311,7 +307,7 @@ Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
 306:            Next i
 307:        End If
 308:    End With
-309:    РЕГВЫР_СЧЁТ = lCount
+309:    REG_Count = lCount
 310: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -329,18 +325,18 @@ Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
 '* Optional МногоСтроч As Boolean = False : ЛОЖЬ - однострочный объект, ИСТИНА - многострочный
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function РЕГВЫР_ТЕСТ(ByVal Текст As String, ByVal Паттерн As String, Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As Boolean
-328:    If Not Текст Like vbNullString And Not Паттерн Like vbNullString Then
+     Public Function REG_Test(ByVal Text As String, ByVal Pattern As String, Optional SerchAll As Boolean = True, Optional CaseWord As Boolean = False, Optional MultiLine As Boolean = False) As Boolean
+328:    If Not Text Like vbNullString And Not Pattern Like vbNullString Then
 329:        Dim RegExp  As New RegExp
 330:        With RegExp
-331:            .Global = ИскатьВсе
-332:            .IgnoreCase = Регист
-333:            .Multiline = МногоСтроч
-334:            .Pattern = Паттерн
+331:            .Global = SerchAll
+332:            .IgnoreCase = CaseWord
+333:            .MultiLine = MultiLine
+334:            .Pattern = Pattern
 335:        End With
 336:
 337:        On Error Resume Next
-338:        РЕГВЫР_ТЕСТ = RegExp.Test(Текст)
+338:        REG_Test = RegExp.Test(Text)
 339:        Set RegExp = Nothing
 340:    End If
 341: End Function
@@ -361,8 +357,6 @@ Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
 '* Optional МногоСтроч As Boolean = False : ЛОЖЬ - однострочный объект, ИСТИНА - многострочный
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Public Function РЕГВЫР_ЗАМЕНИТЬ(ByVal Текст As String, ByVal Паттерн As String, ByVal Заменить_на As String, Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As String
-Attribute РЕГВЫР_ЗАМЕНИТЬ.VB_Description = "Заменяет значения удовлетворяющие рег. выражению в тексте на текст замены"
-Attribute РЕГВЫР_ЗАМЕНИТЬ.VB_ProcData.VB_Invoke_Func = " \n7"
-360:    РЕГВЫР_ЗАМЕНИТЬ = RegExpFindReplace(Текст, Паттерн, Заменить_на, ИскатьВсе, Регист, МногоСтроч)
+Public Function REG_Replace(ByVal Text As String, ByVal Pattern As String, ByVal ReplaceOn As String, Optional SerchAll As Boolean = True, Optional CaseWord As Boolean = False, Optional MultiLine As Boolean = False) As String
+360:    REG_Replace = RegExpFindReplace(Text, Pattern, ReplaceOn, SerchAll, CaseWord, MultiLine)
 End Function

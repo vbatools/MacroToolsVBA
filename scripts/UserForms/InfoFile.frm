@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} InfoFile 
-   Caption         =   "Свойства файла:"
+   Caption         =   "File Properties:"
    ClientHeight    =   8190
    ClientLeft      =   45
    ClientTop       =   375
@@ -54,11 +54,11 @@ Private Sub Label2_Click()
 End Sub
 
 Private Sub LbDelAllProper_Click()
-    If MsgBox("Удалить ВСЕ свойства ?", vbYesNo + vbQuestion, "Удаление свойств:") = vbYes Then
+    If MsgBox("Delete ALL properties ?", vbYesNo + vbQuestion, "Deleting properties:") = vbYes Then
         Dim iCount  As Byte
         iCount = X_InfoFile.DelAllProp(Workbooks(cmbMain.Value))
         Call cmbMain_Change
-        Call MsgBox("Удалено свойств: " & iCount, vbInformation, "Удаление свойств:")
+        Call MsgBox("Deleted properties:" & iCount, vbInformation, "Deleting properties:")
     End If
 End Sub
 Private Sub LbEdit_Click()
@@ -87,7 +87,7 @@ Private Sub EditProp()
         If IsNumeric(.BoundValue) Then
             txtOld = VBA.Trim$(.List(CInt(.BoundValue) - 1, 2))
             NameProp = .List(CInt(.BoundValue) - 1, 1)
-            txtNew = InputBox("Рактировать свойство [ " & NameProp & " ] ?", "Редактирование свойства:", txtOld)
+            txtNew = InputBox("Edit a property [" & NameProp & " ] ?", "Edit a property:", txtOld)
             If txtNew <> txtOld Then
                 Call X_InfoFile.WriteOneProp(Workbooks(cmbMain.Value), NameProp, txtNew)
                 Call cmbMain_Change
@@ -118,7 +118,7 @@ Private Sub lbDelOneCustProp_Click()
     With Me.ListCustomProp
         If IsNumeric(.BoundValue) Then
             NameProp = .List(CInt(.BoundValue) - 1, 1)
-            If MsgBox("Удалить свойство [ " & NameProp & " ] ?", vbYesNo + vbQuestion, "Удаление свойства:") = vbYes Then
+            If MsgBox("Delete a property [" & NameProp & " ] ?", vbYesNo + vbQuestion, "Deleting a property:") = vbYes Then
                 Call X_InfoFile.DelOneCustomProp(Workbooks(cmbMain.Value), NameProp)
                 Call cmbMain_Change
             End If
@@ -126,9 +126,9 @@ Private Sub lbDelOneCustProp_Click()
     End With
 End Sub
 Private Sub AddCustProp(ByVal txtPropName As String, ByVal txtPropValue As String)
-    txtPropName = InputBox("Ведите  название свойства", "Создание свойства:", txtPropName)
+    txtPropName = InputBox("Ведите  название свойства", "Creating a property:", txtPropName)
     If txtPropName <> vbNullString Then
-        txtPropValue = InputBox("Ведите  значение свойства", "Создание свойства:", txtPropValue)
+        txtPropValue = InputBox("Ведите  значение свойства", "Creating a property:", txtPropValue)
         If txtPropValue <> vbNullString Then
             Call X_InfoFile.AddOneCustomProp(Workbooks(cmbMain.Value), txtPropName, txtPropValue)
             Call cmbMain_Change
@@ -138,11 +138,11 @@ End Sub
 
 
 Private Sub lbDelAllCustomProp_Click()
-    If MsgBox("Удалить ВСЕ свойства ?", vbYesNo + vbQuestion, "Удаление свойств:") = vbYes Then
+    If MsgBox("Delete ALL properties ?", vbYesNo + vbQuestion, "Deleting properties:") = vbYes Then
         Dim iCount  As Byte
         iCount = X_InfoFile.DelAllCustomProp(Workbooks(cmbMain.Value))
         Call cmbMain_Change
-        Call MsgBox("Удалено свойств: " & iCount, vbInformation, "Удаление свойств:")
+        Call MsgBox("Deleted properties:" & iCount, vbInformation, "Deleting properties:")
     End If
 End Sub
 
@@ -150,7 +150,7 @@ Private Sub UserForm_Activate()
     Dim vbProj      As VBIDE.VBProject
     If Workbooks.Count = 0 Then
         Unload Me
-        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
         Exit Sub
     End If
     With Me.cmbMain

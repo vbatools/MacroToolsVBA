@@ -29,7 +29,7 @@ End Sub
 Public Sub AddContextMenus()
 
     Call AddNewCommandBarMenu(C_Const.MENUMOVECONTRL)
-    Call AddButtom(C_Const.MTAG5, 984, "Справка по инструменту", "HelpMoveControl", C_Const.MENUMOVECONTRL, False, True)
+    Call AddButtom(C_Const.MTAG5, 984, "Tool Reference", "HelpMoveControl", C_Const.MENUMOVECONTRL, False, True)
     Call AddButtom(C_Const.MTAG4, 38, "", "MoveControl", C_Const.MENUMOVECONTRL)
     Call AddButtom(C_Const.MTAG3, 40, "", "MoveControl", C_Const.MENUMOVECONTRL, False, True)
     Call AddButtom(C_Const.MTAG2, 39, "", "MoveControl", C_Const.MENUMOVECONTRL)
@@ -37,7 +37,7 @@ Public Sub AddContextMenus()
     Call AddComboBoxMove(C_Const.MENUMOVECONTRL)
 
     Call AddNewCommandBarMenu(C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG15, 984, "Справка по надстройке", "HelpMainAddin", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG15, 984, "Add-in Help", "HelpMainAddin", C_Const.TOOLSMENU, False, True)
     Call AddButtom(C_Const.TAG12, 0, "FormatBuilder", "subFormatBuilder", C_Const.TOOLSMENU, True, True)
     Call AddButtom(C_Const.TAG11, 0, "MsgBoxBuilder", "subMsgBoxGenerator", C_Const.TOOLSMENU, True, True)
     Call AddButtom(C_Const.TAG13, 0, "ProcedureBuilder", "subProcedureBuilder", C_Const.TOOLSMENU, True, True)
@@ -46,31 +46,31 @@ Public Sub AddContextMenus()
     Call AddButtom(C_Const.TAG24, 2045, "Copy", "SetInCipBoard", C_Const.TOOLSMENU, True, False)
     Call AddButtom(C_Const.TAG25, 22, "Paste", "GetFromCipBoard", C_Const.TOOLSMENU, True, True)
 
-    Call AddButtom(C_Const.TAG20, 1714, "Поиск не используемых переменых ", "SerchVariableUnUsedInSelectedWorkBook", C_Const.TOOLSMENU, False, False)
-    Call AddButtom(C_Const.TAG19, 3838, "Закрыть все окна VBE ", "CloseAllWindowsVBE", C_Const.TOOLSMENU, False, False)
-    Call AddButtom(C_Const.TAG14, 22, "Вставить класс LogRecorder ", "AddLogRecorderClass", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG20, 1714, "Finding unused variables", "SerchVariableUnUsedInSelectedWorkBook", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG19, 3838, "Close all VBE windows", "CloseAllWindowsVBE", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG14, 22, "Insert the LogRecorder class", "AddLogRecorderClass", C_Const.TOOLSMENU, False, True)
 
-    Call AddButtom(C_Const.TAG19, 8, "Список TODO ", "ShowTODOList", C_Const.TOOLSMENU, False, False)
-    Call AddButtom(C_Const.TAG18, 1972, "Создать TODO ", "sysAddTODOTop", C_Const.TOOLSMENU, False, False)
-    Call AddButtom(C_Const.TAG17, 456, "Создать строку комментария обновления ", "sysAddModifiedTop", C_Const.TOOLSMENU, False, False)
-    Call AddButtom(C_Const.TAG16, 1546, "Создать комментарий ", "sysAddHeaderTop", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG19, 8, "TODO List", "ShowTODOList", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG18, 1972, "Create a TODO", "sysAddTODOTop", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG17, 456, "Create an update comment line", "sysAddModifiedTop", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG16, 1546, "Create a comment", "sysAddHeaderTop", C_Const.TOOLSMENU, False, True)
 
-    Call AddButtom(C_Const.TAG10, 3917, "Удалить форматирование Кода", "CutTab", C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG9, 3919, "Форматировать Код", "ReBild", C_Const.TOOLSMENU, False, True)
-    Call AddButtom(C_Const.TAG8, 12, "Удалить нумерацию строк", "RemoveLineNumbers_", C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG7, 11, "Создать нумерацию строк", "AddLineNumbers_", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG10, 3917, "Remove Code Formatting", "CutTab", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG9, 3919, "Format The Code", "ReBild", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG8, 12, "Remove line numbering", "RemoveLineNumbers_", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG7, 11, "Create line numbering", "AddLineNumbers_", C_Const.TOOLSMENU)
     Call AddComboBox(C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG27, 210, "Сортировка процедур по алфавиту", "AlphabetizeProcedure", C_Const.TOOLSMENU, False, True)
-    Call AddButtom(C_Const.TAG6, 47, "Очистить окно [Immediate]", "ClearImmediateWindow", C_Const.TOOLSMENU, False, True)
-    Call AddButtom(C_Const.TAG5, 2059, "Создать легенду", "AddLegend", C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG4, 21, "Удалить модуль", "DeleteSnippetEnumModule", C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG3, 1753, "Вставить модуль", "AddSnippetEnumModule", C_Const.TOOLSMENU)
-    Call AddButtom(C_Const.TAG2, 22, "Вставить код", "InsertCode", C_Const.TOOLSMENU, False, False)
+    Call AddButtom(C_Const.TAG27, 210, "Sorting procedures alphabetically", "AlphabetizeProcedure", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG6, 47, "Clear the window [Immediate]", "ClearImmediateWindow", C_Const.TOOLSMENU, False, True)
+    Call AddButtom(C_Const.TAG5, 2059, "Create a legend", "AddLegend", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG4, 21, "Delete a module", "DeleteSnippetEnumModule", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG3, 1753, "Insert a module", "AddSnippetEnumModule", C_Const.TOOLSMENU)
+    Call AddButtom(C_Const.TAG2, 22, "Insert code", "InsertCode", C_Const.TOOLSMENU, False, False)
 
-    Call AddButtom(C_Const.TAG26, 9634, "Поменять местами относ [=]", "SwapEgual", C_Const.POPMENU, True, False)
+    Call AddButtom(C_Const.TAG26, 9634, "Swap the relation [=]", "SwapEgual", C_Const.POPMENU, True, False)
     Call AddButtom(C_Const.TAG21, 0, "UPPER Case", "toUpperCase", C_Const.POPMENU, True, False)
     Call AddButtom(C_Const.TAG22, 0, "lower Case", "toLowerCase", C_Const.POPMENU, True, False)
-    Call AddButtom(C_Const.TAG1, 22, "Вставить код", "InsertCode", C_Const.POPMENU, True, False)
+    Call AddButtom(C_Const.TAG1, 22, "Insert code", "InsertCode", C_Const.POPMENU, True, False)
 
     Call AddButtom(C_Const.RTAG1, 162, "ReName Control", "RenameControl", C_Const.RENAMEMENU, True)
     Call AddButtom(C_Const.RTAG2, 22, "Paste Style", "PasteStyleControl", C_Const.RENAMEMENU, True)
@@ -186,7 +186,7 @@ ErrorHandler:
         Case 5:
             Err.Clear
         Case Else:
-            Debug.Print "Ошибка! в DeleteContextMenus" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Error in DeleteContextMenus" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("DeleteContextMenus")
     End Select
     Err.Clear
@@ -204,7 +204,7 @@ Private Sub DeleteButton(ByRef sTag As String, ByVal sMenu As String)
     Next Ctrl
     Exit Sub
 ErrorHandler:
-    Debug.Print "Ошибка! в DeleteButton" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+    Debug.Print "Error in DeleteButton" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
     Call WriteErrorLog("DeleteButton")
     Err.Clear
     Resume Next
@@ -216,12 +216,12 @@ Public Function VBAIsTrusted() As Boolean
 ErrorHandler:
     Select Case Err.Number
         Case 1004:
-            If ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then Call MsgBox("Предупреждение! " & C_Const.NAME_ADDIN & vbLf & vbNewLine & _
-                    "Отключено: [Доверять доступ к объектной модели VBE]" & vbLf & _
-                    "Для включения перейдите: Файл->Параметры->Центр управления безопасностью->Параметры макросов" & _
-                    vbLf & vbNewLine & "И перезапустите Excel", vbCritical, "Предупреждение:")
+            If ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then Call MsgBox("Warning!" & C_Const.NAME_ADDIN & vbLf & vbNewLine & _
+                    "Disabled: [Trust access to the VBA object model]" & vbLf & _
+                    "To enable it, go to: File->Settings->Security Management Center->Macro Settings" & _
+                    vbLf & vbNewLine & "And restart Excel", vbCritical, "Warning:")
         Case Else:
-            Debug.Print "Ошибка! в VBAIsTrusted" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Error! in VBA, isTrusted" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("VBAIsTrusted")
     End Select
     Err.Clear
@@ -255,7 +255,7 @@ Public Sub ClearImmediateWindow()
             Call ClearImmediateWindowFunction
             Call LoadKeyboardLayout("00000419", &H1)
         Case Else
-            Call MsgBox("Переключите раскладку клавиатуры на Английскую!", vbInformation, "Переключение раскладки клавиатуры")
+            Call MsgBox("Switch your keyboard layout to English!", vbInformation, "Switching the keyboard layout")
     End Select
 End Sub
 Private Sub ClearImmediateWindowFunction()
@@ -266,7 +266,7 @@ End Sub
 Public Sub RefreshMenu()
     Call B_CreateMenus.DeleteContextMenus
     Call B_CreateMenus.AddContextMenus
-    Call MsgBox("Перезагрузка надстройки " & C_Const.NAME_ADDIN & " прошла!", vbInformation, "Перезагрузка надстройки " & C_Const.NAME_ADDIN & ":")
+    Call MsgBox("The add" & C_Const.NAME_ADDIN & "-in was rebooted!", vbInformation, "The add" & C_Const.NAME_ADDIN & ":")
 End Sub
 Private Sub subMsgBoxGenerator()
     MsgBoxGenerator.Show
@@ -280,3 +280,4 @@ End Sub
 Private Sub subOptionsMenu()
     Call Y_Options.subOptions
 End Sub
+

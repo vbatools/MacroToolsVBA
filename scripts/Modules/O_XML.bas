@@ -58,10 +58,10 @@ Private Declare Function SetCurrentDirectoryA Lib "kernel32" (ByVal lpPathName A
 errmsg:
 58:    Select Case Err.Number
         Case 70:
-60:            Call MsgBox("Ошибка! Нет доступа к файлу!" & vbLf & "Возможно файл открыт, для продолжения закройте его и повторите попытку.", vbCritical, "Нет доступа к файлу:")
+60:            Call MsgBox("Error No access to the file!" & vbLf & "Perhaps the file is open, to continue, close it and try again.", vbCritical, "No file access:")
 61:            Exit Function
 62:        Case Else:
-63:            Call MsgBox("Ошибка! в OpenAndCloseExcelFileInFolder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+63:            Call MsgBox("Error! in Open And Close Excel File In Folder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl, vbCritical, "Error:")
 64:            Call WriteErrorLog("OpenAndCloseExcelFileInFolder")
 65:    End Select
 66:    Err.Clear
@@ -84,15 +84,15 @@ errmsg:
 83:            'Распоковка файла
 84:            .UnzipFile
 85:            OpenAndCloseExcelFile = .XMLFolder(XMLFolder_root)
-86:            sMsg = "Распоковка файла выполнена!"
-87:            sTitleMsg = "Распоковка файла Excel:"
+86:            sMsg = "Unpacking the file has been completed!"
+87:            sTitleMsg = "Unpacking an Excel file:"
 88:        Else
 89:            .CreateBackupXML = bBackUp
 90:            .SourceFile = sFilePath
 91:            'Запоковка файла
 92:            .ZipAllFilesInFolder
-93:            sMsg = "Запоковка файла выполнена!" & vbLf & "Так же создан Backup файла"
-94:            sTitleMsg = "Запоковка файла Excel:"
+93:            sMsg = "The file has been packed!" & vbLf & "Also created a Backup file"
+94:            sTitleMsg = "Packing an Excel file:"
 95:        End If
 96:    End With
 97:    Set cEditOpenXML = Nothing
@@ -102,10 +102,10 @@ errmsg:
 errmsg:
 102:    Select Case Err.Number
         Case 70:
-104:            Call MsgBox("Ошибка! Нет доступа к файлу!" & vbLf & "Возможно файл открыт, для продолжения закройте его и повторите попытку.", vbCritical, "Нет доступа к файлу:")
+104:            Call MsgBox("Error No access to the file!" & vbLf & "Perhaps the file is open, to continue, close it and try again.", vbCritical, "No file access:")
 105:            Exit Function
 106:        Case Else:
-107:            Call MsgBox("Ошибка! в OpenAndCloseExcelFileInFolder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+107:            Call MsgBox("Error! in Open And Close Excel File In Folder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl, vbCritical, "Error:")
 108:            Call WriteErrorLog("OpenAndCloseExcelFileInFolder")
 109:    End Select
 110:    Err.Clear
@@ -144,3 +144,4 @@ Private Function UnQualifyPath(ByVal sFolder As String) As String
 143:        UnQualifyPath = sFolder
 144:    End If
 End Function
+

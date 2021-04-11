@@ -44,18 +44,18 @@ Public LogSeparator As String
 
     Public Sub WriteErrorLog(Optional ByVal sNameFunction As String = vbNullString)
 29:    Dim Txt    As String
-30:    If sNameFunction = vbNullString Then sNameFunction = "Имя прцедуры не задано"
-31:    Txt = String(2, vbNewLine) & "Название функции/процедуры: " & sNameFunction & vbNewLine
-32:    Txt = Txt & "Номер ошибки: " & Err.Number & vbNewLine
-33:    Txt = Txt & "Номер строки: " & Erl
-34:    Call AddRecord(Txt, vbTab & vbTab & "Описание: " & Err.Description, 0, LOG_SEPARATOR_BEFORE_AND_AFTER, True)
+30:    If sNameFunction = vbNullString Then sNameFunction = "Procedure name not specified"
+31:    Txt = String(2, vbNewLine) & "Function/procedure name:" & sNameFunction & vbNewLine
+32:    Txt = Txt & "Error number:" & Err.Number & vbNewLine
+33:    Txt = Txt & "Line number:" & Erl
+34:    Call AddRecord(Txt, vbTab & vbTab & "Description:" & Err.Description, 0, LOG_SEPARATOR_BEFORE_AND_AFTER, True)
 35: End Sub
 
     Public Sub SaveLog()
 38:    If AddIntoTXTfile(LogFileFullName, Buffer) Then
 39:        Buffer = Empty
 40:    Else
-41:        Debug.Print "Ошибка записи лога в файл " & LogFileFullName
+41:        Debug.Print "Error writing the log to the file" & LogFileFullName
 42:    End If
 43: End Sub
 
@@ -156,3 +156,4 @@ Public LogSeparator As String
 139:    Set ts = Nothing: Set FSO = Nothing
 140:    AddIntoTXTfile = Err = 0
 141: End Function
+

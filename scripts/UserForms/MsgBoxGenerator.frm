@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MsgBoxGenerator 
-   Caption         =   "MsgBox Генератор:"
+   Caption         =   "MsgBox Generator:"
    ClientHeight    =   9360
    ClientLeft      =   45
    ClientTop       =   375
@@ -181,13 +181,13 @@ Option Explicit
 162:    If sSTR = vbNullString Then Exit Sub
 163:    If opbCliboard.Value = True Then
 164:        Call C_PublicFunctions.SetTextIntoClipboard(sSTR)
-165:        sMsgBoxString = "Код скопирован в буфер обмена!" & vbNewLine & "Для вставки кода используйте " & Chr(34) & "Ctrl+V" & Chr(34)
+165:        sMsgBoxString = "The code is copied to the clipboard!" & vbNewLine & "To insert the code, use" & Chr(34) & "Ctrl+V" & Chr(34)
 166:    Else
 167:        Debug.Print sSTR
-168:        sMsgBoxString = "Код напечатан в окне: " & Chr(34) & "Immediate" & Chr(34)
+168:        sMsgBoxString = "The code is printed in the window:" & Chr(34) & "Immediate" & Chr(34)
 169:    End If
 170:
-171:    Call MsgBox(sMsgBoxString, vbInformation, "Копирование кода:")
+171:    Call MsgBox(sMsgBoxString, vbInformation, "Copying the code:")
 172:    'Unload Me
 173:    Me.Hide
 174: End Sub

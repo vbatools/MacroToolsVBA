@@ -38,14 +38,14 @@ Option Private Module
 36:    Set prjProject = Application.VBE.ActiveVBProject
 37:
 38:    If prjProject Is Nothing Then
-39:        Debug.Print "Нет активного проекта VBA"
+39:        Debug.Print "No active VBA project"
 40:        Exit Sub
 41:    End If
 42:
 43:    Set cpCodePane = Application.VBE.ActiveCodePane
 44:
 45:    If cpCodePane Is Nothing Then
-46:        Debug.Print "Нет активного модуля кода VBA"
+46:        Debug.Print "No active VBA code module"
 47:        Exit Sub
 48:    End If
 49:
@@ -54,7 +54,7 @@ Option Private Module
 52:    sCode = cpCodePane.CodeModule.Lines(nStartLine, IIf(nEndline - nStartLine = 0, 1, nEndline - nStartLine))
 53:
 54:    If (sCode = vbNullString) Then
-55:        Debug.Print "Код VBA не выделен"
+55:        Debug.Print "VBA code is not allocated"
 56:        Exit Sub
 57:    End If
 58:

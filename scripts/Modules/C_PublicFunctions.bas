@@ -56,9 +56,9 @@ Private Declare Function GetKeyboardState Lib "USER32" (pbKeyState As Byte) As L
 ErrorHandler:
 38:    Select Case Err
         Case 91:
-40:            Debug.Print "Ошибка!, не активирован модуль для вставки кода!" & vbNewLine & Err.Number & vbNewLine & Err.Description
+40:            Debug.Print "Error!, the module for inserting code is not activated!" & vbNewLine & Err.Number & vbNewLine & Err.Description
 41:        Case Else:
-42:            Debug.Print "Произошла ошибка в SelectedLineColumnProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
+42:            Debug.Print "An error occurred in SelectedLineColumnProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
 43:            Call WriteErrorLog("SelectedLineColumnProcedure")
 44:    End Select
 45: End Function
@@ -76,7 +76,7 @@ ErrorHandler:
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Function DirLoadFiles(ByVal sPath As String) As String
 47:    With Application.FileDialog(msoFileDialogFolderPicker)     ' вывод диалогового окна
-48:        .ButtonName = "Выбрать": .Title = "VBATools": .InitialFileName = sPath
+48:        .ButtonName = "Choose": .Title = "VBATools": .InitialFileName = sPath
 49:         If .Show <> -1 Then Exit Function    ' если пользователь отказался от выбора папки
 50:        DirLoadFiles = .SelectedItems(1) & Application.PathSeparator
 51:    End With
@@ -144,7 +144,7 @@ ErrorHandler:
 ErrorHandler:
 85:    Select Case Err
         Case Else:
-87:            Call MsgBox("Произошла ошибка в URLLinks" & vbNewLine & Err.Number & vbNewLine & Err.Description, vbOKOnly + vbCritical, "Ошибка в URLLinks")
+87:            Call MsgBox("An error occurred in the URL Links" & vbNewLine & Err.Number & vbNewLine & Err.Description, vbOKOnly + vbCritical, "Error in URL Links")
 88:            Call WriteErrorLog("URLLinks")
 89:    End Select
 90:    Set appEX = Nothing
@@ -237,7 +237,7 @@ ErrorHandler:
 143:
 144:    With oFd     'используем короткое обращение к объекту
 145:        .AllowMultiSelect = bMultiSelect
-146:        .Title = "VBATools: Выберите файл Excel"     'заголовок окна диалога
+146:        .Title = "VBA Tools: Select an Excel file"     'заголовок окна диалога
 147:        .Filters.Clear     'очищаем установленные ранее типы файлов
 148:        .Filters.Add "Microsoft Excel Files", ExcelExtens, 1     'устанавливаем возможность выбора только файлов Excel
 149:        .InitialFileName = sPath     'назначаем папку отображения и имя файла по умолчанию

@@ -13,8 +13,8 @@ Option Explicit
 4:    Dim frm    As AddEditCode
 5:    Set frm = New AddEditCode
 6:    With frm
-7:        .Caption = "СОЗДАТЬ SNIPPET:"
-8:        .lbOk.Caption = "СОЗДАТЬ"
+7:        .Caption = "CREATE SNIPPET:"
+8:        .lbOK.Caption = "TO CREATE"
 9:        .txtRow = X + 1
 10:        .Show
 11:    End With
@@ -25,14 +25,14 @@ Option Explicit
 16:    Dim st()   As String
 17:    X = X + 1
 18:    If X <= 0 Then
-19:        Call MsgBox("Ничего не выбрано в таблице!", vbCritical, "Ничего не выбрано:")
+19:        Call MsgBox("Nothing is selected in the table!", vbCritical, "Nothing selected:")
 20:        Exit Sub
 21:    End If
 22:    Set frm = New AddEditCode
 23:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
 24:    With frm
-25:        .Caption = "ИЗМЕНИТЬ SNIPPET:"
-26:        .lbOk.Caption = "ИЗМЕНИТЬ"
+25:        .Caption = "CHANGE SNIPPET:"
+26:        .lbOK.Caption = "TO CHANGE"
 27:        st = Split(snippets.ListColumns(3).Range(X, 1), ".")
 28:        .cmbENUM.Style = fmStyleDropDownCombo
 29:        .cmbENUM.Text = st(0)
@@ -51,10 +51,10 @@ Option Explicit
 42:    On Error GoTo errmsg
 43:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
 44:    If X <= 0 Then
-45:        Call MsgBox("Ничего не выбрано в таблице!", vbCritical, "Ничего не выбрано:")
+45:        Call MsgBox("Nothing is selected in the table!", vbCritical, "Nothing selected:")
 46:        Exit Sub
 47:    End If
-48:    If MsgBox("Удалить SNIPPET: [ " & snippets.DataBodyRange.Cells(X, 2).Value & " ] ?", vbYesNo, "Удаление SNIPPET:") = vbYes Then
+48:    If MsgBox("Remove SNIPPET: [" & snippets.DataBodyRange.Cells(X, 2).Value & " ] ?", vbYesNo, "Deleting SNIPPET:") = vbYes Then
 49:        snippets.ListRows.Item(X).Delete
 50:        Call G_AddCodeViewForm.TbAdd(objList)
 51:    End If
@@ -63,7 +63,7 @@ errmsg:
 54:    If Err.Number = 91 Then
 55:        Err.Clear
 56:    Else
-57:        Debug.Print "Ошибка в DeletRow!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+57:        Debug.Print "Error in Deleterow!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 58:        Call WriteErrorLog("DeletRow")
 59:    End If
 60: End Sub
@@ -86,7 +86,7 @@ errmsg:
 77:    If Err.Number = 91 Then
 78:        Err.Clear
 79:    Else
-80:        Debug.Print "Ошибка в TbAdd!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+80:        Debug.Print "Error in TbAdd!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 81:        Call WriteErrorLog("TbAdd")
 82:    End If
 83: End Sub

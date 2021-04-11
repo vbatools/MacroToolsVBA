@@ -36,7 +36,7 @@ Option Explicit
 35:    On Error GoTo ErrorHandler
 36:    If VBAIsTrusted Then
 37:        Workbooks(C_Const.NAME_ADDIN & ".xlam").Sheets(C_Const.SH_SNIPPETS).Copy After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count)
-38:        Call MsgBox("Выгрузка базы кода произведена", vbInformation, "Выгрузка базы кода:")
+38:        Call MsgBox("The code base has been uploaded", vbInformation, "Code Base Upload:")
 39:    Else
 40:        Call MsgBox(C_Const.sMSGVBA1, vbCritical, C_Const.sMSGVBA2)
 41:    End If
@@ -44,9 +44,9 @@ Option Explicit
 ErrorHandler:
 44:    Select Case Err.Number
         Case 91:
-46:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+46:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 47:        Case Else:
-48:            Call MsgBox("Ошибка! в ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+48:            Call MsgBox("Error in ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
 49:            Call WriteErrorLog("ImportCodeBaseBtn")
 50:    End Select
 51:    Err.Clear
@@ -74,7 +74,7 @@ ErrorHandler:
 73:    Exit Sub
 ErrorHandler:
 75:    Err.Clear
-76:    Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+76:    Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 77: End Sub
     Private Sub VBABtn(ByRef control As IRibbonControl)
 79:    Call VBAVBEOpen
@@ -115,9 +115,9 @@ ErrorHandler:
 ErrorHandler:
 115:    Select Case Err.Number
         Case 91:
-117:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+117:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 118:        Case Else:
-119:            Call MsgBox("Ошибка! в onUnUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+119:            Call MsgBox("Error in onUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
 120:            Call WriteErrorLog("onUnUnProtectSheets")
 121:    End Select
 122:    Err.Clear
@@ -199,19 +199,19 @@ ErrorHandler:
 198:    Call RegExpTemplateManager.Show
 199: End Sub
      Private Sub onRegExpFunValNumber(control As IRibbonControl)
-201:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ()"
+201:    ActiveCell.FormulaR1C1 = "=REG_GetValueByNumber()"
 202:    Call FunctionWizardShowExc
 203: End Sub
      Private Sub onExpFunCount(control As IRibbonControl)
-205:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_СЧЁТ()"
+205:    ActiveCell.FormulaR1C1 = "=REG_Count()"
 206:    Call FunctionWizardShowExc
 207: End Sub
      Private Sub onRegExpFunTest(control As IRibbonControl)
-209:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ТЕСТ()"
+209:    ActiveCell.FormulaR1C1 = "=REG_Test()"
 210:    Call FunctionWizardShowExc
 211: End Sub
      Private Sub onRegExpFunReplace(control As IRibbonControl)
-213:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ЗАМЕНИТЬ()"
+213:    ActiveCell.FormulaR1C1 = "=REG_Replace()"
 214:    Call FunctionWizardShowExc
 215: End Sub
      Private Sub FunctionWizardShowExc()

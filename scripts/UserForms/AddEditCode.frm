@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddEditCode 
-   Caption         =   "UserForm1"
+   Caption         =   "Add Snipet:"
    ClientHeight    =   7680
    ClientLeft      =   45
    ClientTop       =   375
@@ -79,7 +79,7 @@ errmsg:
 64:    End Select
 65: End Sub
     Private Sub UserForm_Activate()
-67:    lbOk.Enabled = False
+67:    lbOK.Enabled = False
 68:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
 69: End Sub
     Private Sub UserForm_Terminate()
@@ -126,10 +126,10 @@ errmsg:
 111:    End If
 112: End Sub
      Private Sub SaveBtn()
-114:    lbOk.Enabled = False
+114:    lbOK.Enabled = False
 115:    If txtCode.Text <> vbNullString And cmbENUM.Text <> vbNullString And txtSNIP.Text <> vbNullString Then
 116:        If txtCode.Text <> txtCodeBack.Text Or cmbENUM.Text <> txtENUMBack.Text Or txtSNIP.Text <> txtSNIPBack.Text Then
-117:            lbOk.Enabled = True
+117:            lbOK.Enabled = True
 118:        End If
 119:    End If
 120: End Sub
@@ -139,14 +139,14 @@ errmsg:
 124:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
 125:    With snippets
 126:        row_i = CLng(txtRow.Text)
-127:        If MsgBox(lbOk.Caption & " SNIPPET: [ " & lbPreView.Caption & " ] ?", vbYesNo, lbOk.Caption & " SNIPPET:") = vbYes Then
-128:            If lbOk.Caption = "СОЗДАТЬ" Then
+127:        If MsgBox(lbOK.Caption & " SNIPPET: [ " & lbPreView.Caption & " ] ?", vbYesNo, lbOK.Caption & " SNIPPET:") = vbYes Then
+128:            If lbOK.Caption = "TO CREATE" Then
 129:                .ListRows.Add Position:=row_i, AlwaysInsert:=True
 130:                row_i = row_i + 1
-131:            ElseIf lbOk.Caption = "ИЗМЕНИТЬ" Then
+131:            ElseIf lbOK.Caption = "TO CHANGE" Then
 132:                'ничего не делаем
 133:            Else
-134:                Debug.Print "Ошибка в AddEditCode!" & vbLf & "Кнопка [lbOK] не содкржит подписи"
+134:                Debug.Print "Error in Add Edit Code!" & vbLf & "[lbook] button] does not contain a signature"
 135:                Exit Sub
 136:            End If
 137:        End If
@@ -199,3 +199,4 @@ Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
 184:    End If
 185:    GetUniqueValueFromRange = avArr
 End Function
+

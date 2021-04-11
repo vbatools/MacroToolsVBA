@@ -36,7 +36,7 @@ ErrorHandler:
         Case 91:
 36:            Exit Sub
 37:        Case Else:
-38:            Debug.Print "Ошибка! в AddLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+38:            Debug.Print "Error in PadlineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 39:            Call WriteErrorLog("AddLineNumbers_")
 40:    End Select
 41:    Err.Clear
@@ -62,7 +62,7 @@ ErrorHandler:
         Case 91:
 62:            Exit Sub
 63:        Case Else:
-64:            Debug.Print "Ошибка! в RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+64:            Debug.Print "Error in RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 65:            Call WriteErrorLog("RemoveLineNumbers_")
 66:    End Select
 67:    Err.Clear
@@ -220,7 +220,7 @@ NextLine:
 219:                    .ReplaceLine j, Space(4) & strLine
 220:                    On Error GoTo 0
 221:                Else
-222:                    Debug.Print "Этот инструмент ограничен 999 строками кода для правильной работы."
+222:                    Debug.Print "This tool is limited to 999 lines of code to work properly."
 223:                End If
 224:            End If
 225:            j = j + 1
@@ -295,3 +295,4 @@ Private Function RemoveLeadingSpaces(ByVal aString As String) As String
 294:    Loop
 295:    RemoveLeadingSpaces = aString
 End Function
+

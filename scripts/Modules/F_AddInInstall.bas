@@ -15,19 +15,19 @@ Option Explicit
 13:    AddFolder = Replace(Application.UserLibraryPath & "\", "\\", "\")
 14:    'проверка на наличие дириктории
 15:    If Dir(AddFolder, vbDirectory) = vbNullString Then
-16:        Call MsgBox("К сожалению, программа не может выполнить установку надстройки на данном компьютере." _
-                      & vbCrLf & "Отсутствует директория с надстройками. " & vbCrLf & _
-                      "Обратитесь к разработчику программы.", vbCritical, _
-                      "Сбой установки надстройки")
+16:        Call MsgBox("Unfortunately, the program cannot install the add-in on this computer." _
+                      & vbCrLf & "The settings directory is missing." & vbCrLf & _
+                      "Contact the program developer.", vbCritical, _
+                      "Add-in installation failed")
 20:        Exit Sub
 21:    End If
 22:    'Отключаем ранее установленую надстройку
 23:    If FileHave(AddFolder & C_Const.NAME_ADDIN & ".xlam") Then AddIns(C_Const.NAME_ADDIN).Installed = False
 24:    ' Проверяем открыта ли надстройка
 25:    If WorkbookIsOpen(C_Const.NAME_ADDIN & ".xlam") Then
-26:        Call MsgBox("Файл с надстройкой уже открыт." & vbCrLf & _
-                      "Возможно она уже была установлена ранее.", vbCritical, _
-                      "Сбой установки программы")
+26:        Call MsgBox("The file with the add-in is already open." & vbCrLf & _
+                      "It may have already been installed earlier.", vbCritical, _
+                      "Program installation failed")
 29:        Exit Sub
 30:    End If
 31:    ' Сохраняем как
@@ -39,17 +39,18 @@ Option Explicit
 37:    AddIns(C_Const.NAME_ADDIN).Installed = True
 38:    Application.EnableEvents = 1
 39:    Application.DisplayAlerts = True
-40:    Call MsgBox("Программа успешно установлена! " & vbCrLf & _
-                  "Просто откройте или создайте новый документ.", vbInformation, _
-                  "Установка надстройки: " & C_Const.NAME_ADDIN)
+40:    Call MsgBox("The program is installed successfully!" & vbCrLf & _
+                  "Just open or create a new document.", vbInformation, _
+                  "Installing the add-in:" & C_Const.NAME_ADDIN)
 43:    ThisWorkbook.Close False
 44:    Exit Sub
 InstallationAdd_Err:
 46:    If Err.Number = 1004 Then
-47:        MsgBox "Для установки надстройки, пожалуйста закройте данный файл и запустите его еще раз.", _
-                      64, "Установка"
+47:        MsgBox "To install the add-in, please close this file and run it again.", _
+                      64, "Installation"
 49:    Else
-50:        MsgBox Err.Description & vbCrLf & "в F_AddInInstall.InstallationAdd " & vbCrLf & "в строке " & Erl, vbExclamation + vbOKOnly, "Ошибка:"
+50:        MsgBox Err.Description & vbCrLf & "в F_AddInInstall.InstallationAdd " & vbCrLf & "in the line" & Erl, vbExclamation + vbOKOnly, "Error:"
 51:        Call WriteErrorLog("F_AddInInstall.InstallationAdd")
 52:    End If
 53: End Sub
+

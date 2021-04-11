@@ -26,15 +26,15 @@ Option Private Module
 25:            Case "frm": lFrm = lFrm + 1
 26:        End Select
 27:    Next i
-28:    Call MsgBox("Импорт проекта VBA в книгу" & WB.Name & " выполнен!" & vbCrLf & vbCrLf & "Импортировано: " & _
-                  vbCrLf & vbCrLf & "Модулей: " & lBas & _
-                  vbCrLf & "Классов: " & lCls & _
-                  vbCrLf & "Форм: " & lFrm & _
+28:    Call MsgBox("Importing a VBA project into a workbook" & WB.Name & "completed!" & vbCrLf & vbCrLf & "Imported:" & _
+                  vbCrLf & vbCrLf & "Modules:" & lBas & _
+                  vbCrLf & "Classes:" & lCls & _
+                  vbCrLf & "Forms:" & lFrm & _
                   vbCrLf & VBA.String(14, "-") & _
-                  vbCrLf & "Всего: " & lFrm + lCls + lBas, vbInformation, "Импорт проекта VBA:")
+                  vbCrLf & "Total:" & lFrm + lCls + lBas, vbInformation, "Importing a VBA project:")
 34:    Exit Sub
 Error_Handler_:
-36:    Call MsgBox("Ошибка! в ImportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+36:    Call MsgBox("Error in ImportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 37:    Call WriteErrorLog("ImportAllModules")
 38: End Sub
     Public Sub ExportAllModules(ByRef WB As Workbook, ByRef arrVBComp() As String)
@@ -51,7 +51,7 @@ Error_Handler_:
 50:    Else
 51:        Exit Sub
 52:    End If
-53:    If MsgBox("Вы хотите экспортировать все модули, из книги - " & WB.Name & " ?" & vbCrLf & vbCrLf & "Экспорт в папку: " & sDestinationFolder, vbYesNo, "Выгрузка проекта:") = vbNo Then Exit Sub
+53:    If MsgBox("You want to export all modules, from the workbook -" & WB.Name & " ?" & vbCrLf & vbCrLf & "Export to a folder:" & sDestinationFolder, vbYesNo, "Uploading a project:") = vbNo Then Exit Sub
 54:    If Dir(sDestinationFolder, vbDirectory) = vbNullString Then MkDir sDestinationFolder
 55:    On Error Resume Next
 56:    For i = 0 To 2
@@ -85,7 +85,7 @@ Error_Handler_:
 84:    If C > 0 Then Shell "C:\WINDOWS\explorer.exe """ & sDestinationFolder & "", vbNormalFocus
 85:    Exit Sub
 Error_Handler_:
-87:    Call MsgBox("Ошибка! в ExportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+87:    Call MsgBox("Error in ExportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 88:    Call WriteErrorLog("ExportAllModules")
 89: End Sub
      Public Sub DeleteAllModulesInActiveProject(ByRef WB As Workbook, ByRef arrVBComp() As String)
@@ -96,8 +96,8 @@ Error_Handler_:
 95:    Dim i As Integer
 96:    On Error GoTo Error_Handler_
 97:    If Not DoesActiveVBAprojectExist(WB:=WB, bFlagBlankLines:=False) Then Exit Sub
-98:    If MsgBox("Вы хотите удалить все модули кода в активном проекте VBA?, из книги - " & WB.Name, vbYesNo, "Удаление проекта:") = vbNo Then Exit Sub
-99:    If MsgBox("ПОЖАЛУЙСТА, ПОДТВЕРДИТЕ-УДАЛЕНИЕ КОДА ЯВЛЯЕТСЯ НЕ ОБРАТИМЫМ ДЕЙСТВИЕМ" & vbCrLf & vbCrLf & "Вы хотите удалить весь код из активного проекта VBA?, из книги - " & WB.Name, vbYesNo, "Удаление проекта:") = vbNo Then Exit Sub
+98:    If MsgBox("Do you want to remove all code modules in an active VBA project?, from the workbook -" & WB.Name, vbYesNo, "Deleting the project:") = vbNo Then Exit Sub
+99:    If MsgBox("PLEASE CONFIRM-DELETING THE CODE IS AN IRREVERSIBLE ACTION" & vbCrLf & vbCrLf & "Do you want to remove all the code from the active VBA project?, from the workbook -" & WB.Name, vbYesNo, "Deleting the project:") = vbNo Then Exit Sub
 100:    Set oVbProject = WB.VBProject
 101:    For i = 0 To UBound(arrVBComp)
 102:        Set oVBComp = WB.VBProject.VBComponents(arrVBComp(i))
@@ -115,10 +115,10 @@ Error_Handler_:
 114:        End If
 115:    Next i
 116:    'R = RemoveAllReferences(WB)
-117:    If r + m > 0 Then MsgBox "Modules удалено: " & m & vbCrLf & "References удалено: " & r, vbInformation, ""
+117:    If r + m > 0 Then MsgBox "Modules deleted:" & m & vbCrLf & "References removed:" & r, vbInformation, ""
 118:    Exit Sub
 Error_Handler_:
-120:    Call MsgBox("Ошибка! в DeleteAllModulesInActiveProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+120:    Call MsgBox("Error in DeleteAllModulesInActiveProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 121:    Call WriteErrorLog("DeleteAllModulesInActiveProject")
 122: End Sub
 '**********************************************************************************************************************************************************************
@@ -130,7 +130,7 @@ Error_Handler_:
 129:    If Not IsWorkbookOpen Then Exit Function
 130:
 131:    If WB.VBProject.Protection = vbext_pp_locked Then
-132:        Call MsgBox("VBA проект в книге - " & WB.Name & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
+132:        Call MsgBox("VBA project in the book -" & WB.Name & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Error:")
 133:        DoesActiveVBAprojectExist = False: Exit Function
 134:    End If
 135:
@@ -144,7 +144,7 @@ Error_Handler_:
 143:    End If
 144:
 145:    If C = 0 Then
-146:        Call MsgBox("Экспорт проекта VBA - в книге: " & WB.Name & " нет проекта VBA!", vbCritical, "Отсутствие проекта VBA:")
+146:        Call MsgBox("Export a VBA project - in a book:" & WB.Name & "no VBA project!", vbCritical, "No VBA project:")
 147:        DoesActiveVBAprojectExist = False
 148:        Exit Function
 149:    Else
@@ -153,7 +153,7 @@ Error_Handler_:
 152:
 153:    Exit Function
 Error_Handler_:
-155:    Call MsgBox("Ошибка! в DoesActiveVBAprojectExist" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+155:    Call MsgBox("Error in DoesActiveVBAprojectExist" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 156:    Call WriteErrorLog("DoesActiveVBAprojectExist")
 157:    DoesActiveVBAprojectExist = False
 158: End Function
@@ -188,12 +188,13 @@ Error_Handler_:
 187:    Exit Function
 ErrorHandler:
 189:    RemoveAllReferences = i
-190:    Call MsgBox("Ошибка! в RemoveAllReferences" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+190:    Call MsgBox("Error in RemoveAllReferences" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
 191: End Function
 Private Function IsWorkbookOpen() As Boolean
 193:    If Workbooks.Count > 0 Then
 194:        IsWorkbookOpen = True
 195:    Else
-196:        Call MsgBox("Активная рабочая книга не найдена. Пожалуйста, сначала откройте книгу!", vbCritical, "Экспорт проекта VBA:")
+196:        Call MsgBox("The active workbook was not found. Please open the book first!", vbCritical, "Exporting a VBA project:")
 197:    End If
 End Function
+

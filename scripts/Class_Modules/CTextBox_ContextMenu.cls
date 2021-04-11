@@ -42,17 +42,17 @@ Private m_objParent As Object
 21:    Set cbrTemp = Application.CommandBars.Add(mEDIT_CONTEXTMENU_NAME, Position:=msoBarPopup)
 22:    With cbrTemp
 23:        With .Controls.Add(msoControlButton)
-24:            .Caption = "”ƒ¿À»“‹"
+24:            .Caption = "DELETE"
 25:            .FaceId = CUT_MENUID
 26:            .Tag = mCUT_TAG
 27:        End With
 28:        With .Controls.Add(msoControlButton)
-29:            .Caption = "—Œ«ƒ¿“‹"
+29:            .Caption = "TO CREATE"
 30:            .FaceId = COPY_MENUID
 31:            .Tag = mCOPY_TAG
 32:        End With
 33:        With .Controls.Add(msoControlButton)
-34:            .Caption = "»«Ã≈Õ»“‹"
+34:            .Caption = "TO CHANGE"
 35:            .FaceId = PASTE_MENUID
 36:            .Tag = mPASTE_TAG
 37:        End With

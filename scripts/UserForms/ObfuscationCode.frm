@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ObfuscationCode 
-   Caption         =   "Удаление форматирования:"
+   Caption         =   "Removing Formatting:"
    ClientHeight    =   7080
    ClientLeft      =   45
    ClientTop       =   375
@@ -44,7 +44,7 @@ Option Explicit
 30:    On Error GoTo ErrorHandler
 31:    If Workbooks.Count = 0 Then
 32:        Unload Me
-33:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+33:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 34:        Exit Sub
 35:    End If
 36:    With Me.cmbMain
@@ -59,7 +59,7 @@ Option Explicit
 45:    End With
 46:    Call AddListCode
 47:    lbMsg.visible = True
-48:    lbOk.Enabled = False
+48:    lbOK.Enabled = False
 49:
 50:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
 51:    Exit Sub
@@ -67,7 +67,7 @@ ErrorHandler:
 53:    Unload Me
 54:    Select Case Err.Number
         Case Else:
-56:            Call MsgBox("Ошибка! в ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+56:            Call MsgBox("Error in the ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
 57:            Call WriteErrorLog("ObfuscationCode.UserForm_Activate")
 58:    End Select
 59:    Err.Clear
@@ -111,13 +111,13 @@ ErrorHandler:
 97:        For i = 0 To .ListCount - 1
 98:            If .Selected(i) Then
 99:                lbMsg.visible = False
-100:                lbOk.Enabled = True
+100:                lbOK.Enabled = True
 101:                Exit Sub
 102:            End If
 103:        Next i
 104:    End With
 105:    lbMsg.visible = True
-106:    lbOk.Enabled = False
+106:    lbOK.Enabled = False
 107: End Sub
      Private Sub AddListCode()
 109:    Dim WB          As Workbook
@@ -188,12 +188,12 @@ Private Sub lbOK_Click()
 174:    Set WB = Workbooks(oldWbName)
 175:
 176:    Me.Hide
-177:    If MsgBox("Вы полнить удаление форматирования кода ?", vbCritical + vbYesNo, "Удаление форматирования кода:") = vbYes Then
+177:    If MsgBox("Perform code formatting removal ?", vbCritical + vbYesNo, "Removing the code formatting:") = vbYes Then
 178:
 179:        If Not WB.Name Like "*_obf_*" Then
 180:            sPath = Left(WB.FullName, Len(WB.FullName) - Len(WB.Name))
 181:            If sPath = vbNullString Then
-182:                Call MsgBox("Файл не сохранен, для продолжения необходимо сохранить файл: [ " & WB.Name & " ]", vbInformation, "Ошибка:")
+182:                Call MsgBox("The file is not saved, you need to save the file to continue: [" & WB.Name & " ]", vbInformation, "Error:")
 183:                Exit Sub
 184:            End If
 185:            arrNameFile = Split(WB.Name, ".")
@@ -229,7 +229,7 @@ Private Sub lbOK_Click()
 215:        Next i
 216:
 217:        WB.Save
-218:        Call MsgBox("Удаление форматирования [" & oldWbName & "] завершено!", vbInformation, "Удаление форматирования:")
+218:        Call MsgBox("Removing formatting [" & oldWbName & "] completed!", vbInformation, "Delete formatting:")
 219:        cmbMain.Value = WB.Name
 220:        Me.Show
 221:        Exit Sub

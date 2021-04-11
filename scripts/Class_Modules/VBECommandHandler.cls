@@ -25,7 +25,7 @@ Private Sub EvtHandler_Click(ByVal Ctrl As CommandBarButton, CancelDefault As Bo
 16:    Exit Sub
 ErrorHandler:
 18:    If Err.Number <> 0 Then
-19:        Debug.Print "ќшибка! в EvtHandler_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+19:        Debug.Print "Error in Eventhandler_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 20:        Call WriteErrorLog("EvtHandler_Click")
 21:        Err.Clear
 22:        Resume Next

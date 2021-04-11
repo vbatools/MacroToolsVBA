@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} SettingsAddCommentsProc 
-   Caption         =   "Наcтройки Комментарий Кода:"
+   Caption         =   "Settings Code Comment:"
    ClientHeight    =   3975
    ClientLeft      =   45
    ClientTop       =   330
@@ -44,7 +44,7 @@ Option Explicit
 29:        txtOther.Value = .Range(5, 1).Value
 30:        txtOther1.Value = txtOther.Value
 31:    End With
-32:    lbOk.Enabled = False
+32:    lbOK.Enabled = False
 33: End Sub
     Private Sub txtName_Change()
 35:    Call TakeSave
@@ -64,7 +64,7 @@ Option Explicit
 49:    If txtContacts1.Value <> txtContacts.Value Then Flag = True
 50:    If txtCopyright1.Value <> txtCopyright.Value Then Flag = True
 51:    If txtOther1.Value <> txtOther.Value Then Flag = True
-52:    lbOk.Enabled = Flag
+52:    lbOK.Enabled = Flag
 53: End Sub
     Private Sub lbOK_Click()
 55:    Dim TBComment As ListObject
@@ -79,6 +79,6 @@ Option Explicit
 64:        .Range(5, 1).Value = txtOther.Value
 65:        txtOther1.Value = txtOther.Value
 66:    End With
-67:    lbOk.Enabled = False
+67:    lbOK.Enabled = False
 68: End Sub
 

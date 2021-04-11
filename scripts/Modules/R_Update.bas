@@ -29,11 +29,11 @@ Public Const DayAfterCheck As Byte = 10
 28:    TextUpdate = TbRange.Cells(1, 3).Value2
 29:
 30:    If TextUpdate <> vbNullString And TbRange.Cells(1, 2).Value2 + R_Update.DayAfterCheck < Now() Then
-31:        If MsgBox("Добрый день!" & vbNewLine & _
-                   "Доступно обновление надстройки MACROTools VBA" & vbNewLine & vbNewLine & _
-                   "Для обновления перейдите на сайт VBATools.ru" & vbNewLine & vbNewLine & _
+31:        If MsgBox("Good afternoon!" & vbNewLine & _
+                   "Microtools VBA add-in update available" & vbNewLine & vbNewLine & _
+                   "To update, go to the website VBATools.ru" & vbNewLine & vbNewLine & _
                    TextUpdate & vbNewLine & vbNewLine & _
-                   "Напомнить позже ?" & vbNewLine, vbYesNo, "Обновление MACROTools") = vbYes Then
+                   "Remind me later ?" & vbNewLine, vbYesNo, "Micro tools Update") = vbYes Then
 36:            TbRange.Cells(1, 2).Value2 = Now()
 37:            Workbooks(C_Const.NAME_ADDIN & ".xlam").Save
 38:        End If
@@ -46,7 +46,7 @@ ErrorHandler:
 45:            'файл не доступен только чтение
 46:            'ни чего не делаем
 47:        Case Else:
-48:            Debug.Print "Ошибка! в ShowUpdateMsg" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+48:            Debug.Print "Error in ShowUpdates" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl
 49:            Call WriteErrorLog("ShowUpdateMsg")
 50:    End Select
 51:    Err.Clear
@@ -96,7 +96,7 @@ ErrorHandler:
 95:            'файл не доступен только чтение
 96:            'ни чего не делаем
 97:        Case Else:
-98:            Debug.Print "Ошибка! в GetUpdate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+98:            Debug.Print "Error in GetUpdate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl
 99:            Call WriteErrorLog("GetUpdate")
 100:    End Select
 101:    Err.Clear
@@ -143,3 +143,4 @@ Private Function ResponseTextHttp(ByVal URL As String) As String
 142:    End With
 143:    Set oHttp = Nothing
 End Function
+

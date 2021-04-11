@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} HiddenModule 
-   Caption         =   "Скрыть модули VBA:"
+   Caption         =   "Hide Vba Modules:"
    ClientHeight    =   7080
    ClientLeft      =   45
    ClientTop       =   375
@@ -48,7 +48,7 @@ Option Explicit
 33:        For i = 0 To .ListCount - 1
 34:            If .Selected(i) Then
 35:                lbMsg.visible = False
-36:                lbOk.Enabled = True
+36:                lbOK.Enabled = True
 37:                Call MsgSaveFile(cmbMain.Value)
 38:                Exit Sub
 39:            End If
@@ -56,7 +56,7 @@ Option Explicit
 41:    End With
 42:
 43:    lbMsg.visible = True
-44:    lbOk.Enabled = False
+44:    lbOK.Enabled = False
 45: End Sub
     Private Sub UserForm_Activate()
 47:    Me.StartUpPosition = 0
@@ -67,7 +67,7 @@ Option Explicit
 52:    On Error GoTo ErrorHandler
 53:    If Workbooks.Count = 0 Then
 54:        Unload Me
-55:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+55:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 56:        Exit Sub
 57:    End If
 58:    With Me.cmbMain
@@ -79,14 +79,14 @@ Option Explicit
 64:        Call MsgSaveFile(.Value)
 65:    End With
 66:    Call AddListCode
-67:    lbOk.Enabled = False
+67:    lbOK.Enabled = False
 68:
 69:    Exit Sub
 ErrorHandler:
 71:    Unload Me
 72:    Select Case Err.Number
         Case Else:
-74:            Call MsgBox("Ошибка! в HiddenModule.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+74:            Call MsgBox("Error in the HiddenModule.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
 75:            Call WriteErrorLog("HiddenModule.UserForm_Activate")
 76:    End Select
 77:    Err.Clear
@@ -98,10 +98,10 @@ ErrorHandler:
 83:    With WB
 84:        If .Path = vbNullString Then
 85:            lbSave.visible = True
-86:            lbOk.Enabled = False
+86:            lbOK.Enabled = False
 87:        Else
 88:            lbSave.visible = False
-89:            lbOk.Enabled = True
+89:            lbOK.Enabled = True
 90:        End If
 91:    End With
 92: End Sub
@@ -114,7 +114,7 @@ ErrorHandler:
 99:    With ListCode
 100:        .Clear
 101:        If WB.VBProject.Protection <> vbext_pp_none Then
-102:            Call MsgBox("VBA проект в книге - " & cmbMain.Value & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
+102:            Call MsgBox("VBA project in the book -" & cmbMain.Value & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Error:")
 103:            Exit Sub
 104:        End If
 105:        For iFile = 1 To WB.VBProject.VBComponents.Count
@@ -179,14 +179,14 @@ ErrorHandler:
 164:    Application.DisplayAlerts = True
 165:    Application.ScreenUpdating = True
 166:    Unload Me
-167:    Call MsgBox("Модули VBA скрыты!", vbInformation, "Скрыть модули VBA:")
+167:    Call MsgBox("VBA modules are hidden!", vbInformation, "Hide VBA modules:")
 168:
 169:    Exit Sub
 ErrorHandler:
 171:    Unload Me
 172:    Select Case Err.Number
         Case Else:
-174:            Call MsgBox("Ошибка! в HiddenModule.lbOK_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+174:            Call MsgBox("Error in HiddenModule. lbook_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
 175:            Call WriteErrorLog("HiddenModule.lbOK_Click")
 176:    End Select
 177:    Err.Clear
@@ -309,7 +309,7 @@ ErrorHandler:
 294:    Unload Me
 295:    Select Case Err.Number
         Case Else:
-297:            Call MsgBox("Ошибка! в HiddenModule.WriteBinFileHidden" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+297:            Call MsgBox("Error in the HiddenModule.WriteBinFileHidden" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
 298:            Call WriteErrorLog("HiddenModule.WriteBinFileHidden")
 299:    End Select
 300:    Err.Clear
@@ -428,7 +428,7 @@ ErrorHandler:
 413:    Close #NumFile
 414:    Exit Sub
 eByteArrayToFile:
-416:    s = "Ошибка открытия файла " & FilePath & "!"
+416:    s = "File opening error" & FilePath & "!"
 417:    MsgBox s, 16, "ByteArrayToFile"
 418: End Sub
 
@@ -464,7 +464,7 @@ ErrorHandler:
 449:    Unload Me
 450:    Select Case Err.Number
         Case Else:
-452:            Call MsgBox("Ошибка! в HiddenModule.ByteArrayToFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+452:            Call MsgBox("Error in HiddenModule.ByteArrayToFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
 453:            Call WriteErrorLog("HiddenModule.ByteArrayToFile")
 454:    End Select
 455:    Err.Clear

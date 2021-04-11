@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ModuleCommander 
-   Caption         =   "Менеджер проектов VBA:"
+   Caption         =   "VBA Project Manager:"
    ClientHeight    =   8400
    ClientLeft      =   45
    ClientTop       =   375
@@ -49,10 +49,10 @@ Private m_clsAnchors As CAnchors
 36:        .funAnchor("cmbMainCopy").AnchorStyle = enumAnchorStyleLeft Or enumAnchorStyleBottom
 37:    End With
 38:    With ListFilter1
-39:        .AddItem "Все"
-40:        .AddItem "Пустые"
-41:        .AddItem "Не пустые"
-42:        .AddItem "Сбросить все"
+39:        .AddItem "All"
+40:        .AddItem "Empty ones"
+41:        .AddItem "Not empty"
+42:        .AddItem "Reset all"
 43:    End With
 44:    With ListFilter2
 45:        .AddItem "Code Module"
@@ -67,7 +67,7 @@ Private m_clsAnchors As CAnchors
 54:    Dim vbProj      As VBIDE.VBProject
 55:    If Workbooks.Count = 0 Then
 56:        Unload Me
-57:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+57:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 58:        Exit Sub
 59:    End If
 60:    With Me.cmbMain
@@ -89,7 +89,7 @@ ErrorHandler:
 76:    Unload Me
 77:    Select Case Err.Number
         Case Else:
-79:            Call MsgBox("Ошибка! в ModuleCommander.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+79:            Call MsgBox("Error in Module Commander.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
 80:            Call WriteErrorLog("ModuleCommander.UserForm_Activate")
 81:    End Select
 82:    Err.Clear
@@ -111,7 +111,7 @@ ErrorHandler:
 98:    If cmbMain.Value <> vbNullString And lbMsg.visible = False Then
 99:        Call S_ModuleCommander.ExportAllModules(Workbooks(cmbMain.Value), SelectedListItems)
 100:    Else
-101:        Call MsgBox("Ни чего не выбрано!", vbInformation, "Экспорт проекта:")
+101:        Call MsgBox("Nothing is selected!", vbInformation, "Exporting a project:")
 102:    End If
 103:    Call AddListCode
 104:    Call FilterRun
@@ -122,14 +122,14 @@ ErrorHandler:
 109:    If cmbMain.Value <> vbNullString And lbMsg.visible = False Then
 110:        Call S_ModuleCommander.DeleteAllModulesInActiveProject(Workbooks(cmbMain.Value), SelectedListItems)
 111:    Else
-112:        Call MsgBox("Ни чего не выбрано!", vbInformation, "Удаление проекта:")
+112:        Call MsgBox("Nothing is selected!", vbInformation, "Deleting a project:")
 113:    End If
 114:    Call AddListCode
 115:    Call FilterRun
 116:    Application.ScreenUpdating = True
 117: End Sub
      Private Sub lbCopytModule_Click()
-119:    If MsgBox("Скопировать модули VBA из [" & cmbMain.Value & "] в [" & cmbMainCopy.Value & "] ?", vbYesNo + vbQuestion, "Копироание модулей VBA:") = vbNo Then Exit Sub
+119:    If MsgBox("Copy VBA modules from [" & cmbMain.Value & "] to [" & cmbMainCopy.Value & "] ?", vbYesNo + vbQuestion, "Copying VBA modules:") = vbNo Then Exit Sub
 120:    Application.ScreenUpdating = False
 121:    If cmbMain.Value <> vbNullString And cmbMainCopy.Value <> vbNullString And lbMsg.visible = False Then
 122:        Dim i       As Integer
@@ -146,9 +146,9 @@ ErrorHandler:
 133:                End If
 134:            Next i
 135:        End With
-136:        Call MsgBox("Копирование модулей VBA из [" & cmbMain.Value & "] в [" & cmbMainCopy.Value & "] выполнено", vbOKOnly + vbInformation, "Копироание модулей VBA:")
+136:        Call MsgBox("Copying VBA modules from [" & cmbMain.Value & "] to [" & cmbMainCopy.Value & "] completed", vbOKOnly + vbInformation, "Copying VBA modules:")
 137:    Else
-138:        Call MsgBox("Ни чего не выбрано!", vbInformation, "Копирование проекта:")
+138:        Call MsgBox("Nothing is selected!", vbInformation, "Copy Project:")
 139:    End If
 140:    Call AddListCode
 141:    Call FilterRun
@@ -177,13 +177,13 @@ ErrorHandler:
      Private Sub FilterRun()
 165:    Application.ScreenUpdating = False
 166:    Select Case SelectedListItem(ListFilter1)
-        Case "Все":
+        Case "All":
 168:            Call FilterAllOrEmpty(True)
-169:        Case "Сбросить все":
+169:        Case "Reset all":
 170:            Call FilterAllOrEmpty(False)
-171:        Case "Пустые":
+171:        Case "Empty ones":
 172:            Call FilterTypeModule(False)
-173:        Case "Не пустые":
+173:        Case "Not empty":
 174:            Call FilterTypeModule(True)
 175:    End Select
 176:    Application.ScreenUpdating = True
@@ -221,7 +221,7 @@ ErrorHandler:
 208:    With ListCode
 209:        For i = 0 To .ListCount - 1
 210:            If strVal = vbNullString Then
-211:                If .List(i, 3) = "пусто" Then
+211:                If .List(i, 3) = "empty empty" Then
 212:                    .Selected(i) = Not bFlag
 213:                Else
 214:                    .Selected(i) = bFlag
@@ -232,7 +232,7 @@ ErrorHandler:
 219:                Else
 220:                    .Selected(i) = False
 221:                End If
-222:                If .List(i, 3) = "пусто" And .Selected(i) = True Then
+222:                If .List(i, 3) = "empty empty" And .Selected(i) = True Then
 223:                    .Selected(i) = Not bFlag
 224:                ElseIf .Selected(i) = True Then
 225:                    .Selected(i) = bFlag
@@ -246,7 +246,7 @@ ErrorHandler:
 233:    Dim i           As Integer
 234:    With ListCode
 235:        For i = 0 To .ListCount - 1
-236:            If .List(i, 3) = "пусто" Then
+236:            If .List(i, 3) = "empty empty" Then
 237:                .Selected(i) = True
 238:            End If
 239:        Next i
@@ -287,7 +287,7 @@ ErrorHandler:
 274:                .List(iFile - 1, 1) = ComponentTypeToString(WB.VBProject.VBComponents(iFile).Type)
 275:                .List(iFile - 1, 2) = WB.VBProject.VBComponents(iFile).Name
 276:                sLineCount = ModuleLineCount(WB.VBProject.VBComponents(iFile))
-277:                If sLineCount = 0 Then sLineCount = "пусто"
+277:                If sLineCount = 0 Then sLineCount = "empty empty"
 278:                .List(iFile - 1, 3) = sLineCount
 279:            Next iFile
 280:            Arr = .List
@@ -299,7 +299,7 @@ ErrorHandler:
 286:        End With
 287:    Else
 288:        ListCode.Clear
-289:        Call MsgBox("VBA проект в книге - " & WB.Name & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
+289:        Call MsgBox("VBA project in the book -" & WB.Name & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Error:")
 290:    End If
 291:    Application.ScreenUpdating = True
 292:    Exit Sub
@@ -307,9 +307,9 @@ ErrorHandler:
 294:    Select Case Err.Number
         Case 4160:
 296:            ListCode.Clear
-297:            Call MsgBox("Ошибка! Отсутствует доступ к проекту VBA!", vbOKOnly + vbExclamation, "Ошибка:")
+297:            Call MsgBox("Error No access to the VBA project!", vbOKOnly + vbExclamation, "Error:")
 298:        Case Else:
-299:            Call MsgBox("Ошибка! в AddListCode.AddListCode" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+299:            Call MsgBox("Error in the Add List Code.AddListCode" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
 300:            Call WriteErrorLog("AddListCode.AddListCode")
 301:    End Select
 302:    Err.Clear

@@ -10,7 +10,7 @@ Attribute VB_Name = "C_Const"
 Option Private Module
 Option Explicit
 
-Public Const NAME_VERSION As String = "Обновление 2020.11"
+Public Const NAME_VERSION As String = "Update 20.11"
 
 Public FlagVisible As Boolean
 
@@ -40,11 +40,11 @@ Public Const URL_DOWNLOAD As String = URL_MAIN & "skachat/"
 Public Const URL_VK As String = "https://vk.com/vbatools"
 Public Const URL_FB As String = "https://www.facebook.com/groups/VBAToolsExcel/"
 
-Public Const sMSGVBA1 As String = "Отключено: [Доверять доступ к объектной модели VBE]" & vbLf & "Для включения перейдите: Файл->Параметры->Центр управления безопасностью->Параметры макросов" & vbLf & "И перезапустите Excel"
-Public Const sMSGVBA2 As String = "Нет доступа к объектной модели VBE"
+Public Const sMSGVBA1 As String = "Disabled: [Trust access to the VBA object model]" & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" & vbLf & "And restart Excel"
+Public Const sMSGVBA2 As String = "No access to the VBA object model"
 
 Public Const SH_SNIPPETS As String = "SHSNIPPETS"
-Public Const SH_STATISTICA As String = "Статистика"
+Public Const SH_STATISTICA As String = "Statistics"
 
 Public Const TB_SNIPPETS As String = "SNIPPETS"
 'Public Const TB_SNIPPETS_PRE As String = "SNIPPETS_PRE"
