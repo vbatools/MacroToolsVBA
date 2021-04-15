@@ -45,9 +45,9 @@ Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Sub SetInCipBoard()
-47:    Dim stxt        As String
-48:    stxt = GetSelectedLineColumnInProcedure
-49:    Call SetClipboard(stxt)
+47:    Dim sTxt        As String
+48:    sTxt = GetSelectedLineColumnInProcedure
+49:    Call SetClipboard(sTxt)
 50:    Debug.Print "The data is copied to the clipboard!"
 51: End Sub
 

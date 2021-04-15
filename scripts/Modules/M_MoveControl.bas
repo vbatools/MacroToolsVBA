@@ -149,7 +149,7 @@ ErrorHandler:
         Case 9:
             Debug.Print "To use the tool, open the View - > Properties Window"
         Case Else:
-            Debug.Print "Error in TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Debug.Print "Error in TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
             Call WriteErrorLog("TakeSelectControl")
     End Select
     Err.Clear
@@ -197,7 +197,7 @@ ErrorHandler:
             Call MsgBox("This Control name is already in use [" & sNewName & "], set a different name!", vbCritical, "The name is ambiguous:")
             Exit Sub
         Case Else:
-            Debug.Print "Error in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Debug.Print "Error in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
             Call WriteErrorLog("RenameControl")
     End Select
     Err.Clear
@@ -287,7 +287,7 @@ Public Sub AddIcon()
 ErrorHandler:
     Select Case Err.Number
         Case Else:
-            Debug.Print "Error in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Debug.Print "Error in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
             Call WriteErrorLog("AddIcon")
     End Select
     Err.Clear
@@ -295,3 +295,56 @@ End Sub
 Public Sub HelpMoveControl()
     Call URLLinks(C_Const.URL_MOVE_CNTR)
 End Sub
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Sub        : UperTextInControl - изменение регистров у контроллов на форме
+'* Created    : 13-04-2021 09:46
+'* Author     : VBATools
+'* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
+'* Copyright  : VBATools.ru
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Public Sub UperTextInControl()
+    Dim oCont As Object
+    Set oCont = TakeSelectControl
+    If oCont Is Nothing Then Exit Sub
+    
+    If PropertyIsCapiton(oCont, True) Then
+        oCont.Caption = VBA.UCase$(oCont.Caption)
+    End If
+    If PropertyIsCapiton(oCont, False) Then
+        oCont.Text = VBA.UCase$(oCont.Text)
+    End If
+    
+End Sub
+Public Sub LowerTextInControl()
+    Dim oCont As Object
+    Set oCont = TakeSelectControl
+    If oCont Is Nothing Then Exit Sub
+    
+    If PropertyIsCapiton(oCont, True) Then
+        oCont.Caption = VBA.LCase$(oCont.Caption)
+    End If
+    If PropertyIsCapiton(oCont, False) Then
+        oCont.Text = VBA.LCase$(oCont.Text)
+    End If
+    
+End Sub
+
+Public Sub UperTextInForm()
+    Dim oVBComp As VBIDE.VBComponent
+    Set oVBComp = Application.VBE.SelectedVBComponent
+    With oVBComp
+        If .Type = vbext_ct_MSForm Then
+            .Properties("Caption") = VBA.UCase$(.Properties("Caption"))
+        End If
+    End With
+End Sub
+Public Sub LowerTextInForm()
+    Dim oVBComp As VBIDE.VBComponent
+    Set oVBComp = Application.VBE.SelectedVBComponent
+    With oVBComp
+        If .Type = vbext_ct_MSForm Then
+            .Properties("Caption") = VBA.LCase$(.Properties("Caption"))
+        End If
+    End With
+End Sub
+

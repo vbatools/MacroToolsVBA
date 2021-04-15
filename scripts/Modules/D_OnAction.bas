@@ -51,7 +51,7 @@ errmsg:
 50:    If Err.Number = 91 Then
 51:        Debug.Print "Snippet not found, selected:" & str_search
 52:    Else
-53:        Debug.Print "Error in Insert Code!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+53:        Debug.Print "Error in Insert Code!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 54:        Call WriteErrorLog("InsertCode")
 55:    End If
 56:    Err.Clear

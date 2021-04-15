@@ -23,7 +23,7 @@ Option Private Module
 14:    End If
 15:    Exit Sub
 errmsg:
-17:    Debug.Print "Error in InTo File!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+17:    Debug.Print "Error in InTo File!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 18:    Call WriteErrorLog("InToFile")
 19: End Sub
     Private Sub FilenamesCollectionToPath(ByVal StrPathToFile As String)
@@ -55,13 +55,12 @@ errmsg:
 46:    Application.ScreenUpdating = True    ' отключаем обновление экрана
 47:    Exit Sub
 errmsg:
-49:    Debug.Print "Error in FilenamesCollectionToPath!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+49:    Debug.Print "Error in FilenamesCollectionToPath!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 50:    Call WriteErrorLog("FilenamesCollectionToPath")
 51: End Sub
 
     Private Function FilenamesCollection(ByVal FolderPath As String, Optional ByVal Mask As String = "", _
                 Optional ByVal SearchDeep As Long = 999) As Collection
-55:    ' © EducatedFool  excelvba.ru/code/FilenamesCollection
 56:    ' Получает в качестве параметра путь к папке FolderPath,
 57:    ' маску имени искомых файлов Mask (будут отобраны только файлы с такой маской/расширением)
 58:    ' и глубину поиска SearchDeep в подпапках (если SearchDeep=1, то подпапки не просматриваются).
@@ -75,7 +74,7 @@ errmsg:
 66:    Set FSO = Nothing: Application.StatusBar = False    ' очистка строки состояния Excel
 67:    Exit Function
 errmsg:
-69:    Debug.Print "Error in FilenamesCollection!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+69:    Debug.Print "Error in FilenamesCollection!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 70:    Call WriteErrorLog("FilenamesCollection")
 71: End Function
 

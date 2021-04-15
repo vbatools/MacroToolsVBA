@@ -92,7 +92,7 @@ errmsg:
 52:        Case 76:
 53:            Debug.Print "Module: [" & VBName & "] added to the book:" & ActiveWorkbook.Name & vbLf & "The file is not saved!"
 54:        Case Else:
-55:            Debug.Print "Error in Add Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+55:            Debug.Print "Error in Add Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 56:            Call WriteErrorLog("AddModuleToProject")
 57:    End Select
 58: End Sub
@@ -171,7 +171,7 @@ ErrorHandler:
 131:        Case 76:
 132:            Debug.Print "Module: [" & VBName & "] has been removed, from the workbook:" & ActiveWorkbook.Name & vbLf & "The file is not saved!"
 133:        Case Else:
-134:            Debug.Print "Error in Delete Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+134:            Debug.Print "Error in Delete Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 135:            Call WriteErrorLog("DeleteModuleToProject")
 136:    End Select
 137:    Err.Clear
@@ -189,7 +189,7 @@ ErrorHandler:
         Case 76:
 150:            AddFileName = ActiveWorkbook.Name
 151:        Case Else:
-152:            Debug.Print "Error in Add FileName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+152:            Debug.Print "Error in Add FileName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 153:            Call WriteErrorLog("AddFileName")
 154:    End Select
 155:    Err.Clear
@@ -249,7 +249,7 @@ ErrorHandler:
         Case 76:
 210:            Call MsgBox("The file is not saved, save the file!", vbCritical, "Error:")
 211:        Case Else:
-212:            Debug.Print "Error in Copy Module Form" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+212:            Debug.Print "Error in Copy Module Form" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 213:            Call WriteErrorLog("CopyModuleForm")
 214:    End Select
 215:    Err.Clear

@@ -34,7 +34,7 @@ End Type
 33:    Set Form = New AddStatistic
 34:    With Form
 35:        .Caption = "Code base data collection:"
-36:        .lbOK.Caption = "Parse code"
+36:        .lbOK.Caption = "PARSE CODE"
 37:        .chQuestion.visible = True
 38:        .chQuestion.Value = True
 39:        .chQuestion.Caption = "Collect string values?"
@@ -50,7 +50,7 @@ End Type
 ErrStartParser:
 50:    Application.Calculation = xlCalculationAutomatic
 51:    Application.ScreenUpdating = True
-52:    Call MsgBox("Error in N_ObfParserVBA. Start Parser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+52:    Call MsgBox("Error in N_ObfParserVBA. Start Parser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 53:    Call WriteErrorLog("AddShapeStatistic")
 54: End Sub
 
@@ -439,7 +439,7 @@ ErrStartParser:
 438: End Function
 
      Private Sub ParserStringInCode(ByVal sSTR As String, ByVal sNameSub As String, ByRef objVBC As VBIDE.VBComponent, ByRef objDicStr As Scripting.Dictionary)
-441:    Dim stxt        As String
+441:    Dim sTxt        As String
 442:    Dim arrStr      As Variant
 443:    Dim Arr         As Variant
 444:    Dim sReplace    As String
@@ -451,9 +451,9 @@ ErrStartParser:
 450:
 451:    If sSTR Like "*" & VBA.Chr$(34) & "*" And sSTR <> vbNullString Then
 452:
-453:        stxt = VBA.Right$(sSTR, VBA.Len(sSTR) - VBA.InStr(1, sSTR, VBA.Chr$(34)) + 1)
-454:        stxt = VBA.Replace(stxt, VBA.Chr$(34) & VBA.Chr$(34), CHAR_REPLACE)
-455:        arrStr = VBA.Split(stxt, VBA.Chr$(34))
+453:        sTxt = VBA.Right$(sSTR, VBA.Len(sSTR) - VBA.InStr(1, sSTR, VBA.Chr$(34)) + 1)
+454:        sTxt = VBA.Replace(sTxt, VBA.Chr$(34) & VBA.Chr$(34), CHAR_REPLACE)
+455:        arrStr = VBA.Split(sTxt, VBA.Chr$(34))
 456:
 457:        sArray = VBA.Left$(sSTR, VBA.InStr(1, sSTR, VBA.Chr$(34)) - 1)
 458:        If sArray Like "* = Array(" Then
@@ -468,14 +468,14 @@ ErrStartParser:
 467:                If sNameSub = vbNullString Then sNameSub = "Declaration" & CHR_TO
 468:
 469:                sReplace = VBA.Replace(arrStr(i), CHAR_REPLACE, VBA.Chr$(34) & VBA.Chr$(34))
-470:                stxt = objVBC.Name & CHR_TO & sNameSub & CHR_TO & VBA.Chr$(34) & sReplace & VBA.Chr$(34) & CHR_TO & sArray    '& CHR_TO & sYesNo
+470:                sTxt = objVBC.Name & CHR_TO & sNameSub & CHR_TO & VBA.Chr$(34) & sReplace & VBA.Chr$(34) & CHR_TO & sArray    '& CHR_TO & sYesNo
 471:                If arrStr(i + 1) Like "*: * = *" Then sArray = vbNullString
 472:                If arrStr(i + 1) Like "*: * = Array(*" Then
 473:                    sArray = VBA.Replace(arrStr(i + 1), ": ", vbNullString)
 474:                    sArray = VBA.Replace(sArray, " = Array(", vbNullString)
 475:                    sArray = VBA.Replace(sArray, ")", vbNullString)
 476:                End If
-477:                If objDicStr.Exists(stxt) = False Then objDicStr.Add stxt, objVBC.Type
+477:                If objDicStr.Exists(sTxt) = False Then objDicStr.Add sTxt, objVBC.Type
 478:            End If
 479:        Next i
 480:        sArray = vbNullString
@@ -493,7 +493,7 @@ ErrStartParser:
 '* ByVal sTxt As String : - строка кода
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function ParserStrDimConst(ByVal stxt As String, ByVal sNameSub As String, ByVal sNameMod As String) As String
+     Private Function ParserStrDimConst(ByVal sTxt As String, ByVal sNameSub As String, ByVal sNameMod As String) As String
 496:    Dim sTemp       As String
 497:    Dim sWord       As String
 498:    Dim sWordTemp   As String
@@ -502,7 +502,7 @@ ErrStartParser:
 501:    Dim arrWord     As Variant
 502:    Dim sType       As String
 503:
-504:    sTemp = C_PublicFunctions.TrimSpace(stxt)
+504:    sTemp = C_PublicFunctions.TrimSpace(sTxt)
 505:    sType = "Dim"
 506:    If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
 507:        'если есть коментарий в строке кода то удаляем его
@@ -843,123 +843,123 @@ tryAgain:
 842:    ReplaceType = sVar
 843: End Function
 
-     Private Function WorkBookAndSheetsEvents(ByVal stxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
+     Private Function WorkBookAndSheetsEvents(ByVal sTxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
 846:    Dim Flag        As Boolean
 847:    Flag = False
 848:    'только для модулей листов, книг и класов
 849:    If TypeModule = vbext_ct_Document Or TypeModule = vbext_ct_ClassModule Then
 850:        Select Case True
-            Case stxt Like "*_Activate(*": Flag = True
-852:            Case stxt Like "*_AddinInstall(*": Flag = True
-853:            Case stxt Like "*_AddinUninstall(*": Flag = True
-854:            Case stxt Like "*_AfterSave(*": Flag = True
-855:            Case stxt Like "*_AfterXmlExport(*": Flag = True
-856:            Case stxt Like "*_AfterXmlImport(*": Flag = True
-857:            Case stxt Like "*_BeforeClose(*": Flag = True
-858:            Case stxt Like "*_BeforeDoubleClick(*": Flag = True
-859:            Case stxt Like "*_BeforePrint(*": Flag = True
-860:            Case stxt Like "*_BeforeRightClick(*": Flag = True
-861:            Case stxt Like "*_BeforeSave(*": Flag = True
-862:            Case stxt Like "*_BeforeXmlExport(*": Flag = True
-863:            Case stxt Like "*_BeforeXmlImport(*": Flag = True
-864:            Case stxt Like "*_Calculate(*": Flag = True
-865:            Case stxt Like "*_Change(*": Flag = True
-866:            Case stxt Like "*_Deactivate(*": Flag = True
-867:            Case stxt Like "*_FollowHyperlink(*": Flag = True
-868:            Case stxt Like "*_MouseDown(*": Flag = True
-869:            Case stxt Like "*_MouseMove(*": Flag = True
-870:            Case stxt Like "*_MouseUp(*": Flag = True
-871:            Case stxt Like "*_NewChart(*": Flag = True
-872:            Case stxt Like "*_NewSheet(*": Flag = True
-873:            Case stxt Like "*_Open(*": Flag = True
-874:            Case stxt Like "*_PivotTableAfterValueChange(*": Flag = True
-875:            Case stxt Like "*_PivotTableBeforeAllocateChanges(*": Flag = True
-876:            Case stxt Like "*_PivotTableBeforeCommitChanges(*": Flag = True
-877:            Case stxt Like "*_PivotTableBeforeDiscardChanges(*": Flag = True
-878:            Case stxt Like "*_PivotTableChangeSync(*": Flag = True
-879:            Case stxt Like "*_PivotTableCloseConnection(*": Flag = True
-880:            Case stxt Like "*_PivotTableOpenConnection(*": Flag = True
-881:            Case stxt Like "*_PivotTableUpdate(*": Flag = True
-882:            Case stxt Like "*_Resize(*": Flag = True
-883:            Case stxt Like "*_RowsetComplete(*": Flag = True
-884:            Case stxt Like "*_SelectionChange(*": Flag = True
-885:            Case stxt Like "*_SeriesChange(*": Flag = True
-886:            Case stxt Like "*_SheetActivate(*": Flag = True
-887:            Case stxt Like "*_SheetBeforeDoubleClick(*": Flag = True
-888:            Case stxt Like "*_SheetBeforeRightClick(*": Flag = True
-889:            Case stxt Like "*_SheetCalculate(*": Flag = True
-890:            Case stxt Like "*_SheetChange(*": Flag = True
-891:            Case stxt Like "*_SheetDeactivate(*": Flag = True
-892:            Case stxt Like "*_SheetFollowHyperlink(*": Flag = True
-893:            Case stxt Like "*_SheetPivotTableAfterValueChange(*": Flag = True
-894:            Case stxt Like "*_SheetPivotTableBeforeAllocateChanges(*": Flag = True
-895:            Case stxt Like "*_SheetPivotTableBeforeCommitChanges(*": Flag = True
-896:            Case stxt Like "*_SheetPivotTableBeforeDiscardChanges(*": Flag = True
-897:            Case stxt Like "*_SheetPivotTableChangeSync(*": Flag = True
-898:            Case stxt Like "*_SheetPivotTableUpdate(*": Flag = True
-899:            Case stxt Like "*_SheetSelectionChange(*": Flag = True
-900:            Case stxt Like "*_Sync(*": Flag = True
-901:            Case stxt Like "*_WindowActivate(*": Flag = True
-902:            Case stxt Like "*_WindowDeactivate(*": Flag = True
-903:            Case stxt Like "*_WindowResize(*": Flag = True
-904:            Case stxt Like "*_NewWorkbook(*": Flag = True
-905:            Case stxt Like "*_WorkbookActivate(*": Flag = True
-906:            Case stxt Like "*_WorkbookAddinInstall(*": Flag = True
-907:            Case stxt Like "*_WorkbookAddinUninstall(*": Flag = True
-908:            Case stxt Like "*_WorkbookAfterSave(*": Flag = True
-909:            Case stxt Like "*_WorkbookAfterXmlExport(*": Flag = True
-910:            Case stxt Like "*_WorkbookAfterXmlImport(*": Flag = True
-911:            Case stxt Like "*_WorkbookBeforeClose(*": Flag = True
-912:            Case stxt Like "*_WorkbookBeforePrint(*": Flag = True
-913:            Case stxt Like "*_WorkbookBeforeSave(*": Flag = True
-914:            Case stxt Like "*_WorkbookBeforeXmlExport(*": Flag = True
-915:            Case stxt Like "*_WorkbookBeforeXmlImport(*": Flag = True
-916:            Case stxt Like "*_WorkbookDeactivate(*": Flag = True
-917:            Case stxt Like "*_WorkbookModelChange(*": Flag = True
-918:            Case stxt Like "*_WorkbookNewChart(*": Flag = True
-919:            Case stxt Like "*_WorkbookNewSheet(*": Flag = True
-920:            Case stxt Like "*_WorkbookOpen(*": Flag = True
-921:            Case stxt Like "*_WorkbookPivotTableCloseConnection(*": Flag = True
-922:            Case stxt Like "*_WorkbookPivotTableOpenConnection(*": Flag = True
-923:            Case stxt Like "*_WorkbookRowsetComplete(*": Flag = True
-924:            Case stxt Like "*_WorkbookSync(*": Flag = True
+            Case sTxt Like "*_Activate(*": Flag = True
+852:            Case sTxt Like "*_AddinInstall(*": Flag = True
+853:            Case sTxt Like "*_AddinUninstall(*": Flag = True
+854:            Case sTxt Like "*_AfterSave(*": Flag = True
+855:            Case sTxt Like "*_AfterXmlExport(*": Flag = True
+856:            Case sTxt Like "*_AfterXmlImport(*": Flag = True
+857:            Case sTxt Like "*_BeforeClose(*": Flag = True
+858:            Case sTxt Like "*_BeforeDoubleClick(*": Flag = True
+859:            Case sTxt Like "*_BeforePrint(*": Flag = True
+860:            Case sTxt Like "*_BeforeRightClick(*": Flag = True
+861:            Case sTxt Like "*_BeforeSave(*": Flag = True
+862:            Case sTxt Like "*_BeforeXmlExport(*": Flag = True
+863:            Case sTxt Like "*_BeforeXmlImport(*": Flag = True
+864:            Case sTxt Like "*_Calculate(*": Flag = True
+865:            Case sTxt Like "*_Change(*": Flag = True
+866:            Case sTxt Like "*_Deactivate(*": Flag = True
+867:            Case sTxt Like "*_FollowHyperlink(*": Flag = True
+868:            Case sTxt Like "*_MouseDown(*": Flag = True
+869:            Case sTxt Like "*_MouseMove(*": Flag = True
+870:            Case sTxt Like "*_MouseUp(*": Flag = True
+871:            Case sTxt Like "*_NewChart(*": Flag = True
+872:            Case sTxt Like "*_NewSheet(*": Flag = True
+873:            Case sTxt Like "*_Open(*": Flag = True
+874:            Case sTxt Like "*_PivotTableAfterValueChange(*": Flag = True
+875:            Case sTxt Like "*_PivotTableBeforeAllocateChanges(*": Flag = True
+876:            Case sTxt Like "*_PivotTableBeforeCommitChanges(*": Flag = True
+877:            Case sTxt Like "*_PivotTableBeforeDiscardChanges(*": Flag = True
+878:            Case sTxt Like "*_PivotTableChangeSync(*": Flag = True
+879:            Case sTxt Like "*_PivotTableCloseConnection(*": Flag = True
+880:            Case sTxt Like "*_PivotTableOpenConnection(*": Flag = True
+881:            Case sTxt Like "*_PivotTableUpdate(*": Flag = True
+882:            Case sTxt Like "*_Resize(*": Flag = True
+883:            Case sTxt Like "*_RowsetComplete(*": Flag = True
+884:            Case sTxt Like "*_SelectionChange(*": Flag = True
+885:            Case sTxt Like "*_SeriesChange(*": Flag = True
+886:            Case sTxt Like "*_SheetActivate(*": Flag = True
+887:            Case sTxt Like "*_SheetBeforeDoubleClick(*": Flag = True
+888:            Case sTxt Like "*_SheetBeforeRightClick(*": Flag = True
+889:            Case sTxt Like "*_SheetCalculate(*": Flag = True
+890:            Case sTxt Like "*_SheetChange(*": Flag = True
+891:            Case sTxt Like "*_SheetDeactivate(*": Flag = True
+892:            Case sTxt Like "*_SheetFollowHyperlink(*": Flag = True
+893:            Case sTxt Like "*_SheetPivotTableAfterValueChange(*": Flag = True
+894:            Case sTxt Like "*_SheetPivotTableBeforeAllocateChanges(*": Flag = True
+895:            Case sTxt Like "*_SheetPivotTableBeforeCommitChanges(*": Flag = True
+896:            Case sTxt Like "*_SheetPivotTableBeforeDiscardChanges(*": Flag = True
+897:            Case sTxt Like "*_SheetPivotTableChangeSync(*": Flag = True
+898:            Case sTxt Like "*_SheetPivotTableUpdate(*": Flag = True
+899:            Case sTxt Like "*_SheetSelectionChange(*": Flag = True
+900:            Case sTxt Like "*_Sync(*": Flag = True
+901:            Case sTxt Like "*_WindowActivate(*": Flag = True
+902:            Case sTxt Like "*_WindowDeactivate(*": Flag = True
+903:            Case sTxt Like "*_WindowResize(*": Flag = True
+904:            Case sTxt Like "*_NewWorkbook(*": Flag = True
+905:            Case sTxt Like "*_WorkbookActivate(*": Flag = True
+906:            Case sTxt Like "*_WorkbookAddinInstall(*": Flag = True
+907:            Case sTxt Like "*_WorkbookAddinUninstall(*": Flag = True
+908:            Case sTxt Like "*_WorkbookAfterSave(*": Flag = True
+909:            Case sTxt Like "*_WorkbookAfterXmlExport(*": Flag = True
+910:            Case sTxt Like "*_WorkbookAfterXmlImport(*": Flag = True
+911:            Case sTxt Like "*_WorkbookBeforeClose(*": Flag = True
+912:            Case sTxt Like "*_WorkbookBeforePrint(*": Flag = True
+913:            Case sTxt Like "*_WorkbookBeforeSave(*": Flag = True
+914:            Case sTxt Like "*_WorkbookBeforeXmlExport(*": Flag = True
+915:            Case sTxt Like "*_WorkbookBeforeXmlImport(*": Flag = True
+916:            Case sTxt Like "*_WorkbookDeactivate(*": Flag = True
+917:            Case sTxt Like "*_WorkbookModelChange(*": Flag = True
+918:            Case sTxt Like "*_WorkbookNewChart(*": Flag = True
+919:            Case sTxt Like "*_WorkbookNewSheet(*": Flag = True
+920:            Case sTxt Like "*_WorkbookOpen(*": Flag = True
+921:            Case sTxt Like "*_WorkbookPivotTableCloseConnection(*": Flag = True
+922:            Case sTxt Like "*_WorkbookPivotTableOpenConnection(*": Flag = True
+923:            Case sTxt Like "*_WorkbookRowsetComplete(*": Flag = True
+924:            Case sTxt Like "*_WorkbookSync(*": Flag = True
 925:        End Select
 926:    End If
 927:    WorkBookAndSheetsEvents = Flag
 928: End Function
 
-Private Function UserFormsEvents(ByVal stxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
+Private Function UserFormsEvents(ByVal sTxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
 931:    Dim Flag        As Boolean
 932:    Flag = False
 933:    'только для событий юзер форм и класов
 934:    If TypeModule = vbext_ct_MSForm Or TypeModule = vbext_ct_ClassModule Then
 935:        Select Case True
-            Case stxt Like "*_AfterUpdate(*": Flag = True
-937:            Case stxt Like "*_BeforeDragOver(*": Flag = True
-938:            Case stxt Like "*_BeforeDropOrPaste(*": Flag = True
-939:            Case stxt Like "*_BeforeUpdate(*": Flag = True
-940:            Case stxt Like "*_Change(*": Flag = True
-941:            Case stxt Like "*_Click(*": Flag = True
-942:            Case stxt Like "*_DblClick(*": Flag = True
-943:            Case stxt Like "*_Deactivate(*": Flag = True
-944:            Case stxt Like "*_DropButtonClick(*": Flag = True
-945:            Case stxt Like "*_Enter(*": Flag = True
-946:            Case stxt Like "*_Error(*": Flag = True
-947:            Case stxt Like "*_Exit(*": Flag = True
-948:            Case stxt Like "*_Initialize(*": Flag = True
-949:            Case stxt Like "*_KeyDown(*": Flag = True
-950:            Case stxt Like "*_KeyPress(*": Flag = True
-951:            Case stxt Like "*_KeyUp(*": Flag = True
-952:            Case stxt Like "*_Layout(*": Flag = True
-953:            Case stxt Like "*_MouseDown(*": Flag = True
-954:            Case stxt Like "*_MouseMove(*": Flag = True
-955:            Case stxt Like "*_MouseUp(*": Flag = True
-956:            Case stxt Like "*_QueryClose(*": Flag = True
-957:            Case stxt Like "*_RemoveControl(*": Flag = True
-958:            Case stxt Like "*_Resize(*": Flag = True
-959:            Case stxt Like "*_Scroll(*": Flag = True
-960:            Case stxt Like "*_Terminate(*": Flag = True
-961:            Case stxt Like "*_Zoom(*": Flag = True
+            Case sTxt Like "*_AfterUpdate(*": Flag = True
+937:            Case sTxt Like "*_BeforeDragOver(*": Flag = True
+938:            Case sTxt Like "*_BeforeDropOrPaste(*": Flag = True
+939:            Case sTxt Like "*_BeforeUpdate(*": Flag = True
+940:            Case sTxt Like "*_Change(*": Flag = True
+941:            Case sTxt Like "*_Click(*": Flag = True
+942:            Case sTxt Like "*_DblClick(*": Flag = True
+943:            Case sTxt Like "*_Deactivate(*": Flag = True
+944:            Case sTxt Like "*_DropButtonClick(*": Flag = True
+945:            Case sTxt Like "*_Enter(*": Flag = True
+946:            Case sTxt Like "*_Error(*": Flag = True
+947:            Case sTxt Like "*_Exit(*": Flag = True
+948:            Case sTxt Like "*_Initialize(*": Flag = True
+949:            Case sTxt Like "*_KeyDown(*": Flag = True
+950:            Case sTxt Like "*_KeyPress(*": Flag = True
+951:            Case sTxt Like "*_KeyUp(*": Flag = True
+952:            Case sTxt Like "*_Layout(*": Flag = True
+953:            Case sTxt Like "*_MouseDown(*": Flag = True
+954:            Case sTxt Like "*_MouseMove(*": Flag = True
+955:            Case sTxt Like "*_MouseUp(*": Flag = True
+956:            Case sTxt Like "*_QueryClose(*": Flag = True
+957:            Case sTxt Like "*_RemoveControl(*": Flag = True
+958:            Case sTxt Like "*_Resize(*": Flag = True
+959:            Case sTxt Like "*_Scroll(*": Flag = True
+960:            Case sTxt Like "*_Terminate(*": Flag = True
+961:            Case sTxt Like "*_Zoom(*": Flag = True
 962:        End Select
 963:    End If
 964:    UserFormsEvents = Flag

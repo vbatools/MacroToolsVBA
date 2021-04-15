@@ -32,7 +32,7 @@ Option Private Module
 ErrStartParser:
 25:    Application.Calculation = xlCalculationAutomatic
 26:    Application.ScreenUpdating = True
-27:    Call MsgBox("Error in N_ObfParserVBA. Start Parser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+27:    Call MsgBox("Error in N_ObfParserVBA. Start Parser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 28:    Call WriteErrorLog("AddShapeStatistic")
 29: End Sub
 
@@ -65,7 +65,7 @@ ErrStartParser:
 57:    Application.EnableEvents = True
 58:    Application.Calculation = xlCalculationAutomatic
 59:    Application.ScreenUpdating = True
-60:    Call MsgBox("Error in Main Obfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+60:    Call MsgBox("Error in Main Obfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 61: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

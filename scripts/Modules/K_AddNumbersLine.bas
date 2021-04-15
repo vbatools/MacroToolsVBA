@@ -36,7 +36,7 @@ ErrorHandler:
         Case 91:
 36:            Exit Sub
 37:        Case Else:
-38:            Debug.Print "Error in PadlineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+38:            Debug.Print "Error in PadlineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 39:            Call WriteErrorLog("AddLineNumbers_")
 40:    End Select
 41:    Err.Clear
@@ -62,7 +62,7 @@ ErrorHandler:
         Case 91:
 62:            Exit Sub
 63:        Case Else:
-64:            Debug.Print "Error in RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+64:            Debug.Print "Error in RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 65:            Call WriteErrorLog("RemoveLineNumbers_")
 66:    End Select
 67:    Err.Clear

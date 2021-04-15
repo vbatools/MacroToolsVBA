@@ -262,22 +262,22 @@ Option Explicit
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function REG_GetValueByNumber(ByVal Text As String, ByVal Pattern As String, Optional NumberOfSearch As Integer = 0, Optional Separator As String = " ", Optional SerchAll As Boolean = True, Optional CaseWord As Boolean = False, Optional MultiLine As Boolean = False) As Variant
 263:    Dim ObjColl     As MatchCollection
-264:    Dim stxt        As String
+264:    Dim sTxt        As String
 265:    Dim i           As Integer
 266:    Set ObjColl = RegExpExecuteCollection(Text, Pattern, SerchAll, CaseWord, MultiLine)
 267:    With ObjColl
 268:        If .Count > 0 Then
 269:            If NumberOfSearch > 0 Then
-270:                stxt = .Item(NumberOfSearch - 1)
+270:                sTxt = .Item(NumberOfSearch - 1)
 271:            Else
 272:                For i = 0 To .Count - 1
-273:                    stxt = stxt & Separator & .Item(i)
+273:                    sTxt = sTxt & Separator & .Item(i)
 274:                Next i
-275:                stxt = VBA.Right$(stxt, VBA.Len(stxt) - VBA.Len(Separator))
+275:                sTxt = VBA.Right$(sTxt, VBA.Len(sTxt) - VBA.Len(Separator))
 276:            End If
 277:        End If
 278:    End With
-279:    REG_GetValueByNumber = stxt
+279:    REG_GetValueByNumber = sTxt
 280: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

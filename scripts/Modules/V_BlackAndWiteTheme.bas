@@ -55,7 +55,7 @@ Private Const FORE_COLOR_WHITE_THEME As String = "0 0 5 0 1 10 14 0 0 0 0 0 0 0 
 54:
 55:    Exit Sub
 ErrorHandler:
-57:    Call MsgBox("Error! in V_Black And White Theme.Change Color Theme" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+57:    Call MsgBox("Error! in V_Black And White Theme.Change Color Theme" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 58:    Call WriteErrorLog("V_BlackAndWiteTheme.ChangeColorTheme")
 59: End Sub
 

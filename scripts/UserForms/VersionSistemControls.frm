@@ -163,7 +163,7 @@ End Enum
 148:
 149:    Exit Sub
 ErrorHandler:
-151:    Debug.Print "Error in VersionSistemControls. lbAddSource_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+151:    Debug.Print "Error in VersionSistemControls. lbAddSource_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 152:    Call WriteErrorLog("VersionSistemControls.lbAddSource_Click")
 153: End Sub
      Private Sub lbChoseFile_Click()
@@ -202,7 +202,7 @@ ErrorHandler:
 187:
 188:    Exit Sub
 ErrorHandler:
-190:    Debug.Print "Error in Version SystemControls.lbOpenFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+190:    Debug.Print "Error in Version SystemControls.lbOpenFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 191:    Call WriteErrorLog("VersionSistemControls.lbOpenFileVersion_Click")
 192: End Sub
      Private Sub lbLoadFileVersion_Click()
@@ -248,7 +248,7 @@ ErrorHandler:
 233:
 234:    Exit Sub
 ErrorHandler:
-236:    Debug.Print "Error in VersionSistemControls.lbLoadFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+236:    Debug.Print "Error in VersionSistemControls.lbLoadFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 237:    Call WriteErrorLog("VersionSistemControls.lbLoadFileVersion_Click")
 238: End Sub
      Private Sub ListVersion_Click()
@@ -264,7 +264,7 @@ ErrorHandler:
 249:
 250:    Exit Sub
 ErrorHandler:
-252:    Debug.Print "Error d Version SystemControls.ListVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+252:    Debug.Print "Error d Version SystemControls.ListVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 253:    Call WriteErrorLog("VersionSistemControls.ListVersion_Click")
 254: End Sub
      Private Sub cmbFile_Change()
@@ -327,7 +327,7 @@ ErrorHandler:
 312:    Call ChangeColor
 313:    Exit Sub
 ErrorHandler:
-315:    Debug.Print "Error in VersionSistemControls.UserForm_Initialize" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+315:    Debug.Print "Error in VersionSistemControls.UserForm_Initialize" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 316:    Call WriteErrorLog("VersionSistemControls.UserForm_Initialize")
 317: End Sub
      Private Sub UserForm_Terminate()
@@ -380,7 +380,7 @@ ErrorHandler:
 365:
 366:    Exit Sub
 ErrorHandler:
-368:    Debug.Print "Error in Version SystemControls.CheckSourcePath" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+368:    Debug.Print "Error in Version SystemControls.CheckSourcePath" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 369:    Call WriteErrorLog("VersionSistemControls.CheckSourcePath")
 370: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -417,7 +417,7 @@ ErrorHandler:
 402:
 403:    Exit Sub
 ErrorHandler:
-405:    Debug.Print "Error in VersionSistemControls.RefrashListVersion" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+405:    Debug.Print "Error in VersionSistemControls.RefrashListVersion" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 406:    Call WriteErrorLog("VersionSistemControls.RefrashListVersion")
 407: End Sub
 
@@ -445,7 +445,7 @@ ErrorHandler:
 430:    Exit Function
 ErrorHandler:
 432:    GetNomerItemSelectedList = -1
-433:    Debug.Print "Error in VersionSistemControls.Get NumberItemSelectedList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+433:    Debug.Print "Error in VersionSistemControls.Get NumberItemSelectedList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 434:    Call WriteErrorLog("VersionSistemControls.GetNomerItemSelectedList")
 435: End Function
 
@@ -534,7 +534,7 @@ errmsg:
 519:    AddListModuleName = sTemp
 520:    Exit Function
 ErrorHandler:
-522:    Debug.Print "Error in VersionSistemControls.AddListModuleName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+522:    Debug.Print "Error in VersionSistemControls.AddListModuleName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 523:    Call WriteErrorLog("VersionSistemControls.AddListModuleName")
 524: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -570,7 +570,7 @@ ErrorHandler:
 555:
 556:    Exit Function
 ErrorHandler:
-558:    Debug.Print "Error in VersionSistemControls.Add CommentForModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+558:    Debug.Print "Error in VersionSistemControls.Add CommentForModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 559:    Call WriteErrorLog("VersionSistemControls.AddCommentForModule")
 560: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -616,7 +616,7 @@ ErrorHandler:
 601:    Set objModuleWB = Nothing
 602:    Exit Sub
 ErrorHandler:
-604:    Debug.Print "Error in VersionSistemControls.AddCommentVSC" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+604:    Debug.Print "Error in VersionSistemControls.AddCommentVSC" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 605:    Call WriteErrorLog("VersionSistemControls.AddCommentVSC")
 606: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -633,7 +633,7 @@ Private Function addString() As String
 618:    addString = "'" & strTemp & " VSC VBATools " & strTemp
 619:    Exit Function
 ErrorHandler:
-621:    Debug.Print "Error in VersionSistemControls.AddString" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+621:    Debug.Print "Error in VersionSistemControls.AddString" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 622:    Call WriteErrorLog("VersionSistemControls.AddString")
 End Function
 

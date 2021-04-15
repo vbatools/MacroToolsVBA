@@ -22,7 +22,7 @@ Public Sub AddShapeStatistic()
 13:
 14:    Set fForm = New AddStatistic
 15:    With fForm
-16:        .lbOK.Caption = "TO CREATE"
+16:        .lbOK.Caption = "CREATE"
 17:        .Show
 18:        wb_name = .cmbMain.Value
 19:        If wb_name = vbNullString Then Exit Sub
@@ -73,7 +73,7 @@ errmsg:
 64:        Resume Next
 65:    Else
 66:        Application.ScreenUpdating = True
-67:        Call MsgBox("Error in AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+67:        Call MsgBox("Error in AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 68:        Call WriteErrorLog("AddShapeStatistic")
 69:    End If
 End Sub

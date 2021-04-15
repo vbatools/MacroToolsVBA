@@ -97,7 +97,7 @@ ErrorHandler:
         Case 91:
 89:            Exit Sub
 90:        Case Else:
-91:            Debug.Print "Error in Rebuild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+91:            Debug.Print "Error in Rebuild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 92:            Call WriteErrorLog("ReBild")
 93:    End Select
 94:    Err.Clear
@@ -685,7 +685,7 @@ PTR_REPLACE_LINE:
 674:        'And strip comments
 675:        i = InStr(1, sLine, "'")
 676:        If i > 0 Then sLine = Left$(sLine, i - 1)
-677:        ' Do we have a Then statement in the line.  Adding a space on the
+677:        ' Do we have a Then statement in the line .  Adding a space on the
 678:        ' end of the test means we can test for Then being both within or
 679:        ' at the end of the line
 680:        sLine = " " & sLine & " "

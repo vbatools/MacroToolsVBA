@@ -89,7 +89,7 @@ ErrorHandler:
 76:    Unload Me
 77:    Select Case Err.Number
         Case Else:
-79:            Call MsgBox("Error in Module Commander.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
+79:            Call MsgBox("Error in Module Commander.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
 80:            Call WriteErrorLog("ModuleCommander.UserForm_Activate")
 81:    End Select
 82:    Err.Clear
@@ -309,7 +309,7 @@ ErrorHandler:
 296:            ListCode.Clear
 297:            Call MsgBox("Error No access to the VBA project!", vbOKOnly + vbExclamation, "Error:")
 298:        Case Else:
-299:            Call MsgBox("Error in the Add List Code.AddListCode" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
+299:            Call MsgBox("Error in the Add List Code.AddListCode" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
 300:            Call WriteErrorLog("AddListCode.AddListCode")
 301:    End Select
 302:    Err.Clear

@@ -151,7 +151,7 @@ Dim Flag            As Boolean
 errmsg:
 151:    Select Case Err.Number
         Case Else
-153:            Call MsgBox("Error in DeletePaswortSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+153:            Call MsgBox("Error in DeletePaswortSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 154:            Call WriteErrorLog("DeletePaswortSheets")
 155:    End Select
 156:    Application.ScreenUpdating = True
@@ -206,7 +206,7 @@ errmsg:
 errmsg:
 206:    Select Case Err.Number
         Case Else
-208:            Call MsgBox("Error in XMLFileDelNodes" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+208:            Call MsgBox("Error in XMLFileDelNodes" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 209:            Call WriteErrorLog("XMLFileDelNodes")
 210:    End Select
 211: End Sub
@@ -233,7 +233,7 @@ errmsg:
 errmsg:
 233:    Select Case Err.Number
         Case Else
-235:            Call MsgBox("Error in DelPasswordVBAProjectUnisible" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+235:            Call MsgBox("Error in DelPasswordVBAProjectUnisible" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 236:            Call WriteErrorLog("DelPasswordVBAProjectUnivable")
 237:    End Select
 238: End Sub
@@ -256,7 +256,7 @@ errmsg:
 errmsg:
 256:    Select Case Err.Number
         Case Else
-258:            Call MsgBox("Error in WriteBinFileVBAProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+258:            Call MsgBox("Error in WriteBinFileVBAProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 259:            Call WriteErrorLog("WriteBinFileVBAProject")
 260:    End Select
 261:    Set cEditOpenXML = Nothing
@@ -422,7 +422,7 @@ errmsg:
 errmsg:
 422:    Select Case Err.Number
         Case Else
-424:            Call MsgBox("Error in AddModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+424:            Call MsgBox("Error in AddModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 425:            Call WriteErrorLog("AddModule")
 426:    End Select
 427:    MyExcel.Quit
@@ -446,7 +446,7 @@ errmsg:
 445:            'ничего не делаем
 446:            Err.Clear
 447:        Case Else
-448:            Call MsgBox("Error in Add Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Error:")
+448:            Call MsgBox("Error in Add Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
 449:            Call WriteErrorLog("AddModuleToProject")
 450:    End Select
 451:    Set vbComp = Nothing

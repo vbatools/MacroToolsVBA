@@ -66,7 +66,7 @@ errmsg:
 57:        Err.Clear
 58:        Resume Next
 59:    Else
-60:        Call MsgBox("Error in I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+60:        Call MsgBox("Error in I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 61:        Call WriteErrorLog("I_StatisticVBAProj.AddSheetStatistica")
 62:    End If
 63:    Application.DisplayAlerts = True
@@ -250,7 +250,7 @@ Err_msg_WSN:
 241:        Case 9:
 242:            Call MsgBox("Invalid value entered in the file name: [" & WorkSheetName & "] ", vbCritical, "Input error:")
 243:        Case Else:
-244:            Call MsgBox("Error in LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+244:            Call MsgBox("Error in LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 245:            Call WriteErrorLog("LastRowOrColumn")
 246:    End Select
 247: End Function

@@ -434,16 +434,16 @@ ErrorHandler:
 '* ByVal sTxt As String :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Public Function TrimSpace(ByVal stxt As String) As String
+Public Function TrimSpace(ByVal sTxt As String) As String
 297:    Dim sTemp As String
 298:    Const LENGHT_CELLS As Long = 32767
-299:    sTemp = stxt
+299:    sTemp = sTxt
 300:    If VBA.Len(sTemp) <= LENGHT_CELLS Then
 301:        sTemp = Application.WorksheetFunction.Trim(sTemp)
 302:    Else
 303:        Dim i As Long
-304:        For i = 1 To VBA.Len(stxt) Step LENGHT_CELLS
-305:            sTemp = sTemp & Application.WorksheetFunction.Trim(VBA.Mid$(stxt, i, LENGHT_CELLS))
+304:        For i = 1 To VBA.Len(sTxt) Step LENGHT_CELLS
+305:            sTemp = sTemp & Application.WorksheetFunction.Trim(VBA.Mid$(sTxt, i, LENGHT_CELLS))
 306:        Next i
 307:    End If
 308:    TrimSpace = sTemp

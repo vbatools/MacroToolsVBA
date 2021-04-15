@@ -84,17 +84,17 @@ Private m_clsAnchors As CAnchors
 69:    End With
 70: End Sub
 
-    Private Function funParseChars(ByVal stxt As String) As Variant
+    Private Function funParseChars(ByVal sTxt As String) As Variant
 73:
 74:    Dim n           As Long
 75:    Dim i           As Long
 76:    Dim sChar       As String
 77:
 78:    On Error Resume Next
-79:    n = Len(stxt): ReDim Arr(1 To n, 1 To 5)
+79:    n = Len(sTxt): ReDim Arr(1 To n, 1 To 5)
 80:    For i = LBound(Arr) To UBound(Arr)
 81:        Arr(i, 1) = i
-82:        sChar = VBA.Mid$(stxt, i, 1)
+82:        sChar = VBA.Mid$(sTxt, i, 1)
 83:        Arr(i, 2) = sChar
 84:        Arr(i, 3) = VBA.Asc(sChar)
 85:        Arr(i, 4) = VBA.AscW(sChar)

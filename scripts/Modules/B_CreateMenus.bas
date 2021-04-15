@@ -75,11 +75,15 @@ Public Sub AddContextMenus()
     Call AddButtom(C_Const.RTAG1, 162, "ReName Control", "RenameControl", C_Const.RENAMEMENU, True)
     Call AddButtom(C_Const.RTAG2, 22, "Paste Style", "PasteStyleControl", C_Const.RENAMEMENU, True)
     Call AddButtom(C_Const.RTAG3, 1076, "Copy Style", "CopyStyleControl", C_Const.RENAMEMENU, True)
-    Call AddButtom(C_Const.RTAG4, 704, "Paste Icon", "AddIcon", C_Const.RENAMEMENU, True, True)
+    Call AddButtom(C_Const.RTAG5, 0, "UPPER Case", "UperTextInControl", C_Const.RENAMEMENU, True, False)
+    Call AddButtom(C_Const.RTAG6, 0, "lower Case", "LowerTextInControl", C_Const.RENAMEMENU, True, False)
+    
     Call AddButtom(C_Const.CTAG1, 2045, "Copy Module", "CopyModyleVBE", C_Const.COPYMODULE, True, False)
     
     Call AddButtom(C_Const.RTAG2, 22, "Paste Style", "PasteStyleControl", C_Const.mMSFORMS, True)
     Call AddButtom(C_Const.RTAG3, 1076, "Copy Style", "CopyStyleControl", C_Const.mMSFORMS, True)
+    Call AddButtom(C_Const.RTAG5, 0, "UPPER Case", "UperTextInForm", C_Const.mMSFORMS, True, False)
+    Call AddButtom(C_Const.RTAG6, 0, "lower Case", "LowerTextInForm", C_Const.mMSFORMS, True, False)
 End Sub
 Private Sub AddNewCommandBarMenu(ByVal sNameCommandBar As String)
     Dim myCommandBar As CommandBar
@@ -160,9 +164,13 @@ Public Sub DeleteContextMenus()
     Call DeleteButton(C_Const.RTAG2, C_Const.RENAMEMENU)
     Call DeleteButton(C_Const.RTAG3, C_Const.RENAMEMENU)
     Call DeleteButton(C_Const.RTAG4, C_Const.RENAMEMENU)
+    Call DeleteButton(C_Const.RTAG5, C_Const.RENAMEMENU)
+    Call DeleteButton(C_Const.RTAG6, C_Const.RENAMEMENU)
     
     Call DeleteButton(C_Const.RTAG2, C_Const.mMSFORMS)
     Call DeleteButton(C_Const.RTAG3, C_Const.mMSFORMS)
+    Call DeleteButton(C_Const.RTAG5, C_Const.mMSFORMS)
+    Call DeleteButton(C_Const.RTAG6, C_Const.mMSFORMS)
 
     Set myCommandBar = Application.VBE.CommandBars(C_Const.TOOLSMENU)
     If Not myCommandBar Is Nothing Then
@@ -186,7 +194,7 @@ ErrorHandler:
         Case 5:
             Err.Clear
         Case Else:
-            Debug.Print "Error in DeleteContextMenus" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Debug.Print "Error in DeleteContextMenus" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
             Call WriteErrorLog("DeleteContextMenus")
     End Select
     Err.Clear
@@ -204,24 +212,27 @@ Private Sub DeleteButton(ByRef sTag As String, ByVal sMenu As String)
     Next Ctrl
     Exit Sub
 ErrorHandler:
-    Debug.Print "Error in DeleteButton" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+    Debug.Print "Error in DeleteButton" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
     Call WriteErrorLog("DeleteButton")
     Err.Clear
     Resume Next
 End Sub
 Public Function VBAIsTrusted() As Boolean
     On Error GoTo ErrorHandler
+    Dim sTxt As String
+    sTxt = Application.VBE.Version
     VBAIsTrusted = True
     Exit Function
 ErrorHandler:
     Select Case Err.Number
         Case 1004:
-            If ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then Call MsgBox("Warning!" & C_Const.NAME_ADDIN & vbLf & vbNewLine & _
+            'If ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then
+             Call MsgBox("Warning! " & C_Const.NAME_ADDIN & vbLf & vbNewLine & _
                     "Disabled: [Trust access to the VBA object model]" & vbLf & _
                     "To enable it, go to: File->Settings->Security Management Center->Macro Settings" & _
                     vbLf & vbNewLine & "And restart Excel", vbCritical, "Warning:")
         Case Else:
-            Debug.Print "Error! in VBA, isTrusted" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Debug.Print "Error! in VBA, isTrusted" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
             Call WriteErrorLog("VBAIsTrusted")
     End Select
     Err.Clear
@@ -266,7 +277,7 @@ End Sub
 Public Sub RefreshMenu()
     Call B_CreateMenus.DeleteContextMenus
     Call B_CreateMenus.AddContextMenus
-    Call MsgBox("The add" & C_Const.NAME_ADDIN & "-in was rebooted!", vbInformation, "The add" & C_Const.NAME_ADDIN & ":")
+    Call MsgBox("The add-in " & C_Const.NAME_ADDIN & " - was rebooted!", vbInformation, "The add" & C_Const.NAME_ADDIN & ":")
 End Sub
 Private Sub subMsgBoxGenerator()
     MsgBoxGenerator.Show

@@ -14,7 +14,7 @@ Option Explicit
 5:    Set frm = New AddEditCode
 6:    With frm
 7:        .Caption = "CREATE SNIPPET:"
-8:        .lbOK.Caption = "TO CREATE"
+8:        .lbOK.Caption = "CREATE"
 9:        .txtRow = X + 1
 10:        .Show
 11:    End With
@@ -32,7 +32,7 @@ Option Explicit
 23:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
 24:    With frm
 25:        .Caption = "CHANGE SNIPPET:"
-26:        .lbOK.Caption = "TO CHANGE"
+26:        .lbOK.Caption = "CHANGE"
 27:        st = Split(snippets.ListColumns(3).Range(X, 1), ".")
 28:        .cmbENUM.Style = fmStyleDropDownCombo
 29:        .cmbENUM.Text = st(0)
@@ -63,7 +63,7 @@ errmsg:
 54:    If Err.Number = 91 Then
 55:        Err.Clear
 56:    Else
-57:        Debug.Print "Error in Deleterow!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+57:        Debug.Print "Error in Deleterow!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 58:        Call WriteErrorLog("DeletRow")
 59:    End If
 60: End Sub
@@ -86,7 +86,7 @@ errmsg:
 77:    If Err.Number = 91 Then
 78:        Err.Clear
 79:    Else
-80:        Debug.Print "Error in TbAdd!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+80:        Debug.Print "Error in TbAdd!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 81:        Call WriteErrorLog("TbAdd")
 82:    End If
 83: End Sub

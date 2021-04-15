@@ -28,8 +28,6 @@ Option Explicit
     Private Sub RefrasBtn(ByRef control As IRibbonControl)
 28:    If VBAIsTrusted Then
 29:        Call B_CreateMenus.RefreshMenu
-30:    Else
-31:        Call MsgBox(C_Const.sMSGVBA1, vbCritical, C_Const.sMSGVBA2)
 32:    End If
 33: End Sub
     Private Sub ImportCodeBaseBtn(ByRef control As IRibbonControl)
@@ -46,7 +44,7 @@ ErrorHandler:
         Case 91:
 46:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 47:        Case Else:
-48:            Call MsgBox("Error in ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
+48:            Call MsgBox("Error in ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
 49:            Call WriteErrorLog("ImportCodeBaseBtn")
 50:    End Select
 51:    Err.Clear
@@ -117,7 +115,7 @@ ErrorHandler:
         Case 91:
 117:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
 118:        Case Else:
-119:            Call MsgBox("Error in onUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
+119:            Call MsgBox("Error in onUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
 120:            Call WriteErrorLog("onUnUnProtectSheets")
 121:    End Select
 122:    Err.Clear

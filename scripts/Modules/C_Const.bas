@@ -102,6 +102,8 @@ Public Const RTAG1 As String = NAME_ADDIN & "_VBE_RENAME_TAG1"
 Public Const RTAG2 As String = NAME_ADDIN & "_VBE_RENAME_TAG2"
 Public Const RTAG3 As String = NAME_ADDIN & "_VBE_RENAME_TAG3"
 Public Const RTAG4 As String = NAME_ADDIN & "_VBE_RENAME_TAG4"
+Public Const RTAG5 As String = NAME_ADDIN & "_VBE_RENAME_TAG5"
+Public Const RTAG6 As String = NAME_ADDIN & "_VBE_RENAME_TAG6"
 
 Public Const POPMENU As String = "Code Window"
 Public Const TOOLSMENU As String = NAME_ADDIN & " ToolBar"

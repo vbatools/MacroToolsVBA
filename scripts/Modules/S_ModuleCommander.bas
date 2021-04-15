@@ -34,7 +34,7 @@ Option Private Module
                   vbCrLf & "Total:" & lFrm + lCls + lBas, vbInformation, "Importing a VBA project:")
 34:    Exit Sub
 Error_Handler_:
-36:    Call MsgBox("Error in ImportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+36:    Call MsgBox("Error in ImportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 37:    Call WriteErrorLog("ImportAllModules")
 38: End Sub
     Public Sub ExportAllModules(ByRef WB As Workbook, ByRef arrVBComp() As String)
@@ -85,7 +85,7 @@ Error_Handler_:
 84:    If C > 0 Then Shell "C:\WINDOWS\explorer.exe """ & sDestinationFolder & "", vbNormalFocus
 85:    Exit Sub
 Error_Handler_:
-87:    Call MsgBox("Error in ExportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+87:    Call MsgBox("Error in ExportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 88:    Call WriteErrorLog("ExportAllModules")
 89: End Sub
      Public Sub DeleteAllModulesInActiveProject(ByRef WB As Workbook, ByRef arrVBComp() As String)
@@ -118,7 +118,7 @@ Error_Handler_:
 117:    If r + m > 0 Then MsgBox "Modules deleted:" & m & vbCrLf & "References removed:" & r, vbInformation, ""
 118:    Exit Sub
 Error_Handler_:
-120:    Call MsgBox("Error in DeleteAllModulesInActiveProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+120:    Call MsgBox("Error in DeleteAllModulesInActiveProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 121:    Call WriteErrorLog("DeleteAllModulesInActiveProject")
 122: End Sub
 '**********************************************************************************************************************************************************************
@@ -153,7 +153,7 @@ Error_Handler_:
 152:
 153:    Exit Function
 Error_Handler_:
-155:    Call MsgBox("Error in DoesActiveVBAprojectExist" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+155:    Call MsgBox("Error in DoesActiveVBAprojectExist" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 156:    Call WriteErrorLog("DoesActiveVBAprojectExist")
 157:    DoesActiveVBAprojectExist = False
 158: End Function
@@ -188,7 +188,7 @@ Error_Handler_:
 187:    Exit Function
 ErrorHandler:
 189:    RemoveAllReferences = i
-190:    Call MsgBox("Error in RemoveAllReferences" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+190:    Call MsgBox("Error in RemoveAllReferences" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 191: End Function
 Private Function IsWorkbookOpen() As Boolean
 193:    If Workbooks.Count > 0 Then

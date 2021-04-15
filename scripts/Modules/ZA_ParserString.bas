@@ -40,7 +40,7 @@ Public Sub ParserStringWB()
 ErrStartParser:
     Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
-    Call MsgBox("Error in ZA_Parser String.Parser String From W B" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+    Call MsgBox("Error in ZA_Parser String.Parser String From W B" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
     Call WriteErrorLog("ParserStringFromWB")
 End Sub
 
@@ -75,7 +75,7 @@ ErrStartParser:
     Application.EnableEvents = True
     Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
-    Call MsgBox("Error in ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Error:")
+    Call MsgBox("Error in ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 End Sub
 
 '* * * * * ParserStrForm START * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -180,7 +180,7 @@ End Function
 '* ByRef objCont As MSForms.Control :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Private Function PropertyIsCapiton(ByRef objCont As MSForms.control, Optional bCapiton As Boolean = True) As Boolean
+Public Function PropertyIsCapiton(ByRef objCont As MSForms.control, Optional bCapiton As Boolean = True) As Boolean
     On Error GoTo errEnd
     Dim s           As String
     PropertyIsCapiton = True
@@ -372,18 +372,18 @@ End Sub
 '* stxt As String                          :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Private Function GetFullNodeName(ByRef oXMLElem As MSXML2.IXMLDOMElement, stxt As String) As String
+Private Function GetFullNodeName(ByRef oXMLElem As MSXML2.IXMLDOMElement, sTxt As String) As String
     With oXMLElem
 
         If Not oXMLElem.ParentNode.NodeType = NODE_DOCUMENT Then
-            stxt = oXMLElem.ParentNode.BaseName & "/" & stxt
-            stxt = GetFullNodeName(oXMLElem.ParentNode, stxt)
+            sTxt = oXMLElem.ParentNode.BaseName & "/" & sTxt
+            sTxt = GetFullNodeName(oXMLElem.ParentNode, sTxt)
         Else
-            GetFullNodeName = stxt
+            GetFullNodeName = sTxt
             Exit Function
         End If
     End With
-    GetFullNodeName = stxt
+    GetFullNodeName = sTxt
 End Function
 
 Public Sub ReNameStr()

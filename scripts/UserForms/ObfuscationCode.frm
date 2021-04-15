@@ -67,7 +67,7 @@ ErrorHandler:
 53:    Unload Me
 54:    Select Case Err.Number
         Case Else:
-56:            Call MsgBox("Error in the ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Error:")
+56:            Call MsgBox("Error in the ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
 57:            Call WriteErrorLog("ObfuscationCode.UserForm_Activate")
 58:    End Select
 59:    Err.Clear

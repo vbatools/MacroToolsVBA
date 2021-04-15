@@ -166,6 +166,6 @@ Private Sub SerchSnippet()
 151:    Exit Sub
 MyBtnSerch_Err:
 153:    Unload Me
-154:    MsgBox Err.Description & vbCrLf & "â AddCodeView.SerchSnippet " & vbCrLf & "in the line" & Erl, vbExclamation + vbOKOnly, "Error:"
+154:    MsgBox Err.Description & vbCrLf & "â AddCodeView.SerchSnippet " & vbCrLf & "in the line " & Erl, vbExclamation + vbOKOnly, "Error:"
 155:    Call WriteErrorLog("AddCodeView.SerchSnippet")
 End Sub

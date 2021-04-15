@@ -35,7 +35,7 @@ Option Explicit
 24:    Exit Sub
 ErrorHandler:
 26:    If Err.Number <> 91 Then
-27:        Debug.Print "Error in CutTab" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+27:        Debug.Print "Error in CutTab" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 28:        Call WriteErrorLog("CutTab")
 29:    End If
 30:    Err.Clear

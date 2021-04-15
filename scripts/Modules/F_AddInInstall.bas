@@ -49,7 +49,7 @@ InstallationAdd_Err:
 47:        MsgBox "To install the add-in, please close this file and run it again.", _
                       64, "Installation"
 49:    Else
-50:        MsgBox Err.Description & vbCrLf & "â F_AddInInstall.InstallationAdd " & vbCrLf & "in the line" & Erl, vbExclamation + vbOKOnly, "Error:"
+50:        MsgBox Err.Description & vbCrLf & "â F_AddInInstall.InstallationAdd " & vbCrLf & "in the line " & Erl, vbExclamation + vbOKOnly, "Error:"
 51:        Call WriteErrorLog("F_AddInInstall.InstallationAdd")
 52:    End If
 53: End Sub
