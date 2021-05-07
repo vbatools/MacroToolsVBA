@@ -27,11 +27,11 @@ Option Private Module
 26:        End Select
 27:    Next i
 28:    Call MsgBox("Importing a VBA project into a workbook" & WB.Name & "completed!" & vbCrLf & vbCrLf & "Imported:" & _
-                  vbCrLf & vbCrLf & "Modules:" & lBas & _
-                  vbCrLf & "Classes:" & lCls & _
-                  vbCrLf & "Forms:" & lFrm & _
-                  vbCrLf & VBA.String(14, "-") & _
-                  vbCrLf & "Total:" & lFrm + lCls + lBas, vbInformation, "Importing a VBA project:")
+                     vbCrLf & vbCrLf & "Modules:" & lBas & _
+                     vbCrLf & "Classes:" & lCls & _
+                     vbCrLf & "Forms:" & lFrm & _
+                     vbCrLf & VBA.String(14, "-") & _
+                     vbCrLf & "Total:" & lFrm + lCls + lBas, vbInformation, "Importing a VBA project:")
 34:    Exit Sub
 Error_Handler_:
 36:    Call MsgBox("Error in ImportAllModules" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
@@ -190,11 +190,11 @@ ErrorHandler:
 189:    RemoveAllReferences = i
 190:    Call MsgBox("Error in RemoveAllReferences" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
 191: End Function
-Private Function IsWorkbookOpen() As Boolean
+     Private Function IsWorkbookOpen() As Boolean
 193:    If Workbooks.Count > 0 Then
 194:        IsWorkbookOpen = True
 195:    Else
 196:        Call MsgBox("The active workbook was not found. Please open the book first!", vbCritical, "Exporting a VBA project:")
 197:    End If
-End Function
+198: End Function
 

@@ -80,15 +80,15 @@ Dim Flag            As Boolean
 79: End Function
 
     Private Function MyDialogBoxParam(ByVal hInstance As LongPtr, _
-            ByVal pTemplateName As LongPtr, ByVal hWndParent As LongPtr, _
-            ByVal lpDialogFunc As LongPtr, ByVal dwInitParam As LongPtr) As Integer
+                ByVal pTemplateName As LongPtr, ByVal hWndParent As LongPtr, _
+                ByVal lpDialogFunc As LongPtr, ByVal dwInitParam As LongPtr) As Integer
 84:
 85:    If pTemplateName = 4070 Then
 86:        MyDialogBoxParam = 1
 87:    Else
 88:        RecoverBytes
 89:        MyDialogBoxParam = DialogBoxParam(hInstance, pTemplateName, _
-                   hWndParent, lpDialogFunc, dwInitParam)
+                      hWndParent, lpDialogFunc, dwInitParam)
 91:        fHook
 92:    End If
 93: End Function

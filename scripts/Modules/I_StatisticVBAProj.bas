@@ -15,243 +15,243 @@ Public Enum LineSplits
     LineSplitConvert = 2
 End Enum
     Public Sub AddSheetStatistica()
-9:    Dim i      As Integer
-10:    Dim Rng    As Range
-11:    Dim Form   As AddStatistic
-12:    Dim strVar As String
-13:    On Error GoTo errmsg
-14:    If Not VBAIsTrusted Then
-15:        Call MsgBox("Warning!" & vbLf & "Disabled: [Trust access to the VBA object model]" _
-                   & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" _
-                   & vbLf & "And restart Excel", vbCritical, "No access to the object model:")
-18:        Exit Sub
-19:    End If
-20:    Application.DisplayAlerts = False
-21:    Set Form = New AddStatistic
-22:    Form.Show
-23:    strVar = Form.cmbMain.Value
-24:    If strVar = vbNullString Then Exit Sub
-25:    i = 1
-26:    ActiveWorkbook.Sheets.Add After:=Sheets(Sheets.Count)
-27:    With ActiveSheet
-28:        .Name = C_Const.SH_STATISTICA
-29:        Set Rng = .Range("A1")
-30:        Rng.Value = "Module name"
-31:        i = i + 1
-32:        Rng(1, i).Value = "Module type"
-33:        i = i + 1
-34:        Rng(1, i).Value = "Modifier type"
-35:        i = i + 1
-36:        Rng(1, i).Value = "Type of procedure"
-37:        i = i + 1
-38:        Rng(1, i).Value = "Name of the procedure"
+17:    Dim i      As Integer
+18:    Dim Rng    As Range
+19:    Dim Form   As AddStatistic
+20:    Dim strVar As String
+21:    On Error GoTo errmsg
+22:    If Not VBAIsTrusted Then
+23:        Call MsgBox("Warning!" & vbLf & "Disabled: [Trust access to the VBA object model]" _
+                      & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" _
+                      & vbLf & "And restart Excel", vbCritical, "No access to the object model:")
+26:        Exit Sub
+27:    End If
+28:    Application.DisplayAlerts = False
+29:    Set Form = New AddStatistic
+30:    Form.Show
+31:    strVar = Form.cmbMain.Value
+32:    If strVar = vbNullString Then Exit Sub
+33:    i = 1
+34:    ActiveWorkbook.Sheets.Add After:=Sheets(Sheets.Count)
+35:    With ActiveSheet
+36:        .Name = C_Const.SH_STATISTICA
+37:        Set Rng = .Range("A1")
+38:        Rng.Value = "Module name"
 39:        i = i + 1
-40:        Rng(1, i).Value = "Start line"
+40:        Rng(1, i).Value = "Module type"
 41:        i = i + 1
-42:        Rng(1, i).Value = "Number of rows"
+42:        Rng(1, i).Value = "Modifier type"
 43:        i = i + 1
-44:        Rng(1, i).Value = "Declaring the procedure"
-45:    End With
-46:    Call AddInfoProject(Workbooks(strVar))
-47:    With ActiveSheet.UsedRange
-48:        .EntireColumn.AutoFit
-49:        .EntireRow.AutoFit
-50:    End With
-51:    Application.DisplayAlerts = True
-52:    Exit Sub
+44:        Rng(1, i).Value = "Type of procedure"
+45:        i = i + 1
+46:        Rng(1, i).Value = "Name of the procedure"
+47:        i = i + 1
+48:        Rng(1, i).Value = "Start line"
+49:        i = i + 1
+50:        Rng(1, i).Value = "Number of rows"
+51:        i = i + 1
+52:        Rng(1, i).Value = "Declaring the procedure"
+53:    End With
+54:    Call AddInfoProject(Workbooks(strVar))
+55:    With ActiveSheet.UsedRange
+56:        .EntireColumn.AutoFit
+57:        .EntireRow.AutoFit
+58:    End With
+59:    Application.DisplayAlerts = True
+60:    Exit Sub
 errmsg:
-54:    If Err.Number = 1004 Then
-55:        ActiveWorkbook.Sheets(C_Const.SH_STATISTICA).Delete
-56:        ActiveSheet.Name = C_Const.SH_STATISTICA
-57:        Err.Clear
-58:        Resume Next
-59:    Else
-60:        Call MsgBox("Error in I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
-61:        Call WriteErrorLog("I_StatisticVBAProj.AddSheetStatistica")
-62:    End If
-63:    Application.DisplayAlerts = True
-64: End Sub
+62:    If Err.Number = 1004 Then
+63:        ActiveWorkbook.Sheets(C_Const.SH_STATISTICA).Delete
+64:        ActiveSheet.Name = C_Const.SH_STATISTICA
+65:        Err.Clear
+66:        Resume Next
+67:    Else
+68:        Call MsgBox("Error in I_StatisticVBAProj.AddSheetStatistica" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
+69:        Call WriteErrorLog("I_StatisticVBAProj.AddSheetStatistica")
+70:    End If
+71:    Application.DisplayAlerts = True
+72: End Sub
     Private Sub AddInfoProject(Optional ByRef WB As Workbook = Nothing)
-66:    Dim VBP    As VBIDE.VBProject
-67:    Dim vbComp As VBIDE.VBComponent
-68:    If WB Is Nothing Then
-69:        Set VBP = ActiveWorkbook.VBProject
-70:    Else
-71:        Set VBP = WB.VBProject
-72:    End If
-73:    If VBP.Protection = vbext_pp_locked Then
-74:        Call MsgBox("On a VBA project, [" & VBP.Name & "] password set!", vbCritical, "Error, the project is password protected:")
-75:        Exit Sub
-76:    End If
-77:    For Each vbComp In VBP.VBComponents
-78:        Call ListProcedures(vbComp)
-79:    Next vbComp
-80: End Sub
+74:    Dim VBP    As VBIDE.VBProject
+75:    Dim vbComp As VBIDE.VBComponent
+76:    If WB Is Nothing Then
+77:        Set VBP = ActiveWorkbook.VBProject
+78:    Else
+79:        Set VBP = WB.VBProject
+80:    End If
+81:    If VBP.Protection = vbext_pp_locked Then
+82:        Call MsgBox("On a VBA project, [" & VBP.Name & "] password set!", vbCritical, "Error, the project is password protected:")
+83:        Exit Sub
+84:    End If
+85:    For Each vbComp In VBP.VBComponents
+86:        Call ListProcedures(vbComp)
+87:    Next vbComp
+88: End Sub
      Public Sub ListProcedures(ByRef vbComp As VBIDE.VBComponent)
-82:    Dim CodeMod As VBIDE.CodeModule
-83:    Dim LineNum As Long
-84:    Dim NumLines As Long
-85:    Dim WS     As Worksheet
-86:    Dim Rng    As Range
-87:    Dim procName As String
-88:    Dim ProcKind As VBIDE.vbext_ProcKind
-89:    Dim i      As Integer
-90:    Dim StrDeclarationProcedure As String
-91:    Set CodeMod = vbComp.CodeModule
-92:    Set WS = ActiveSheet
-93:    Set Rng = WS.Range("A" & LastRowOrColumn(1) + 1)
-94:    With CodeMod
-95:        LineNum = .CountOfDeclarationLines + 1
-96:        Do Until LineNum >= .CountOfLines
-97:            procName = .ProcOfLine(LineNum, ProcKind)
-98:            StrDeclarationProcedure = GetProcedureDeclaration(CodeMod, procName, ProcKind, LineSplitKeep)
-99:            Rng.Value = vbComp.Name
-100:            i = 1
-101:            i = i + 1
-102:            Rng(1, i).Value = ComponentTypeToString(vbComp.Type)
-103:            i = i + 1
-104:            Rng(1, i).Value = TypeOfAccessModifier(StrDeclarationProcedure)
-105:            i = i + 1
-106:            Rng(1, i).Value = TypeProcedyre(StrDeclarationProcedure)
-107:            i = i + 1
-108:            Rng(1, i).Value = procName
+90:    Dim CodeMod As VBIDE.CodeModule
+91:    Dim LineNum As Long
+92:    Dim NumLines As Long
+93:    Dim WS     As Worksheet
+94:    Dim Rng    As Range
+95:    Dim procName As String
+96:    Dim ProcKind As VBIDE.vbext_ProcKind
+97:    Dim i      As Integer
+98:    Dim StrDeclarationProcedure As String
+99:    Set CodeMod = vbComp.CodeModule
+100:    Set WS = ActiveSheet
+101:    Set Rng = WS.Range("A" & LastRowOrColumn(1) + 1)
+102:    With CodeMod
+103:        LineNum = .CountOfDeclarationLines + 1
+104:        Do Until LineNum >= .CountOfLines
+105:            procName = .ProcOfLine(LineNum, ProcKind)
+106:            StrDeclarationProcedure = GetProcedureDeclaration(CodeMod, procName, ProcKind, LineSplitKeep)
+107:            Rng.Value = vbComp.Name
+108:            i = 1
 109:            i = i + 1
-110:            Rng(1, i).Value = .ProcStartLine(procName, ProcKind)
+110:            Rng(1, i).Value = ComponentTypeToString(vbComp.Type)
 111:            i = i + 1
-112:            Rng(1, i).Value = .ProcCountLines(procName, ProcKind)
+112:            Rng(1, i).Value = TypeOfAccessModifier(StrDeclarationProcedure)
 113:            i = i + 1
-114:            Rng(1, i).Value = StrDeclarationProcedure
-115:            LineNum = .ProcStartLine(procName, ProcKind) + _
-                        .ProcCountLines(procName, ProcKind) + 1
-117:            Set Rng = Rng(2, 1)
-118:        Loop
-119:    End With
-120: End Sub
+114:            Rng(1, i).Value = TypeProcedyre(StrDeclarationProcedure)
+115:            i = i + 1
+116:            Rng(1, i).Value = procName
+117:            i = i + 1
+118:            Rng(1, i).Value = .ProcStartLine(procName, ProcKind)
+119:            i = i + 1
+120:            Rng(1, i).Value = .ProcCountLines(procName, ProcKind)
+121:            i = i + 1
+122:            Rng(1, i).Value = StrDeclarationProcedure
+123:            LineNum = .ProcStartLine(procName, ProcKind) + _
+                            .ProcCountLines(procName, ProcKind) + 1
+125:            Set Rng = Rng(2, 1)
+126:        Loop
+127:    End With
+128: End Sub
      Private Function TypeOfAccessModifier(ByRef StrDeclarationProcedure As String) As String
-122:    If StrDeclarationProcedure Like "Private*" Then
-123:        TypeOfAccessModifier = "Private"
-124:    Else
-125:        TypeOfAccessModifier = "Public"
-126:    End If
-127: End Function
+130:    If StrDeclarationProcedure Like "Private*" Then
+131:        TypeOfAccessModifier = "Private"
+132:    Else
+133:        TypeOfAccessModifier = "Public"
+134:    End If
+135: End Function
      Public Function TypeProcedyre(ByRef StrDeclarationProcedure As String) As String
-129:    If StrDeclarationProcedure Like "*Sub*" Then
-130:        TypeProcedyre = "Sub"
-131:    ElseIf StrDeclarationProcedure Like "*Function*" Then
-132:        TypeProcedyre = "Function"
-133:    ElseIf StrDeclarationProcedure Like "*Property Set*" Then
-134:        TypeProcedyre = "Property Set"
-135:    ElseIf StrDeclarationProcedure Like "*Property Get*" Then
-136:        TypeProcedyre = "Property Get"
-137:    ElseIf StrDeclarationProcedure Like "*Property Let*" Then
-138:        TypeProcedyre = "Property Let"
-139:    Else
-140:        TypeProcedyre = "Unknown Type"
-141:    End If
-142: End Function
+137:    If StrDeclarationProcedure Like "*Sub*" Then
+138:        TypeProcedyre = "Sub"
+139:    ElseIf StrDeclarationProcedure Like "*Function*" Then
+140:        TypeProcedyre = "Function"
+141:    ElseIf StrDeclarationProcedure Like "*Property Set*" Then
+142:        TypeProcedyre = "Property Set"
+143:    ElseIf StrDeclarationProcedure Like "*Property Get*" Then
+144:        TypeProcedyre = "Property Get"
+145:    ElseIf StrDeclarationProcedure Like "*Property Let*" Then
+146:        TypeProcedyre = "Property Let"
+147:    Else
+148:        TypeProcedyre = "Unknown Type"
+149:    End If
+150: End Function
      Public Function ComponentTypeToString(ByRef ComponentType As VBIDE.vbext_ComponentType) As String
-144:    Select Case ComponentType
+152:    Select Case ComponentType
         Case vbext_ct_ActiveXDesigner
-146:            ComponentTypeToString = "ActiveX Designer"
-147:        Case vbext_ct_ClassModule
-148:            ComponentTypeToString = "Class Module"
-149:        Case vbext_ct_Document
-150:            ComponentTypeToString = "Document Module"
-151:        Case vbext_ct_MSForm
-152:            ComponentTypeToString = "UserForm"
-153:        Case vbext_ct_StdModule
-154:            ComponentTypeToString = "Code Module"
-155:        Case Else
-156:            ComponentTypeToString = "Unknown Type: " & CStr(ComponentType)
-157:    End Select
-158: End Function
+154:            ComponentTypeToString = "ActiveX Designer"
+155:        Case vbext_ct_ClassModule
+156:            ComponentTypeToString = "Class Module"
+157:        Case vbext_ct_Document
+158:            ComponentTypeToString = "Document Module"
+159:        Case vbext_ct_MSForm
+160:            ComponentTypeToString = "UserForm"
+161:        Case vbext_ct_StdModule
+162:            ComponentTypeToString = "Code Module"
+163:        Case Else
+164:            ComponentTypeToString = "Unknown Type: " & CStr(ComponentType)
+165:    End Select
+166: End Function
      Public Function GetProcedureDeclaration( _
-             ByRef CodeMod As VBIDE.CodeModule, _
-             ByRef procName As String, ByRef ProcKind As VBIDE.vbext_ProcKind, _
-             Optional ByRef LineSplitBehavior As LineSplits = LineSplitRemove) As Variant
-163:    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-164:    ' GetProcedureDeclaration
-165:    ' This return the procedure declaration of ProcName in CodeMod. The LineSplitBehavior
-166:    ' determines what to do with procedure declaration that span more than one line using
-167:    ' the "_" line continuation character. If LineSplitBehavior is LineSplitRemove, the
-168:    ' entire procedure declaration is converted to a single line of text. If
-169:    ' LineSplitBehavior is LineSplitKeep the "_" characters are retained and the
-170:    ' declaration is split with vbNewLine into multiple lines. If LineSplitBehavior is
-171:    ' LineSplitConvert, the "_" characters are removed and replaced with vbNewLine.
-172:    ' The function returns vbNullString if the procedure could not be found.
-173:    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-174:    Dim LineNum As Long
-175:    Dim s      As String
-176:    Dim Declaration As String
-177:    On Error Resume Next
-178:    LineNum = CodeMod.ProcBodyLine(procName, ProcKind)
-179:    If Err.Number <> 0 Then
-180:        Exit Function
-181:    End If
-182:    s = CodeMod.Lines(LineNum, 1)
-183:    Do While Right$(s, 1) = "_"
-184:        Select Case True
+                  ByRef CodeMod As VBIDE.CodeModule, _
+                  ByRef procName As String, ByRef ProcKind As VBIDE.vbext_ProcKind, _
+                  Optional ByRef LineSplitBehavior As LineSplits = LineSplitRemove) As Variant
+171:    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+172:    ' GetProcedureDeclaration
+173:    ' This return the procedure declaration of ProcName in CodeMod. The LineSplitBehavior
+174:    ' determines what to do with procedure declaration that span more than one line using
+175:    ' the "_" line continuation character. If LineSplitBehavior is LineSplitRemove, the
+176:    ' entire procedure declaration is converted to a single line of text. If
+177:    ' LineSplitBehavior is LineSplitKeep the "_" characters are retained and the
+178:    ' declaration is split with vbNewLine into multiple lines. If LineSplitBehavior is
+179:    ' LineSplitConvert, the "_" characters are removed and replaced with vbNewLine.
+180:    ' The function returns vbNullString if the procedure could not be found.
+181:    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+182:    Dim LineNum As Long
+183:    Dim s      As String
+184:    Dim Declaration As String
+185:    On Error Resume Next
+186:    LineNum = CodeMod.ProcBodyLine(procName, ProcKind)
+187:    If Err.Number <> 0 Then
+188:        Exit Function
+189:    End If
+190:    s = CodeMod.Lines(LineNum, 1)
+191:    Do While Right$(s, 1) = "_"
+192:        Select Case True
             Case LineSplitBehavior = LineSplitConvert
-186:                s = Left$(s, Len(s) - 1) & vbNewLine
-187:            Case LineSplitBehavior = LineSplitKeep
-188:                s = s & vbNewLine
-189:            Case LineSplitBehavior = LineSplitRemove
-190:                s = Left$(s, Len(s) - 1) & " "
-191:        End Select
-192:        Declaration = Declaration & s
-193:        LineNum = LineNum + 1
-194:        s = CodeMod.Lines(LineNum, 1)
-195:    Loop
-196:    Declaration = SingleSpace(Declaration & s)
-197:    GetProcedureDeclaration = Declaration
-198: End Function
+194:                s = Left$(s, Len(s) - 1) & vbNewLine
+195:            Case LineSplitBehavior = LineSplitKeep
+196:                s = s & vbNewLine
+197:            Case LineSplitBehavior = LineSplitRemove
+198:                s = Left$(s, Len(s) - 1) & " "
+199:        End Select
+200:        Declaration = Declaration & s
+201:        LineNum = LineNum + 1
+202:        s = CodeMod.Lines(LineNum, 1)
+203:    Loop
+204:    Declaration = SingleSpace(Declaration & s)
+205:    GetProcedureDeclaration = Declaration
+206: End Function
      Private Function SingleSpace(ByVal sText As String) As String
-200:    Dim pos    As String
-201:    pos = VBA.InStr(1, sText, Space(2), vbBinaryCompare)
-202:    Do Until pos = 0
-203:        sText = VBA.Replace(sText, Space(2), Space(1))
-204:        pos = VBA.InStr(1, sText, Space(2), vbBinaryCompare)
-205:    Loop
-206:    SingleSpace = sText
-207: End Function
+208:    Dim pos    As String
+209:    pos = VBA.InStr(1, sText, Space(2), vbBinaryCompare)
+210:    Do Until pos = 0
+211:        sText = VBA.Replace(sText, Space(2), Space(1))
+212:        pos = VBA.InStr(1, sText, Space(2), vbBinaryCompare)
+213:    Loop
+214:    SingleSpace = sText
+215: End Function
      Private Function LastRowOrColumn(ByVal NomerRowOrColumn As Variant, _
-             Optional ByRef WorkSheetName As Variant = vbNullString, _
-             Optional ByRef RowOrColumn As Boolean = True) As Long
-211:    'NomerRowOrColumn - номер или буква искомого столбца для строк, строки для столбцов, обезательный параметр
-212:    'WorkSheetName - на каком листе искать, по умолчанию используется активный, не обезательный параметр
-213:    'RowOrColumn - поиск строки или столбца, по умолчанию по ищем строку, не обезательный параметр
-214:    On Error GoTo Err_msg_WSN
-215:    Dim WH     As Worksheet
-216:    If WorkSheetName = vbNullString Then
-217:        Set WH = ActiveSheet
-218:    ElseIf IsNumeric(WorkSheetName) Then
-219:        Set WH = ActiveWorkbook.Worksheets(CInt(WorkSheetName))
-220:    Else
-221:        Set WH = ActiveWorkbook.Worksheets(WorkSheetName)
-222:    End If
-223:    If RowOrColumn Then
-224:        If Not IsNumeric(NomerRowOrColumn) Then
-225:            LastRowOrColumn = WH.Cells(Rows.Count, NomerRowOrColumn).End(xlUp).Row
-226:        Else
-227:            LastRowOrColumn = WH.Cells(Rows.Count, CInt(NomerRowOrColumn)).End(xlUp).Row
-228:        End If
-229:    Else
-230:        If Not IsNumeric(NomerRowOrColumn) Then
-231:            LastRowOrColumn = WH.Cells(NomerRowOrColumn, Columns.Count).End(xlToLeft).Column
-232:        Else
-233:            LastRowOrColumn = WH.Cells(CInt(NomerRowOrColumn), Columns.Count).End(xlToLeft).Column
-234:        End If
-235:    End If
-236:    Exit Function
+                  Optional ByRef WorkSheetName As Variant = vbNullString, _
+                  Optional ByRef RowOrColumn As Boolean = True) As Long
+219:    'NomerRowOrColumn - номер или буква искомого столбца для строк, строки для столбцов, обезательный параметр
+220:    'WorkSheetName - на каком листе искать, по умолчанию используется активный, не обезательный параметр
+221:    'RowOrColumn - поиск строки или столбца, по умолчанию по ищем строку, не обезательный параметр
+222:    On Error GoTo Err_msg_WSN
+223:    Dim WH     As Worksheet
+224:    If WorkSheetName = vbNullString Then
+225:        Set WH = ActiveSheet
+226:    ElseIf IsNumeric(WorkSheetName) Then
+227:        Set WH = ActiveWorkbook.Worksheets(CInt(WorkSheetName))
+228:    Else
+229:        Set WH = ActiveWorkbook.Worksheets(WorkSheetName)
+230:    End If
+231:    If RowOrColumn Then
+232:        If Not IsNumeric(NomerRowOrColumn) Then
+233:            LastRowOrColumn = WH.Cells(Rows.Count, NomerRowOrColumn).End(xlUp).Row
+234:        Else
+235:            LastRowOrColumn = WH.Cells(Rows.Count, CInt(NomerRowOrColumn)).End(xlUp).Row
+236:        End If
+237:    Else
+238:        If Not IsNumeric(NomerRowOrColumn) Then
+239:            LastRowOrColumn = WH.Cells(NomerRowOrColumn, Columns.Count).End(xlToLeft).Column
+240:        Else
+241:            LastRowOrColumn = WH.Cells(CInt(NomerRowOrColumn), Columns.Count).End(xlToLeft).Column
+242:        End If
+243:    End If
+244:    Exit Function
 Err_msg_WSN:
-238:    Select Case Err.Number
+246:    Select Case Err.Number
         Case 13, 1004:
-240:            Call MsgBox("Invalid column or row number value entered: [" & NomerRowOrColumn & "] ", vbCritical, "Input error:")
-241:        Case 9:
-242:            Call MsgBox("Invalid value entered in the file name: [" & WorkSheetName & "] ", vbCritical, "Input error:")
-243:        Case Else:
-244:            Call MsgBox("Error in LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
-245:            Call WriteErrorLog("LastRowOrColumn")
-246:    End Select
-247: End Function
+248:            Call MsgBox("Invalid column or row number value entered: [" & NomerRowOrColumn & "] ", vbCritical, "Input error:")
+249:        Case 9:
+250:            Call MsgBox("Invalid value entered in the file name: [" & WorkSheetName & "] ", vbCritical, "Input error:")
+251:        Case Else:
+252:            Call MsgBox("Error in LastRowOrColumn:" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
+253:            Call WriteErrorLog("LastRowOrColumn")
+254:    End Select
+255: End Function
 

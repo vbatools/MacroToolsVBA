@@ -22,315 +22,315 @@ Attribute VB_Exposed = False
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Option Explicit
     Private Sub btnCancel_Click()
-11:    Me.Hide
-12: End Sub
+10:    Me.Hide
+11: End Sub
     Private Sub lbCancel_Click()
-14:    Call btnCancel_Click
-15: End Sub
+13:    Call btnCancel_Click
+14: End Sub
 
     Private Sub lbHelp_Click()
-18:    Call URLLinks(C_Const.URL_BILD_PROC)
-19: End Sub
+17:    Call URLLinks(C_Const.URL_BILD_PROC)
+18: End Sub
 
     Private Sub UserForm_Initialize()
-22:    With cmbFunc
-23:        .AddItem "Boolean"
-24:        .AddItem "String"
-25:        .AddItem "Byte"
-26:        .AddItem "Integer"
-27:        .AddItem "Long"
-28:        .AddItem "Single"
-29:        .AddItem "Double"
-30:        .AddItem "Currency"
-31:        .AddItem "Variant"
-32:        .AddItem "Date"
-33:        .AddItem "Object"
-34:    End With
-35:    txtErroName.Text = "< - Input field" & Chr(34) & Replace(lbName.Caption, "*:", vbNullString) & Chr(34) & "must be filled in!"
-36: End Sub
+21:    With cmbFunc
+22:        .AddItem "Boolean"
+23:        .AddItem "String"
+24:        .AddItem "Byte"
+25:        .AddItem "Integer"
+26:        .AddItem "Long"
+27:        .AddItem "Single"
+28:        .AddItem "Double"
+29:        .AddItem "Currency"
+30:        .AddItem "Variant"
+31:        .AddItem "Date"
+32:        .AddItem "Object"
+33:    End With
+34:    txtErroName.Text = "< - Input field" & Chr(34) & Replace(lbName.Caption, "*:", vbNullString) & Chr(34) & "must be filled in!"
+35: End Sub
     Private Sub UserForm_Activate()
-38:    chbAddMainProceure.Value = False
-39:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
-40: End Sub
+37:    chbAddMainProceure.Value = False
+38:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
+39: End Sub
     Private Sub chbAll_Change()
-42:    Dim Flag        As Boolean
-43:    Flag = chbAll.Value
-44:    chbScreen.Value = Flag
-45:    chbCalculations.Value = Flag
-46:    chbAlerts.Value = Flag
-47:    chbEvents.Value = Flag
-48:    chbMsg.Value = Flag
-49:    chbUseDefaultMsg.Value = Flag
-50: End Sub
+41:    Dim Flag        As Boolean
+42:    Flag = chbAll.Value
+43:    chbScreen.Value = Flag
+44:    chbCalculations.Value = Flag
+45:    chbAlerts.Value = Flag
+46:    chbEvents.Value = Flag
+47:    chbMsg.Value = Flag
+48:    chbUseDefaultMsg.Value = Flag
+49: End Sub
     Private Sub optTypeModif_Change()
-52:    txtViewCode.Text = AddCode
-53: End Sub
+51:    txtViewCode.Text = AddCode
+52: End Sub
     Private Sub txtName_Change()
-55:    Dim Txt         As String
-56:    If txtName = vbNullString Then
-57:        txtName.BorderColor = &HC0C0FF
-58:    Else
-59:        txtName.BorderColor = &H8000000D
-60:    End If
-61:    txtViewCode.Text = AddCode
-62:    Txt = txtName.Text
-63:    If VBA.Left$(Txt, 1) = "_" Then
-64:        Txt = VBA.Right(Txt, VBA.Len(Txt) - 1)
-65:        txtName.Text = Txt
-66:    End If
-67: End Sub
+54:    Dim Txt         As String
+55:    If txtName = vbNullString Then
+56:        txtName.BorderColor = &HC0C0FF
+57:    Else
+58:        txtName.BorderColor = &H8000000D
+59:    End If
+60:    txtViewCode.Text = AddCode
+61:    Txt = txtName.Text
+62:    If VBA.Left$(Txt, 1) = "_" Then
+63:        Txt = VBA.Right(Txt, VBA.Len(Txt) - 1)
+64:        txtName.Text = Txt
+65:    End If
+66: End Sub
     Private Sub txtName_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
-69:    Dim sTemplate As String, Txt As String
-70:    Txt = txtName.Text
-71:    sTemplate = "!@#$%^&*+=.,'№/\|-:;{}[]() <>" & Chr(34)
-72:    If InStr(1, sTemplate, ChrW(KeyAscii)) > 0 Then KeyAscii = 0
-73:    If Txt = vbNullString Then
-74:        Select Case KeyAscii
+68:    Dim sTemplate As String, Txt As String
+69:    Txt = txtName.Text
+70:    sTemplate = "!@#$%^&*+=.,'№/\|-:;{}[]() <>" & Chr(34)
+71:    If InStr(1, sTemplate, ChrW(KeyAscii)) > 0 Then KeyAscii = 0
+72:    If Txt = vbNullString Then
+73:        Select Case KeyAscii
             Case 48 To 57: KeyAscii = 0
-76:        End Select
-77:    End If
-78:    If VBA.Left$(Txt, 1) = "_" Then
-79:        Txt = VBA.Right(Txt, VBA.Len(Txt) - 1)
-80:        txtName.Text = Txt
-81:    End If
-82: End Sub
+75:        End Select
+76:    End If
+77:    If VBA.Left$(Txt, 1) = "_" Then
+78:        Txt = VBA.Right(Txt, VBA.Len(Txt) - 1)
+79:        txtName.Text = Txt
+80:    End If
+81: End Sub
     Private Sub cmbFunc_Change()
-84:    Call AddBackColorCombobox
-85:    txtViewCode.Text = AddCode
-86: End Sub
+83:    Call AddBackColorCombobox
+84:    txtViewCode.Text = AddCode
+85: End Sub
     Private Sub optTypeProcedure_Change()
-88:    cmbFunc.Enabled = Not optTypeProcedure.Value
-89:    chbArray.Enabled = Not optTypeProcedure.Value
-90:    Call AddBackColorCombobox
-91:    txtViewCode.Text = AddCode
-92: End Sub
-     Private Sub AddBackColorCombobox()
-94:    cmbFunc.BorderColor = &H8000000D
-95:    If (Not optTypeProcedure) Then
-96:        If cmbFunc.Value = vbNullString Then
-97:            cmbFunc.BorderColor = &HC0C0FF
-98:        End If
-99:    End If
-100: End Sub
+87:    cmbFunc.Enabled = Not optTypeProcedure.Value
+88:    chbArray.Enabled = Not optTypeProcedure.Value
+89:    Call AddBackColorCombobox
+90:    txtViewCode.Text = AddCode
+91: End Sub
+    Private Sub AddBackColorCombobox()
+93:    cmbFunc.BorderColor = &H8000000D
+94:    If (Not optTypeProcedure) Then
+95:        If cmbFunc.Value = vbNullString Then
+96:            cmbFunc.BorderColor = &HC0C0FF
+97:        End If
+98:    End If
+99: End Sub
      Private Sub chbArray_Change()
-102:    txtViewCode.Text = AddCode
-103: End Sub
+101:    txtViewCode.Text = AddCode
+102: End Sub
      Private Sub chbAlerts_Change()
-105:    txtViewCode.Text = AddCode
-106:    Call TernOffOn
-107: End Sub
+104:    txtViewCode.Text = AddCode
+105:    Call TernOffOn
+106: End Sub
      Private Sub chbCalculations_Change()
-109:    txtViewCode.Text = AddCode
-110:    Call TernOffOn
-111: End Sub
+108:    txtViewCode.Text = AddCode
+109:    Call TernOffOn
+110: End Sub
      Private Sub chbEvents_Change()
-113:    txtViewCode.Text = AddCode
-114:    Call TernOffOn
-115: End Sub
+112:    txtViewCode.Text = AddCode
+113:    Call TernOffOn
+114: End Sub
      Private Sub chbMsg_Change()
-117:    txtViewCode.Text = AddCode
-118:
-119:    chbUseDefaultMsg.Enabled = chbMsg.Value
-120:    txtMsg.Enabled = chbMsg.Value
-121: End Sub
+116:    txtViewCode.Text = AddCode
+117:
+118:    chbUseDefaultMsg.Enabled = chbMsg.Value
+119:    txtMsg.Enabled = chbMsg.Value
+120: End Sub
      Private Sub chbScreen_Change()
-123:    txtViewCode.Text = AddCode
-124:    Call TernOffOn
-125: End Sub
+122:    txtViewCode.Text = AddCode
+123:    Call TernOffOn
+124: End Sub
      Private Sub txtMsg_Change()
-127:    txtViewCode.Text = AddCode
-128: End Sub
+126:    txtViewCode.Text = AddCode
+127: End Sub
      Private Sub txtDiscprition_Change()
-130:    txtViewCode.Text = AddCode
-131: End Sub
+129:    txtViewCode.Text = AddCode
+130: End Sub
      Private Sub optDefaultError_Change()
-133:    txtViewCode.Text = AddCode
-134: End Sub
+132:    txtViewCode.Text = AddCode
+133: End Sub
      Private Sub optResumNext_Change()
-136:    txtViewCode.Text = AddCode
-137: End Sub
+135:    txtViewCode.Text = AddCode
+136: End Sub
      Private Sub chbUseDefaultMsg_Change()
-139:    txtViewCode.Text = AddCode
-140: End Sub
+138:    txtViewCode.Text = AddCode
+139: End Sub
      Private Sub chbOffDiscription_Change()
-142:    txtViewCode.Text = AddCode
-143:    txtDiscprition.Enabled = chbOffDiscription.Value
-144: End Sub
+141:    txtViewCode.Text = AddCode
+142:    txtDiscprition.Enabled = chbOffDiscription.Value
+143: End Sub
      Private Function AddCode() As String
-146:    Dim strCode As String, strSpes As String, strEndLine As String
-147:    Dim TypeModif As String, TypeProc As String, strDiscprition As String
-148:    Dim TypeFunction As String, ResultDimFunc As String, ResultEndFunc As String
-149:    Dim strMsg As String, strMsg1 As String, CustMsg As String
-150:    Dim ErrorMsgFerst As String, ErrorMsgEnd As String
-151:    Dim MsgStop     As String
-152:    Dim ScreenUpdatingCalculationTrue As String, ScreenUpdatingCalculationFalse As String
-153:    Dim txtArray    As String
-154:
-155:    If txtName.Text = vbNullString Then
-156:        txtErroName.visible = True
-157:        Exit Function
-158:    Else
-159:        txtErroName.visible = False
-160:    End If
-161:    If (Not optTypeProcedure) Then
-162:        If cmbFunc.Value = vbNullString Then
-163:            MsgStop = "The function data type selection field must be filled in!"
-164:        End If
-165:    End If
-166:
-167:    If MsgStop <> vbNullString Then
-168:        Call MsgBox(MsgStop, vbOKOnly + vbCritical, "Error:")
-169:        Exit Function
-170:    End If
-171:
-172:    strEndLine = vbNewLine & vbTab
-173:    'отключение описание
-174:    If chbOffDiscription Then
-175:        strDiscprition = strEndLine & Chr(39) & "Description:" & txtDiscprition.Text
-176:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Дата создания: " & Format(Now(), "dddddd в  h:nn:ss")
-177:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Author:" & Environ("UserName")
-178:    End If
-179:    strSpes = Space(1)
-180:    ScreenUpdatingCalculationTrue = "Call ScreenUpdatingCalculation(Screen:=True, Calculat:=True, Alerts:=True, Events:=True)"
-181:
-182:    'тип модификатора доступа
-183:    If optTypeModif Then
-184:        TypeModif = "Public"
-185:    Else
-186:        TypeModif = "Private"
-187:    End If
-188:
-189:    'массив для функций
-190:    If (Not optTypeProcedure.Value) And chbArray.Value Then
-191:        txtArray = " ()"
-192:    End If
-193:
-194:    'процедура или функция
-195:    If optTypeProcedure Then
-196:        TypeProc = "Sub"
-197:        TypeFunction = vbNullString
-198:    Else
-199:        TypeProc = "Function"
-200:        TypeFunction = " as " & cmbFunc.Value
-201:        ResultDimFunc = vbNewLine & vbTab & "Dim Result" & txtArray & " as " & cmbFunc.Value
-202:        ResultEndFunc = vbNewLine & vbTab & txtName.Text & " = Result"
-203:    End If
-204:
-205:    'вывод сообщения по окончанию
-206:    If chbMsg Then
-207:        Dim txtNewLine As String
-208:        If txtMsg.Text <> vbNullString Then txtNewLine = " & vbNewLine & "
-209:        If chbUseDefaultMsg Then strMsg1 = Chr(34) & "Accomplishment" & txtName.Text & "It's over!" & Chr(34) & txtNewLine
-210:        CustMsg = txtMsg.Text
-211:        If CustMsg = vbNullString Then
-212:            If chbUseDefaultMsg Then
-213:                CustMsg = vbNullString
-214:            Else
-215:                CustMsg = Chr(34) & vbNullString & Chr(34)
-216:            End If
-217:        Else
-218:            CustMsg = Replace(CustMsg, Chr(34), "| & Chr(34) & |")
-219:            CustMsg = Chr(34) & Replace(CustMsg, "|", Chr(34)) & Chr(34)
-220:        End If
-221:        strMsg1 = strMsg1 & CustMsg
-222:        strMsg = strEndLine & "Call MsgBox(" & strMsg1 & ", vbOKOnly + vbInformation," & Chr(34) & txtName.Text & Chr(34) & ")"
-223:    End If
-224:
-225:    'обработка ошибок
-226:    If optDefaultError Then
-227:        ErrorMsgFerst = vbNullString
-228:        ErrorMsgEnd = vbNullString
-229:    End If
-230:
-231:    If optResumNext Then
-232:        ErrorMsgFerst = strEndLine & "On Error Resume Next"
-233:        ErrorMsgEnd = vbNullString
-234:    End If
-235:    ScreenUpdatingCalculationFalse = "Call ScreenUpdatingCalculation(Screen:=" & (Not chbScreen.Value) & ", Calculat:=" & (Not chbCalculations.Value) & ", Alerts:=" & (Not chbAlerts.Value) & ", Events:=" & (Not chbEvents.Value) & ")"
-236:
-237:    'если ни чего не отключено то не чего включать
-238:    If ScreenUpdatingCalculationFalse = ScreenUpdatingCalculationTrue Then
-239:        ScreenUpdatingCalculationTrue = vbNullString
-240:        ScreenUpdatingCalculationFalse = vbNullString
-241:    End If
-242:
-243:    If optErrorHandele Then
-244:        ErrorMsgFerst = strEndLine & "On Error GoTo ErrorHandler"
-245:        ErrorMsgEnd = strEndLine & "Exit " & TypeProc & vbNewLine & "ErrorHandler:" & strEndLine & ScreenUpdatingCalculationTrue
-246:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "Select Case Err"
+145:    Dim strCode As String, strSpes As String, strEndLine As String
+146:    Dim TypeModif As String, TypeProc As String, strDiscprition As String
+147: Dim TypeFunction As String, ResultDimFunc As String, ResultEndFunc As String
+148:    Dim strMsg As String, strMsg1 As String, CustMsg As String
+149:    Dim ErrorMsgFerst As String, ErrorMsgEnd As String
+150:    Dim MsgStop     As String
+151:    Dim ScreenUpdatingCalculationTrue As String, ScreenUpdatingCalculationFalse As String
+152:    Dim txtArray    As String
+153:
+154:    If txtName.Text = vbNullString Then
+155:        txtErroName.visible = True
+156:        Exit Function
+157:    Else
+158:        txtErroName.visible = False
+159:    End If
+160:    If (Not optTypeProcedure) Then
+161:        If cmbFunc.Value = vbNullString Then
+162:            MsgStop = "The function data type selection field must be filled in!"
+163:        End If
+164:    End If
+165:
+166:    If MsgStop <> vbNullString Then
+167:        Call MsgBox(MsgStop, vbOKOnly + vbCritical, "Error:")
+168:        Exit Function
+169:    End If
+170:
+171:    strEndLine = vbNewLine & vbTab
+172:    'отключение описание
+173:    If chbOffDiscription Then
+174:        strDiscprition = strEndLine & Chr(39) & "Description:" & txtDiscprition.Text
+175:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Дата создания: " & Format(Now(), "dddddd в  h:nn:ss")
+176:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Author:" & Environ("UserName")
+177:    End If
+178:    strSpes = Space(1)
+179:    ScreenUpdatingCalculationTrue = "Call ScreenUpdatingCalculation(Screen:=True, Calculat:=True, Alerts:=True, Events:=True)"
+180:
+181:    'тип модификатора доступа
+182:    If optTypeModif Then
+183:        TypeModif = "Public"
+184:    Else
+185:        TypeModif = "Private"
+186:    End If
+187:
+188:    'массив для функций
+189:    If (Not optTypeProcedure.Value) And chbArray.Value Then
+190:        txtArray = " ()"
+191:    End If
+192:
+193:    'процедура или функция
+194:    If optTypeProcedure Then
+195:        TypeProc = "Sub"
+196: TypeFunction = vbNullString
+197:    Else
+198:        TypeProc = "Function"
+199: TypeFunction = " as " & cmbFunc.Value
+200:        ResultDimFunc = vbNewLine & vbTab & "Dim Result" & txtArray & " as " & cmbFunc.Value
+201:        ResultEndFunc = vbNewLine & vbTab & txtName.Text & " = Result"
+202:    End If
+203:
+204:    'вывод сообщения по окончанию
+205:    If chbMsg Then
+206:        Dim txtNewLine As String
+207:        If txtMsg.Text <> vbNullString Then txtNewLine = " & vbNewLine & "
+208:        If chbUseDefaultMsg Then strMsg1 = Chr(34) & "Accomplishment" & txtName.Text & "It's over!" & Chr(34) & txtNewLine
+209:        CustMsg = txtMsg.Text
+210:        If CustMsg = vbNullString Then
+211:            If chbUseDefaultMsg Then
+212:                CustMsg = vbNullString
+213:            Else
+214:                CustMsg = Chr(34) & vbNullString & Chr(34)
+215:            End If
+216:        Else
+217:            CustMsg = Replace(CustMsg, Chr(34), "| & Chr(34) & |")
+218:            CustMsg = Chr(34) & Replace(CustMsg, "|", Chr(34)) & Chr(34)
+219:        End If
+220:        strMsg1 = strMsg1 & CustMsg
+221:        strMsg = strEndLine & "Call MsgBox(" & strMsg1 & ", vbOKOnly + vbInformation," & Chr(34) & txtName.Text & Chr(34) & ")"
+222:    End If
+223:
+224:    'обработка ошибок
+225:    If optDefaultError Then
+226:        ErrorMsgFerst = vbNullString
+227:        ErrorMsgEnd = vbNullString
+228:    End If
+229:
+230:    If optResumNext Then
+231:        ErrorMsgFerst = strEndLine & "On Error Resume Next"
+232:        ErrorMsgEnd = vbNullString
+233:    End If
+234:    ScreenUpdatingCalculationFalse = "Call ScreenUpdatingCalculation(Screen:=" & (Not chbScreen.Value) & ", Calculat:=" & (Not chbCalculations.Value) & ", Alerts:=" & (Not chbAlerts.Value) & ", Events:=" & (Not chbEvents.Value) & ")"
+235:
+236:    'если ни чего не отключено то не чего включать
+237:    If ScreenUpdatingCalculationFalse = ScreenUpdatingCalculationTrue Then
+238:        ScreenUpdatingCalculationTrue = vbNullString
+239:        ScreenUpdatingCalculationFalse = vbNullString
+240:    End If
+241:
+242:    If optErrorHandele Then
+243:        ErrorMsgFerst = strEndLine & "On Error GoTo ErrorHandler"
+244:        ErrorMsgEnd = strEndLine & "Exit " & TypeProc & vbNewLine & "ErrorHandler:" & strEndLine & ScreenUpdatingCalculationTrue
+245:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "Select Case Err"
         ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "error handling for using uncomment"
-248:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "Case"
-249:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & "Case Else:"
-250:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & vbTab & "Debug.Print " & Chr(34) & "An error occurred in" & txtName & Chr(34) & " & vbNewLine & Err.Number & vbNewLine & Err.Description"
-251:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "End Select"
-252:    End If
-253:
-254:    'формирование кода
-255:    strCode = TypeModif & strSpes & TypeProc & strSpes & txtName & strSpes & "()" & TypeFunction & txtArray
-256:    strCode = strCode & strDiscprition
-257:    strCode = strCode & ResultDimFunc
-258:    strCode = strCode & ErrorMsgFerst
-259:    strCode = strCode & strEndLine & ScreenUpdatingCalculationFalse
-260:    strCode = strCode & strEndLine & strEndLine & Chr(39) & "place for the code" & strEndLine
-261:    strCode = strCode & ResultEndFunc
-262:    strCode = strCode & strEndLine & ScreenUpdatingCalculationTrue
-263:    strCode = strCode & strMsg
-264:    strCode = strCode & ErrorMsgEnd
-265:    strCode = strCode & vbNewLine & "End " & TypeProc
-266:
-267:    AddCode = strCode
-268: End Function
+247:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "Case"
+248:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & "Case Else:"
+249:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & vbTab & "Debug.Print " & Chr(34) & "An error occurred in" & txtName & Chr(34) & " & vbNewLine & Err.Number & vbNewLine & Err.Description"
+250:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "End Select"
+251:    End If
+252:
+253:    'формирование кода
+254: strCode = TypeModif & strSpes & TypeProc & strSpes & txtName & strSpes & "()" & TypeFunction & txtArray
+255:    strCode = strCode & strDiscprition
+256:    strCode = strCode & ResultDimFunc
+257:    strCode = strCode & ErrorMsgFerst
+258:    strCode = strCode & strEndLine & ScreenUpdatingCalculationFalse
+259:    strCode = strCode & strEndLine & strEndLine & Chr(39) & "place for the code" & strEndLine
+260:    strCode = strCode & ResultEndFunc
+261:    strCode = strCode & strEndLine & ScreenUpdatingCalculationTrue
+262:    strCode = strCode & strMsg
+263:    strCode = strCode & ErrorMsgEnd
+264:    strCode = strCode & vbNewLine & "End " & TypeProc
+265:
+266:    AddCode = strCode
+267: End Function
      Private Function AddMainProceure() As String
-270:    Dim txtCode     As String
-271:    txtCode = txtViewCode.Text
-272:
-273:    'копирование процедуры ScreenUpdatingCalculation
-274:    If chbAddMainProceure Then
-275:        Dim snippets As ListObject
-276:        Dim i_row   As Long
-277:        Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
-278:        i_row = snippets.ListColumns(3).DataBodyRange.Find(What:="cu.ScreenUpdatingCalculation", LookIn:=xlValues, LookAt:=xlWhole).Row
-279:        txtCode = txtCode & vbNewLine & snippets.Range(i_row, 4)
-280:    End If
-281:    AddMainProceure = txtCode
-282: End Function
+269:    Dim txtCode     As String
+270:    txtCode = txtViewCode.Text
+271:
+272:    'копирование процедуры ScreenUpdatingCalculation
+273:    If chbAddMainProceure Then
+274:        Dim snippets As ListObject
+275:        Dim i_row   As Long
+276:        Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
+277:        i_row = snippets.ListColumns(3).DataBodyRange.Find(What:="cu.ScreenUpdatingCalculation", LookIn:=xlValues, LookAt:=xlWhole).Row
+278:        txtCode = txtCode & vbNewLine & snippets.Range(i_row, 4)
+279:    End If
+280:    AddMainProceure = txtCode
+281: End Function
      Private Sub btnCopyCode_Click()
-284:    Dim sMsgBoxString As String, txtCode As String
-285:    'получение кода
-286:    txtCode = AddMainProceure()
-287:
-288:    If opbCliboard Then
-289:        Call C_PublicFunctions.SetTextIntoClipboard(txtCode)
-290:        sMsgBoxString = "The code is copied to the clipboard!" & vbNewLine & "To insert the code, use" & Chr(34) & "Ctrl+V" & Chr(34)
-291:        Call MsgBox(sMsgBoxString, vbInformation, "Copying the code:")
-292:    Else
-293:        Debug.Print txtCode
-294:    End If
-295:    Me.Hide
-296: End Sub
+283:    Dim sMsgBoxString As String, txtCode As String
+284:    'получение кода
+285:    txtCode = AddMainProceure()
+286:
+287:    If opbCliboard Then
+288:        Call C_PublicFunctions.SetTextIntoClipboard(txtCode)
+289:        sMsgBoxString = "The code is copied to the clipboard!" & vbNewLine & "To insert the code, use" & Chr(34) & "Ctrl+V" & Chr(34)
+290:        Call MsgBox(sMsgBoxString, vbInformation, "Copying the code:")
+291:    Else
+292:        Debug.Print txtCode
+293:    End If
+294:    Me.Hide
+295: End Sub
      Private Sub lbInsertCode_Click()
-298:    Dim iLine       As Integer
-299:    Dim txtCode As String, txtLine As String
-300:    'получение кода
-301:    txtCode = AddMainProceure()
-302:    If txtCode = vbNullString Then Exit Sub
-303:    txtLine = C_PublicFunctions.SelectedLineColumnProcedure
-304:    If txtLine = vbNullString Then
-305:        Me.Hide
-306:        Exit Sub
-307:    End If
-308:    iLine = Split(txtLine, "|")(2)
-309:
-310:    With Application.VBE.ActiveCodePane
-311:        .CodeModule.InsertLines iLine, txtCode
-312:    End With
-313:    Me.Hide
-314: End Sub
+297:    Dim iLine       As Integer
+298:    Dim txtCode As String, txtLine As String
+299:    'получение кода
+300:    txtCode = AddMainProceure()
+301:    If txtCode = vbNullString Then Exit Sub
+302:    txtLine = C_PublicFunctions.SelectedLineColumnProcedure
+303:    If txtLine = vbNullString Then
+304:        Me.Hide
+305:        Exit Sub
+306:    End If
+307:    iLine = Split(txtLine, "|")(2)
+308:
+309:    With Application.VBE.ActiveCodePane
+310:        .CodeModule.InsertLines iLine, txtCode
+311:    End With
+312:    Me.Hide
+313: End Sub
 
 Private Sub TernOffOn()
-317:    If (chbScreen.Value + chbCalculations.Value + chbAlerts.Value + chbEvents.Value) <> 0 Then
-318:        chbAddMainProceure.Enabled = True
-319:    Else
-320:        chbAddMainProceure.Enabled = False
-321:    End If
+316:    If (chbScreen.Value + chbCalculations.Value + chbAlerts.Value + chbEvents.Value) <> 0 Then
+317:        chbAddMainProceure.Enabled = True
+318:    Else
+319:        chbAddMainProceure.Enabled = False
+320:    End If
 End Sub

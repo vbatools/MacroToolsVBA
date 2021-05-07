@@ -143,11 +143,11 @@ End Enum
 128:    'формированияе комментария
 129:    sCommentariy = VBA.Replace(VBA.Trim(Me.txtCommentariy.Text), vbNewLine, " vbNewLine ")
 130:    sCongig = GetTypeCoomment(VersionList.verNameFileVer) & sNewDirForFile & ";" & _
-                                GetTypeCoomment(VersionList.verVersion) & sVersion & ";" & _
-                                GetTypeCoomment(VersionList.verDateAdd) & sDate & ";" & _
-                                GetTypeCoomment(VersionList.verOldVersion) & sOldVer & ";" & _
-                                GetTypeCoomment(VersionList.verModuleNames) & AddListModuleName(Me.cmbFile.Value) & ";" & _
-                                GetTypeCoomment(VersionList.verComment) & sCommentariy & vbNewLine
+                                    GetTypeCoomment(VersionList.verVersion) & sVersion & ";" & _
+                                    GetTypeCoomment(VersionList.verDateAdd) & sDate & ";" & _
+                                    GetTypeCoomment(VersionList.verOldVersion) & sOldVer & ";" & _
+                                    GetTypeCoomment(VersionList.verModuleNames) & AddListModuleName(Me.cmbFile.Value) & ";" & _
+                                    GetTypeCoomment(VersionList.verComment) & sCommentariy & vbNewLine
 136:    'обновление или создание файла Config.cvs
 137:    Call C_PublicFunctions.TXTAddIntoTXTFile(sPath & CONFIG, sCongig)
 138:    sVersionInfo = C_PublicFunctions.TXTReadALLFile(sPath & Application.PathSeparator & CONFIG, False)
@@ -230,8 +230,8 @@ ErrorHandler:
 215:        Me.txtMsg.ForeColor = myRedColor
 216:
 217:    ElseIf MsgBox("Upload a file: [" & SelectFileName & " ]" & vbNewLine & vbNewLine & _
-                                "Attention, the current file [" & Workbooks(Me.cmbFile.Value).Name & "] will be overwritten!", _
-                                vbYesNo + vbQuestion, "Download version:") = vbYes Then
+                                    "Attention, the current file [" & Workbooks(Me.cmbFile.Value).Name & "] will be overwritten!", _
+                                    vbYesNo + vbQuestion, "Download version:") = vbYes Then
 220:        sMainPath = Workbooks(Me.cmbFile.Value).FullName
 221:        sLoadPath = Me.txtPath & SelectFileName
 222:
@@ -626,7 +626,7 @@ ErrorHandler:
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Private Function addString() As String
+     Private Function addString() As String
 615:    Dim strTemp As String
 616:    On Error GoTo ErrorHandler
 617:    strTemp = VBA.Replace(VBA.String(20, "*"), "*", "* ")
@@ -635,5 +635,5 @@ Private Function addString() As String
 ErrorHandler:
 621:    Debug.Print "Error in VersionSistemControls.AddString" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
 622:    Call WriteErrorLog("VersionSistemControls.AddString")
-End Function
+623: End Function
 

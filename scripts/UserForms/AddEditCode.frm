@@ -163,7 +163,7 @@ errmsg:
 148:    With snippets
 149:        .Sort.SortFields.Clear
 150:        .Sort.SortFields.Add Key:=Range("C:C"), SortOn:=xlSortOnValues, Order:= _
-                        xlAscending, DataOption:=xlSortNormal
+                            xlAscending, DataOption:=xlSortNormal
 152:        With .Sort
 153:            .Header = xlYes
 154:            .MatchCase = False
@@ -174,7 +174,7 @@ errmsg:
 159:    End With
 160: End Sub
 
-Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
+     Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
 163:    Dim vItem, li   As Long
 164:    Dim avArr()     As String
 165:    li = 0
@@ -198,5 +198,5 @@ Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
 183:        avArr(0) = 0
 184:    End If
 185:    GetUniqueValueFromRange = avArr
-End Function
+186: End Function
 

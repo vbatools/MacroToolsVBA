@@ -90,11 +90,11 @@ errmsg:
 89:    Next i
 90:    AddSpaceCode = new_code
 91: End Function
-Private Function AddCodeStr(ByRef strVar() As String) As String
+    Private Function AddCodeStr(ByRef strVar() As String) As String
 93:    Dim i           As Long
 94:    AddCodeStr = vbNullString
 95:    For i = 1 To UBound(strVar)
 96:        AddCodeStr = AddCodeStr & " " & strVar(i)
 97:    Next
-End Function
+98: End Function
 

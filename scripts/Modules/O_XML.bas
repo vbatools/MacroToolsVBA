@@ -127,13 +127,13 @@ errmsg:
 126:    'and the directory attribute is set
 127:    'the folder exists
 128:    FolderExists = (hFile <> INVALID_HANDLE_VALUE) And _
-                (WFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY)
+                    (WFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY)
 130:
 131:    'clean up
 132:    Call FindClose(hFile)
 133: End Function
 
-Private Function UnQualifyPath(ByVal sFolder As String) As String
+     Private Function UnQualifyPath(ByVal sFolder As String) As String
 136:
 137:    'trim and remove any trailing slash
 138:    sFolder = Trim$(sFolder)
@@ -143,5 +143,5 @@ Private Function UnQualifyPath(ByVal sFolder As String) As String
 142:    Else
 143:        UnQualifyPath = sFolder
 144:    End If
-End Function
+145: End Function
 

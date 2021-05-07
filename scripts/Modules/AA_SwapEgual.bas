@@ -9,70 +9,70 @@ Option Private Module
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    Public Sub SwapEgual()
-11:    Dim nStartLine  As Long
-12:    Dim nStartColumn As Long
-13:    Dim nEndline    As Long
-14:    Dim nEndColumn  As Long
-15:    Dim arrStr As Variant
-16:
-17:    Dim sLine       As String
-18:    Dim sCode       As String
-19:
-20:    Dim nLine       As Integer
-21:    Dim sToken1     As String
-22:    Dim sToken2     As String
-23:
-24:    Dim sNew        As String
-25:
-26:    Dim nI          As Integer
-27:
-28:    Dim prjProject  As VBProject
-29:    Dim cpCodePane  As CodePane
-30:
-31:    Dim nPos        As Integer
-32:
+Public Sub SwapEgual()
+12:    Dim nStartLine  As Long
+13:    Dim nStartColumn As Long
+14:    Dim nEndline    As Long
+15:    Dim nEndColumn  As Long
+16:    Dim arrStr As Variant
+17:
+18:    Dim sLine       As String
+19:    Dim sCode       As String
+20:
+21:    Dim nLine       As Integer
+22:    Dim sToken1     As String
+23:    Dim sToken2     As String
+24:
+25:    Dim sNew        As String
+26:
+27:    Dim nI          As Integer
+28:
+29:    Dim prjProject  As VBProject
+30:    Dim cpCodePane  As CodePane
+31:
+32:    Dim nPos        As Integer
 33:
-34:    On Error Resume Next
-35:
-36:    Set prjProject = Application.VBE.ActiveVBProject
-37:
-38:    If prjProject Is Nothing Then
-39:        Debug.Print "No active VBA project"
-40:        Exit Sub
-41:    End If
-42:
-43:    Set cpCodePane = Application.VBE.ActiveCodePane
-44:
-45:    If cpCodePane Is Nothing Then
-46:        Debug.Print "No active VBA code module"
-47:        Exit Sub
-48:    End If
-49:
-50:    cpCodePane.GetSelection nStartLine, nStartColumn, nEndline, nEndColumn
-51:    If nEndColumn > 1 Then nEndline = nEndline + 1
-52:    sCode = cpCodePane.CodeModule.Lines(nStartLine, IIf(nEndline - nStartLine = 0, 1, nEndline - nStartLine))
-53:
-54:    If (sCode = vbNullString) Then
-55:        Debug.Print "VBA code is not allocated"
-56:        Exit Sub
-57:    End If
-58:
-59:    sNew = vbNullString
-60:    nLine = nStartLine
-61:    arrStr = VBA.Split(sCode, vbNewLine)
-62:    For nI = 0 To UBound(arrStr)
-63:        sLine = arrStr(nI)
-64:        nPos = InStr(sLine, " = ")
-65:        If nPos > 0 Then
-66:            sToken1 = RTrim(Left(sLine, nPos - 1))
-67:            sToken2 = Right$(sLine, Len(sLine) - nPos - 2)
-68:            sNew = Space(Len(sToken1) - Len(LTrim(sToken1))) & Trim$(sToken2) & " = " & Trim$(sToken1)
-69:
-70:            cpCodePane.CodeModule.ReplaceLine nLine, sNew
-71:        End If
-72:
-73:        nLine = nLine + 1
-74:    Next
-75:    cpCodePane.SetSelection nStartLine, nStartColumn, nStartLine, nStartColumn
-76: End Sub
+34:
+35:    On Error Resume Next
+36:
+37:    Set prjProject = Application.VBE.ActiveVBProject
+38:
+39:    If prjProject Is Nothing Then
+40:        Debug.Print "No active VBA project"
+41:        Exit Sub
+42:    End If
+43:
+44:    Set cpCodePane = Application.VBE.ActiveCodePane
+45:
+46:    If cpCodePane Is Nothing Then
+47:        Debug.Print "No active VBA code module"
+48:        Exit Sub
+49:    End If
+50:
+51:    cpCodePane.GetSelection nStartLine, nStartColumn, nEndline, nEndColumn
+52:    If nEndColumn > 1 Then nEndline = nEndline + 1
+53:    sCode = cpCodePane.CodeModule.Lines(nStartLine, IIf(nEndline - nStartLine = 0, 1, nEndline - nStartLine))
+54:
+55:    If (sCode = vbNullString) Then
+56:        Debug.Print "VBA code is not allocated"
+57:        Exit Sub
+58:    End If
+59:
+60:    sNew = vbNullString
+61:    nLine = nStartLine
+62:    arrStr = VBA.Split(sCode, vbNewLine)
+63:    For nI = 0 To UBound(arrStr)
+64:        sLine = arrStr(nI)
+65:        nPos = InStr(sLine, " = ")
+66:        If nPos > 0 Then
+67:            sToken1 = RTrim(Left(sLine, nPos - 1))
+68:            sToken2 = Right$(sLine, Len(sLine) - nPos - 2)
+69:            sNew = Space(Len(sToken1) - Len(LTrim(sToken1))) & Trim$(sToken2) & " = " & Trim$(sToken1)
+70:
+71:            cpCodePane.CodeModule.ReplaceLine nLine, sNew
+72:        End If
+73:
+74:        nLine = nLine + 1
+75:    Next
+76:    cpCodePane.SetSelection nStartLine, nStartColumn, nStartLine, nStartColumn
+End Sub

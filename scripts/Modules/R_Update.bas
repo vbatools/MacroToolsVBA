@@ -30,10 +30,10 @@ Public Const DayAfterCheck As Byte = 10
 29:
 30:    If TextUpdate <> vbNullString And TbRange.Cells(1, 2).Value2 + R_Update.DayAfterCheck < Now() Then
 31:        If MsgBox("Good afternoon!" & vbNewLine & _
-                   "Microtools VBA add-in update available" & vbNewLine & vbNewLine & _
-                   "To update, go to the website VBATools.ru" & vbNewLine & vbNewLine & _
-                   TextUpdate & vbNewLine & vbNewLine & _
-                   "Remind me later ?" & vbNewLine, vbYesNo, "Micro tools Update") = vbYes Then
+                      "Microtools VBA add-in update available" & vbNewLine & vbNewLine & _
+                      "To update, go to the website VBATools.ru" & vbNewLine & vbNewLine & _
+                      TextUpdate & vbNewLine & vbNewLine & _
+                      "Remind me later ?" & vbNewLine, vbYesNo, "Micro tools Update") = vbYes Then
 36:            TbRange.Cells(1, 2).Value2 = Now()
 37:            Workbooks(C_Const.NAME_ADDIN & ".xlam").Save
 38:        End If
@@ -117,7 +117,7 @@ ErrorHandler:
 116:    ChekDateUpdate = True
 117: End Function
 
-Private Function ResponseTextHttp(ByVal URL As String) As String
+     Private Function ResponseTextHttp(ByVal URL As String) As String
 120:    Dim oHttp       As Object
 121:
 122:    'запрос новой версии
@@ -142,5 +142,5 @@ Private Function ResponseTextHttp(ByVal URL As String) As String
 141:        End If
 142:    End With
 143:    Set oHttp = Nothing
-End Function
+144: End Function
 

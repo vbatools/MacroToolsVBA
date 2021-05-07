@@ -22,29 +22,29 @@ Attribute VB_Exposed = False
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Option Explicit
     Private Sub cmbCancel_Click()
-12:    cmbMain.Clear
-13:    cmbMain.Value = vbNullString
-14:    Unload Me
-15: End Sub
+10:    cmbMain.Clear
+11:    cmbMain.Value = vbNullString
+12:    Unload Me
+13: End Sub
     Private Sub lbCancel_Click()
-17:    Call cmbCancel_Click
-18: End Sub
+15:    Call cmbCancel_Click
+16: End Sub
     Private Sub lbOK_Click()
-20:    Unload Me
-21: End Sub
+18:    Unload Me
+19: End Sub
 Private Sub UserForm_Activate()
-23:    Me.StartUpPosition = 0
-24:    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
-25:    Me.top = Application.top + (0.5 * Application.Height) - (0.5 * Me.Height)
-26:
-27:    Dim vbProj      As VBIDE.VBProject
-28:    On Error Resume Next
-29:    With cmbMain
-30:        .Clear
-31:        For Each vbProj In Application.VBE.VBProjects
-32:            .AddItem C_PublicFunctions.sGetFileName(vbProj.Filename)
-33:        Next
-34:        .Value = ActiveWorkbook.Name
-35:    End With
-36:    Exit Sub
+21:    Me.StartUpPosition = 0
+22:    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+23:    Me.top = Application.top + (0.5 * Application.Height) - (0.5 * Me.Height)
+24:
+25:    Dim vbProj      As VBIDE.VBProject
+26:    On Error Resume Next
+27:    With cmbMain
+28:        .Clear
+29:        For Each vbProj In Application.VBE.VBProjects
+30:            .AddItem C_PublicFunctions.sGetFileName(vbProj.Filename)
+31:        Next
+32:        .Value = ActiveWorkbook.Name
+33:    End With
+34:    Exit Sub
 End Sub

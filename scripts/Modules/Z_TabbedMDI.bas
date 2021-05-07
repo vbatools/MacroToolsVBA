@@ -20,29 +20,29 @@ Private Declare Function FreeLibrary Lib "kernel32" (ByVal hLibModule As Long) A
 Private m_hDll      As Long
 #End If
 
-Public Sub AddTabbed()
-    Dim dllPath     As String
-    dllPath = Environ("APPDATA") & "\Microsoft\AddIns\" & DLLNAME
-    If Dir(dllPath) <> "" Then
-        'Debug.Assert (m_hDll = 0)
-        If (m_hDll = 0) Then m_hDll = LoadLibrary(dllPath)
-        'Debug.Assert (m_hDll <> 0)
-        If m_hDll <> 0 Then
-            hResult = Connect(Application)
-            'Debug.Assert (hResult = S_OK)
-            'Debug.Print DLLNAME & "::Connect()"
-        End If
-    Else
-        Debug.Print DLLNAME & " file not found", vbCritical
-    End If
-End Sub
+    Public Sub AddTabbed()
+23:    Dim dllPath     As String
+24:    dllPath = Environ("APPDATA") & "\Microsoft\AddIns\" & DLLNAME
+25:    If Dir(dllPath) <> "" Then
+26:        'Debug.Assert (m_hDll = 0)
+27:        If (m_hDll = 0) Then m_hDll = LoadLibrary(dllPath)
+28:        'Debug.Assert (m_hDll <> 0)
+29:        If m_hDll <> 0 Then
+30:            hResult = Connect(Application)
+31:            'Debug.Assert (hResult = S_OK)
+32:            'Debug.Print DLLNAME & "::Connect()"
+33:        End If
+34:    Else
+35:        Debug.Print DLLNAME & " file not found", vbCritical
+36:    End If
+37: End Sub
 
-Public Sub CloseTabed()
-    If (m_hDll <> 0) Then
-        hResult = Disconnect()
-        'Debug.Assert (hResult = S_OK)
-        FreeLibrary m_hDll
-        m_hDll = 0
-    End If
-End Sub
+    Public Sub CloseTabed()
+40:    If (m_hDll <> 0) Then
+41:        hResult = Disconnect()
+42:        'Debug.Assert (hResult = S_OK)
+43:        FreeLibrary m_hDll
+44:        m_hDll = 0
+45:    End If
+46: End Sub
 

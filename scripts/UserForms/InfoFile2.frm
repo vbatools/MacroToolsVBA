@@ -23,84 +23,84 @@ Attribute VB_Exposed = False
 Option Explicit
 
     Private Sub cmbMain_Change()
-13:    Me.txtLastAuthor = X_InfoFile.GetOneProp(Workbooks(cmbMain.Value), "Last author")
-14:    Me.txtLastAuthorOld = Me.txtLastAuthor
-15:    Me.txtLastSaveTime = X_InfoFile.GetOneProp(Workbooks(cmbMain.Value), "Last save time")
-16:    Me.txtLastSaveTimeOld = Me.txtLastSaveTime
-17: End Sub
+11:    Me.txtLastAuthor = X_InfoFile.GetOneProp(Workbooks(cmbMain.Value), "Last author")
+12:    Me.txtLastAuthorOld = Me.txtLastAuthor
+13:    Me.txtLastSaveTime = X_InfoFile.GetOneProp(Workbooks(cmbMain.Value), "Last save time")
+14:    Me.txtLastSaveTimeOld = Me.txtLastSaveTime
+15: End Sub
 
     Private Sub lbOK_Click()
-20:    If Me.txtLastSaveTimeOld <> Me.txtLastSaveTime Or Me.txtLastAuthorOld <> Me.txtLastAuthor Then
-21:        If IsDate(Me.txtLastSaveTime) Then
-22:            Dim WB  As Workbook
-23:            Dim sPath As String
-24:            Set WB = Workbooks(cmbMain.Value)
-25:            sPath = WB.FullName
-26:            WB.Close savechanges:=True
-27:            Call WriteXML(sPath, Me.txtLastAuthor.Text, CDate(Me.txtLastSaveTime.Text))
-28:            Workbooks.Open Filename:=sPath
-29:            Call MsgBox("Changes made to the file!", vbInformation, "Changes:")
-30:            Unload Me
-31:        Else
-32:            Call MsgBox("The [ Last save time ] field does not contain a date!", vbCritical, "Error:")
-33:        End If
-34:    End If
-35: End Sub
+18:    If Me.txtLastSaveTimeOld <> Me.txtLastSaveTime Or Me.txtLastAuthorOld <> Me.txtLastAuthor Then
+19:        If IsDate(Me.txtLastSaveTime) Then
+20:            Dim WB  As Workbook
+21:            Dim sPath As String
+22:            Set WB = Workbooks(cmbMain.Value)
+23:            sPath = WB.FullName
+24:            WB.Close savechanges:=True
+25:            Call WriteXML(sPath, Me.txtLastAuthor.Text, CDate(Me.txtLastSaveTime.Text))
+26:            Workbooks.Open Filename:=sPath
+27:            Call MsgBox("Changes made to the file!", vbInformation, "Changes:")
+28:            Unload Me
+29:        Else
+30:            Call MsgBox("The [ Last save time ] field does not contain a date!", vbCritical, "Error:")
+31:        End If
+32:    End If
+33: End Sub
 
     Private Sub WriteXML(ByVal sFileName As String, ByVal LastAuthor As String, ByVal lastTime As Date, Optional bBackUp As Boolean = False)
-38:    Dim cEditOpenXML As clsEditOpenXML
-39:    Dim sXml        As String
-40:    Dim oXMLDoc     As MSXML2.DOMDocument
+36:    Dim cEditOpenXML As clsEditOpenXML
+37:    Dim sXml        As String
+38:    Dim oXMLDoc     As MSXML2.DOMDocument
+39:
+40:    Set oXMLDoc = New MSXML2.DOMDocument
 41:
-42:    Set oXMLDoc = New MSXML2.DOMDocument
-43:
-44:    Set cEditOpenXML = New clsEditOpenXML
-45:    With cEditOpenXML
-46:        .CreateBackupXML = bBackUp
-47:        .SourceFile = sFileName
-48:        .UnzipFile
-49:        sXml = .GetXMLFromFile("core.xml", .XMLFolder(XMLFolder_docProps))
-50:
-51:        oXMLDoc.loadXML sXml
-52:        With oXMLDoc.ChildNodes(1)
-53:            .SelectSingleNode("cp:lastModifiedBy").nodeTypedValue = LastAuthor
-54:            .SelectSingleNode("dcterms:modified").nodeTypedValue = VBA.Format$(lastTime, "yyyy\-mm\-ddThh\:mm\:ssZ")
-55:        End With
-56:        Call .WriteXML2File(oXMLDoc.XML, "core.xml", XMLFolder_docProps)
-57:        .ZipAllFilesInFolder
-58:    End With
-59:
-60:    Set cEditOpenXML = Nothing
-61:    Set oXMLDoc = Nothing
-62:
-63: End Sub
+42:    Set cEditOpenXML = New clsEditOpenXML
+43:    With cEditOpenXML
+44:        .CreateBackupXML = bBackUp
+45:        .SourceFile = sFileName
+46:        .UnzipFile
+47:        sXml = .GetXMLFromFile("core.xml", .XMLFolder(XMLFolder_docProps))
+48:
+49:        oXMLDoc.loadXML sXml
+50:        With oXMLDoc.ChildNodes(1)
+51:            .SelectSingleNode("cp:lastModifiedBy").nodeTypedValue = LastAuthor
+52:            .SelectSingleNode("dcterms:modified").nodeTypedValue = VBA.Format$(lastTime, "yyyy\-mm\-ddThh\:mm\:ssZ")
+53:        End With
+54:        Call .WriteXML2File(oXMLDoc.XML, "core.xml", XMLFolder_docProps)
+55:        .ZipAllFilesInFolder
+56:    End With
+57:
+58:    Set cEditOpenXML = Nothing
+59:    Set oXMLDoc = Nothing
+60:
+61: End Sub
 
     Private Sub UserForm_Activate()
-66:    Dim vbProj      As VBIDE.VBProject
-67:    If Workbooks.Count = 0 Then
-68:        Unload Me
-69:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
-70:        Exit Sub
-71:    End If
-72:    With Me.cmbMain
-73:        .Clear
-74:        On Error Resume Next
-75:        For Each vbProj In Application.VBE.VBProjects
-76:            .AddItem C_PublicFunctions.sGetFileName(vbProj.Filename)
-77:        Next
-78:        On Error GoTo 0
-79:        .Value = ActiveWorkbook.Name
-80:    End With
-81: End Sub
+64:    Dim vbProj      As VBIDE.VBProject
+65:    If Workbooks.Count = 0 Then
+66:        Unload Me
+67:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
+68:        Exit Sub
+69:    End If
+70:    With Me.cmbMain
+71:        .Clear
+72:        On Error Resume Next
+73:        For Each vbProj In Application.VBE.VBProjects
+74:            .AddItem C_PublicFunctions.sGetFileName(vbProj.Filename)
+75:        Next
+76:        On Error GoTo 0
+77:        .Value = ActiveWorkbook.Name
+78:    End With
+79: End Sub
 
     Private Sub cmbCancel_Click()
-84:    Unload Me
-85: End Sub
+82:    Unload Me
+83: End Sub
     Private Sub lbCancel_Click()
-87:    Call cmbCancel_Click
-88: End Sub
+85:    Call cmbCancel_Click
+86: End Sub
 Private Sub UserForm_Initialize()
-90:    Me.StartUpPosition = 0
-91:    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
-92:    Me.top = Application.top + (0.5 * Application.Height) - (0.5 * Me.Height)
+88:    Me.StartUpPosition = 0
+89:    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+90:    Me.top = Application.top + (0.5 * Application.Height) - (0.5 * Me.Height)
 End Sub
