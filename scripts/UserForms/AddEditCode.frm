@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddEditCode 
-   Caption         =   "Add Snipet:"
+   Caption         =   "UserForm1"
    ClientHeight    =   7680
    ClientLeft      =   45
    ClientTop       =   375
@@ -52,13 +52,13 @@ Private m_clsAnchorsEditAdd As CAnchors
 37:    Dim i_row       As Long
 38:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_DESCRIPTION)
 39:    lbPreView.Caption = cmbENUM.Text & txtSNIP.Text
-40:    On Error GoTo errmsg
+40:    On Error GoTo errMsg
 41:    i_row = snippets.ListColumns(1).DataBodyRange.Find(What:=cmbENUM.Text, LookIn:=xlValues, LookAt:=xlWhole).Row
 42:    txtDescription.Text = snippets.Range(i_row, 3)
 43:    Call BorderColorCntr(cmbENUM)
 44:    Call SaveBtn
 45:    Exit Sub
-errmsg:
+errMsg:
 47:    If Err.Number = 91 Then
 48:        Err.Clear
 49:    End If
@@ -140,13 +140,13 @@ errmsg:
 125:    With snippets
 126:        row_i = CLng(txtRow.Text)
 127:        If MsgBox(lbOK.Caption & " SNIPPET: [ " & lbPreView.Caption & " ] ?", vbYesNo, lbOK.Caption & " SNIPPET:") = vbYes Then
-128:            If lbOK.Caption = "TO CREATE" Then
+128:            If lbOK.Caption = "СОЗДАТЬ" Then
 129:                .ListRows.Add Position:=row_i, AlwaysInsert:=True
 130:                row_i = row_i + 1
-131:            ElseIf lbOK.Caption = "TO CHANGE" Then
+131:            ElseIf lbOK.Caption = "ИЗМЕНИТЬ" Then
 132:                'ничего не делаем
 133:            Else
-134:                Debug.Print "Error in Add Edit Code!" & vbLf & "[lbook] button] does not contain a signature"
+134:                Debug.Print "Ошибка в AddEditCode!" & vbLf & "Кнопка [lbOK] не содкржит подписи"
 135:                Exit Sub
 136:            End If
 137:        End If
@@ -163,7 +163,7 @@ errmsg:
 148:    With snippets
 149:        .Sort.SortFields.Clear
 150:        .Sort.SortFields.Add Key:=Range("C:C"), SortOn:=xlSortOnValues, Order:= _
-                            xlAscending, DataOption:=xlSortNormal
+                        xlAscending, DataOption:=xlSortNormal
 152:        With .Sort
 153:            .Header = xlYes
 154:            .MatchCase = False
@@ -174,7 +174,7 @@ errmsg:
 159:    End With
 160: End Sub
 
-     Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
+Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
 163:    Dim vItem, li   As Long
 164:    Dim avArr()     As String
 165:    li = 0
@@ -198,5 +198,4 @@ errmsg:
 183:        avArr(0) = 0
 184:    End If
 185:    GetUniqueValueFromRange = avArr
-186: End Function
-
+End Function

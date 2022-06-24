@@ -18,11 +18,11 @@ Private Const BACK_COLOR_WHITE_THEME As String = "0 0 0 7 6 0 0 0 0 0 0 0 0 0 0 
 Private Const FORE_COLOR_WHITE_THEME As String = "0 0 5 0 1 10 14 0 0 0 0 0 0 0 0 0"
 
     Public Sub ChangeColorWhiteTheme()
-20:    Call ChangeColorTheme(BACK_COLOR_WHITE_THEME, FORE_COLOR_WHITE_THEME, "Light theme enabled, restart MS Excel")
+20:    Call ChangeColorTheme(BACK_COLOR_WHITE_THEME, FORE_COLOR_WHITE_THEME, "Включена Светлая тема, перезагрузите MS Excel")
 21: End Sub
 
     Public Sub ChangeColorDarkTheme()
-24:    Call ChangeColorTheme(BACK_COLOR_BLACK_THEME, FORE_COLOR_BLACK_THEME, "Dark Theme enabled, restart MS Excel")
+24:    Call ChangeColorTheme(BACK_COLOR_BLACK_THEME, FORE_COLOR_BLACK_THEME, "Включена Тёмная тема, перезагрузите MS Excel")
 25: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -51,11 +51,11 @@ Private Const FORE_COLOR_WHITE_THEME As String = "0 0 5 0 1 10 14 0 0 0 0 0 0 0 
 50:        .RegWrite BackColor, sBackColorTheme, "REG_SZ"
 51:        .RegWrite ForeColor, sForeColorTheme, "REG_SZ"
 52:    End With
-53:    Call MsgBox(sMsg, vbInformation, "Changing the topic:")
+53:    Call MsgBox(sMsg, vbInformation, "Смена темы:")
 54:
 55:    Exit Sub
 ErrorHandler:
-57:    Call MsgBox("Error! in V_Black And White Theme.Change Color Theme" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
+57:    Call MsgBox("Ошибка! в V_BlackAndWiteTheme.ChangeColorTheme" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
 58:    Call WriteErrorLog("V_BlackAndWiteTheme.ChangeColorTheme")
 59: End Sub
 

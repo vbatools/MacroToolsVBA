@@ -36,7 +36,7 @@ ErrorHandler:
         Case 91:
 36:            Exit Sub
 37:        Case Else:
-38:            Debug.Print "Error in PadlineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+38:            Debug.Print "Ошибка! в AddLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 39:            Call WriteErrorLog("AddLineNumbers_")
 40:    End Select
 41:    Err.Clear
@@ -62,17 +62,17 @@ ErrorHandler:
         Case 91:
 62:            Exit Sub
 63:        Case Else:
-64:            Debug.Print "Error in RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+64:            Debug.Print "Ошибка! в RemoveLineNumbers_" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 65:            Call WriteErrorLog("RemoveLineNumbers_")
 66:    End Select
 67:    Err.Clear
 68: End Sub
      Private Sub AddLineNumbers( _
-                       ByVal vbCompObj As VBIDE.VBComponent, _
-                       ByVal LabelType As vbLineNumbers_LabelTypes, _
-                       ByVal AddLineNumbersToEmptyLines As Boolean, _
-                       ByVal AddLineNumbersToEndOfProc As Boolean, _
-                       ByVal Scope As vbLineNumbers_ScopeToAddLineNumbersTo)
+                  ByVal vbCompObj As VBIDE.VBComponent, _
+                  ByVal LabelType As vbLineNumbers_LabelTypes, _
+                  ByVal AddLineNumbersToEmptyLines As Boolean, _
+                  ByVal AddLineNumbersToEndOfProc As Boolean, _
+                  ByVal Scope As vbLineNumbers_ScopeToAddLineNumbersTo)
 75:    ' USAGE RULES
 76:    ' DO NOT MIX LABEL TYPES FOR LINE NUMBERS! IF ADDING LINE NUMBERS AS COLON TYPE, ANY LINE NUMBERS AS VBTAB TYPE MUST BE REMOVE BEFORE, AND RECIPROCALLY ADDING LINE NUMBERS AS VBTAB TYPE
 77:    Dim i      As Long
@@ -175,20 +175,20 @@ NextLine:
 174:    End With
 175: End Sub
      Private Function IsProcEndLine( _
-                       ByVal vbCompObj As VBIDE.VBComponent, _
-                       ByVal lLine As Long) As Boolean
+                  ByVal vbCompObj As VBIDE.VBComponent, _
+                  ByVal lLine As Long) As Boolean
 179:    With vbCompObj.CodeModule
 180:        If Trim$(.Lines(lLine, 1)) Like "End Sub*" _
-                            Or Trim$(.Lines(lLine, 1)) Like "End Function*" _
-                            Or Trim$(.Lines(lLine, 1)) Like "End Property*" _
-                            Then IsProcEndLine = True
+                        Or Trim$(.Lines(lLine, 1)) Like "End Function*" _
+                        Or Trim$(.Lines(lLine, 1)) Like "End Property*" _
+                        Then IsProcEndLine = True
 184:    End With
 185: End Function
      Private Sub IndentProcBodyLinesAsProcEndLine( _
-                       ByVal vbCompObj As VBIDE.VBComponent, _
-                       ByVal LabelType As vbLineNumbers_LabelTypes, _
-                       ByVal ProcEndLine As Long, _
-                       ByVal VBEXT As vbext_ProcKind)
+                  ByVal vbCompObj As VBIDE.VBComponent, _
+                  ByVal LabelType As vbLineNumbers_LabelTypes, _
+                  ByVal ProcEndLine As Long, _
+                  ByVal VBEXT As vbext_ProcKind)
 191:    Dim procName As String
 192:    Dim bodyOfProcedure As Long
 193:    Dim j      As Long
@@ -220,7 +220,7 @@ NextLine:
 219:                    .ReplaceLine j, Space(4) & strLine
 220:                    On Error GoTo 0
 221:                Else
-222:                    Debug.Print "This tool is limited to 999 lines of code to work properly."
+222:                    Debug.Print "Этот инструмент ограничен 999 строками кода для правильной работы."
 223:                End If
 224:            End If
 225:            j = j + 1
@@ -277,8 +277,8 @@ NextLine:
 276:        If aString Like "#   *" Or aString Like "##  *" Or aString Like "### *" Or aString Like "#### *" Then RemoveOneLineNumber = Mid$(aString, 5)
 277:        If aString Like "#" Or aString Like "##" Or aString Like "###" Or aString Like "####" Then RemoveOneLineNumber = vbNullString
 278:    End If
-279: If RemoveOneLineNumber Like "*Function *" Or RemoveOneLineNumber Like "*Sub *" _
-                Or RemoveOneLineNumber Like "*Property Set *" Or RemoveOneLineNumber Like "*Property Get *" Or RemoveOneLineNumber Like "*Property Let *" Then
+211:     If RemoveOneLineNumber Like "*Function *" Or RemoveOneLineNumber Like "*Sub *" _
+            Or RemoveOneLineNumber Like "*Property Set *" Or RemoveOneLineNumber Like "*Property Get *" Or RemoveOneLineNumber Like "*Property Let *" Then
 281:        RemoveOneLineNumber = RemoveLeadingSpaces(RemoveOneLineNumber)
 282:    End If
 283: End Function
@@ -289,10 +289,9 @@ NextLine:
 288:    End If
 289: End Function
 'удаляет все пробелы вначале строки
-     Private Function RemoveLeadingSpaces(ByVal aString As String) As String
+Private Function RemoveLeadingSpaces(ByVal aString As String) As String
 292:    Do Until Left$(aString, 1) <> " "
 293:        aString = Mid$(aString, 2)
 294:    Loop
 295:    RemoveLeadingSpaces = aString
-296: End Function
-
+End Function

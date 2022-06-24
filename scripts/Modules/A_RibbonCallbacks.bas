@@ -24,216 +24,224 @@ Option Explicit
 23:    On Error Resume Next
 24:    Call R_Update.StartUpdate
 25: End Sub
-
     Private Sub RefrasBtn(ByRef control As IRibbonControl)
-28:    If VBAIsTrusted Then
-29:        Call B_CreateMenus.RefreshMenu
-30:    End If
-31: End Sub
+27:    If VBAIsTrusted Then
+28:        Call B_CreateMenus.RefreshMenu
+29:    End If
+30: End Sub
     Private Sub ImportCodeBaseBtn(ByRef control As IRibbonControl)
-33:    On Error GoTo ErrorHandler
-34:    If VBAIsTrusted Then
-35:        Workbooks(C_Const.NAME_ADDIN & ".xlam").Sheets(C_Const.SH_SNIPPETS).Copy After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count)
-36:        Call MsgBox("The code base has been uploaded", vbInformation, "Code Base Upload:")
-37:    End If
-38:    Exit Sub
+32:    On Error GoTo ErrorHandler
+33:    If VBAIsTrusted Then
+34:        Workbooks(C_Const.NAME_ADDIN & ".xlam").Sheets(C_Const.SH_SNIPPETS).Copy After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count)
+35:        Call MsgBox("Выгрузка базы кода произведена", vbInformation, "Выгрузка базы кода:")
+36:    End If
+37:    Exit Sub
 ErrorHandler:
-40:    Select Case Err.Number
+39:    Select Case Err.Number
         Case 91:
-42:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
-43:        Case Else:
-44:            Call MsgBox("Error in ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
-45:            Call WriteErrorLog("ImportCodeBaseBtn")
-46:    End Select
-47:    Err.Clear
-48: End Sub
+41:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+42:        Case Else:
+43:            Call MsgBox("Ошибка! в ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+44:            Call WriteErrorLog("ImportCodeBaseBtn")
+45:    End Select
+46:    Err.Clear
+47: End Sub
     Private Sub AddCodeBaseBtn(ByRef control As IRibbonControl)
-50:    If VBAIsTrusted Then
-51:        Call AddCodeView.Show
-52:    End If
-53: End Sub
+49:    If VBAIsTrusted Then
+50:        Call AddCodeView.Show
+51:    End If
+52: End Sub
     Private Sub AddStatBtn(ByRef control As IRibbonControl)
-55:    If VBAIsTrusted Then
-56:        Call I_StatisticVBAProj.AddSheetStatistica
-57:    End If
-58: End Sub
+54:    If VBAIsTrusted Then
+55:        Call I_StatisticVBAProj.AddSheetStatistica
+56:    End If
+57: End Sub
     Sub btnHiddenModule(control As IRibbonControl)
-60:    Call HiddenModule.Show
-61: End Sub
+59:    Call HiddenModule.Show
+60: End Sub
     Private Sub AddInBtn(ByRef control As IRibbonControl)
-63:    On Error GoTo ErrorHandler
-64:    Application.Dialogs(xlDialogAddinManager).Show
-65:    Exit Sub
+62:    On Error GoTo ErrorHandler
+63:    Application.Dialogs(xlDialogAddinManager).Show
+64:    Exit Sub
 ErrorHandler:
-67:    Err.Clear
-68:    Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
-69: End Sub
+66:    Err.Clear
+67:    Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+68: End Sub
     Private Sub VBABtn(ByRef control As IRibbonControl)
-71:    Call VBAVBEOpen
-72: End Sub
+70:    Call VBAVBEOpen
+71: End Sub
     Private Sub BtnExportVBA(control As IRibbonControl)
-74:    Call VBAVBEOpen
-75:    Call ModuleCommander.Show
-76: End Sub
+73:    Call VBAVBEOpen
+74:    Call ModuleCommander.Show
+75: End Sub
     Public Sub VBAVBEOpen()
-78:    If C_PublicFunctions.Num_Not_Stable Then Call SendKeys("%{NUMLOCK}")
-79:    Call SendKeys("%{F11}")
-80: End Sub
+77:    If C_PublicFunctions.Num_Not_Stable Then Call SendKeys("%{NUMLOCK}")
+78:    Call SendKeys("%{F11}")
+79: End Sub
     Private Sub BtnVSC(control As IRibbonControl)
-82:    Call VersionSistemControls.Show
-83: End Sub
+81:    Call VersionSistemControls.Show
+82: End Sub
     Private Sub onSwitcherReferenceStyle(ByRef control As IRibbonControl)
-85:    With Application
-86:        If .ReferenceStyle = xlR1C1 Then
-87:            .ReferenceStyle = xlA1
-88:        Else
-89:            .ReferenceStyle = xlR1C1
-90:        End If
-91:    End With
-92: End Sub
+84:    With Application
+85:        If .ReferenceStyle = xlR1C1 Then
+86:            .ReferenceStyle = xlA1
+87:        Else
+88:            .ReferenceStyle = xlR1C1
+89:        End If
+90:    End With
+91: End Sub
     Private Sub onOpenFileExcel(ByRef control As IRibbonControl)
-94:    Call O_XML.OpenAndCloseExcelFileInFolder(bOpenFile:=True, bBackUp:=False)
-95: End Sub
+93:    Call O_XML.OpenAndCloseExcelFileInFolder(bOpenFile:=True, bBackUp:=False)
+94: End Sub
     Private Sub onCloseFileExcel(ByRef control As IRibbonControl)
-97:    Call O_XML.OpenAndCloseExcelFileInFolder(bOpenFile:=False, bBackUp:=True)
-98: End Sub
+96:    Call O_XML.OpenAndCloseExcelFileInFolder(bOpenFile:=False, bBackUp:=True)
+97: End Sub
      Private Sub onUnProtectVBA(ByRef control As IRibbonControl)
-100:    Call P_UnProtected.unprotected
-101: End Sub
+99:    Call P_UnProtected.unprotected
+100: End Sub
      Private Sub onUnProtectSheets(ByRef control As IRibbonControl)
-103:    On Error GoTo ErrorHandler
-104:    Call ProtectedSheets.Show
-105:    Exit Sub
+102:    On Error GoTo ErrorHandler
+103:    Call ProtectedSheets.Show
+104:    Exit Sub
 ErrorHandler:
-107:    Select Case Err.Number
+106:    Select Case Err.Number
         Case 91:
-109:            Call MsgBox("No open files" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
-110:        Case Else:
-111:            Call MsgBox("Error in onUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbExclamation, "Error:")
-112:            Call WriteErrorLog("onUnUnProtectSheets")
-113:    End Select
-114:    Err.Clear
-115: End Sub
+108:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+109:        Case Else:
+110:            Call MsgBox("Ошибка! в onUnUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+111:            Call WriteErrorLog("onUnUnProtectSheets")
+112:    End Select
+113:    Err.Clear
+114: End Sub
      Private Sub onUnProtectVBAUnivable(control As IRibbonControl)
-117:    Call P_UnProtected.DelPasswordVBAProjectUnivable
-118: End Sub
+116:    Call P_UnProtected.DelPasswordVBAProjectUnivable
+117: End Sub
      Private Sub onAddShapeStatistic(ByRef control As IRibbonControl)
-120:    Call AddShapeStatistic
-121: End Sub
+119:    Call AddShapeStatistic
+120: End Sub
      Private Sub onOptions(ByRef control As IRibbonControl)
-123:    Call OptionsCodeFormat.Show
-124: End Sub
+122:    Call OptionsCodeFormat.Show
+123: End Sub
      Private Sub onOptionsComments(ByRef control As IRibbonControl)
-126:    Call SettingsAddCommentsProc.Show
-127: End Sub
+125:    Call SettingsAddCommentsProc.Show
+126: End Sub
      Private Sub BtnHelpMain(control As IRibbonControl)
-129:    Call HelpMainAddin
-130: End Sub
+128:    Call HelpMainAddin
+129: End Sub
      Private Sub BtnMainBuilders(control As IRibbonControl)
-132:    Call URLLinks(C_Const.URL_BILD)
-133: End Sub
+131:    Call URLLinks(C_Const.URL_BILD)
+132: End Sub
      Private Sub BtnHelpControls(control As IRibbonControl)
-135:    Call URLLinks(C_Const.URL_MOVE_CNTR)
-136: End Sub
+134:    Call URLLinks(C_Const.URL_MOVE_CNTR)
+135: End Sub
      Private Sub BtnHelpSnippets(control As IRibbonControl)
-138:    Call URLLinks(C_Const.URL_STYLE)
-139: End Sub
+137:    Call URLLinks(C_Const.URL_STYLE)
+138: End Sub
      Private Sub BtnHelpPass(control As IRibbonControl)
-141:    Call URLLinks(C_Const.URL_FILE)
-142: End Sub
+140:    Call URLLinks(C_Const.URL_FILE)
+141: End Sub
      Private Sub BtnHelpContacts(control As IRibbonControl)
-144:    Call URLLinks(C_Const.URL_CONTACT)
-145: End Sub
+143:    Call URLLinks(C_Const.URL_CONTACT)
+144: End Sub
      Private Sub HelpMainAddin()
-147:    Call URLLinks(C_Const.URL_ADDIN)
-148: End Sub
+146:    Call URLLinks(C_Const.URL_ADDIN)
+147: End Sub
      Private Sub onInToFile(control As IRibbonControl)
-150:    Call Q_InToFile.InToFile
-151: End Sub
+149:    Call Q_InToFile.InToFile
+150: End Sub
      Private Sub BtnOrderMacro(control As IRibbonControl)
-153:    Call URLLinks(C_Const.URL_CONTACT)
-154: End Sub
+152:    Call URLLinks(C_Const.URL_CONTACT)
+153: End Sub
 'Version
      Public Sub getVisible(control As IRibbonControl, ByRef visible)
-157:    visible = C_Const.FlagVisible
-158: End Sub
+156:    visible = C_Const.FlagVisible
+157: End Sub
 'btnVersion
      Public Sub onVisible(control As IRibbonControl)
-161:    Call URLLinks(C_Const.URL_DOWNLOAD)
-162: End Sub
+160:    Call URLLinks(C_Const.URL_DOWNLOAD)
+161: End Sub
      Private Sub BtnUnProtectSheetsXML(control As IRibbonControl)
-164:    Call DeletePaswortSheets
-165: End Sub
+163:    Call DeletePaswortSheets
+164: End Sub
      Private Sub onProtectVBAUnivable(control As IRibbonControl)
-167:    Call SetPasswordVBAProjectUnviewable
-168: End Sub
+166:    Call SetPasswordVBAProjectUnviewable
+167: End Sub
      Private Sub BtnVK(control As IRibbonControl)
-170:    Call URLLinks(C_Const.URL_VK)
-171: End Sub
+169:    Call URLLinks(C_Const.URL_VK)
+170: End Sub
      Private Sub BtnFB(control As IRibbonControl)
-173:    Call URLLinks(C_Const.URL_FB)
-174: End Sub
+172:    Call URLLinks(C_Const.URL_FB)
+173: End Sub
 'смена темы
      Private Sub onBlackTheme(control As IRibbonControl)
-177:    Call V_BlackAndWiteTheme.ChangeColorDarkTheme
-178: End Sub
+176:    Call V_BlackAndWiteTheme.ChangeColorDarkTheme
+177: End Sub
      Private Sub onWhiteTheme(control As IRibbonControl)
-180:    Call V_BlackAndWiteTheme.ChangeColorWhiteTheme
-181: End Sub
+179:    Call V_BlackAndWiteTheme.ChangeColorWhiteTheme
+180: End Sub
      Private Sub onToolCharMonitor(control As IRibbonControl)
-183:    Call CharsMonitor.Show
-184: End Sub
+182:    Call CharsMonitor.Show
+183: End Sub
 'Регулярные выражения
      Private Sub onTestRegExp(control As IRibbonControl)
-187:    Call W_RegExp.AddSheetTestRegExp
-188: End Sub
+186:    Call W_RegExp.AddSheetTestRegExp
+187: End Sub
      Private Sub onTempleteRegExp(control As IRibbonControl)
-190:    Call RegExpTemplateManager.Show
-191: End Sub
+189:    Call RegExpTemplateManager.Show
+190: End Sub
      Private Sub onRegExpFunValNumber(control As IRibbonControl)
-193:    ActiveCell.FormulaR1C1 = "=REG_GetValueByNumber()"
-194:    Call FunctionWizardShowExc
-195: End Sub
+192:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ()"
+193:    Call FunctionWizardShowExc
+194: End Sub
      Private Sub onExpFunCount(control As IRibbonControl)
-197:    ActiveCell.FormulaR1C1 = "=REG_Count()"
-198:    Call FunctionWizardShowExc
-199: End Sub
+196:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_СЧЁТ()"
+197:    Call FunctionWizardShowExc
+198: End Sub
      Private Sub onRegExpFunTest(control As IRibbonControl)
-201:    ActiveCell.FormulaR1C1 = "=REG_Test()"
-202:    Call FunctionWizardShowExc
-203: End Sub
+200:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ТЕСТ()"
+201:    Call FunctionWizardShowExc
+202: End Sub
      Private Sub onRegExpFunReplace(control As IRibbonControl)
-205:    ActiveCell.FormulaR1C1 = "=REG_Replace()"
-206:    Call FunctionWizardShowExc
-207: End Sub
+204:    ActiveCell.FormulaR1C1 = "=РЕГВЫР_ЗАМЕНИТЬ()"
+205:    Call FunctionWizardShowExc
+206: End Sub
      Private Sub FunctionWizardShowExc()
-209:    If Application.Dialogs(xlDialogFunctionWizard).Show = False Then
-210:        ActiveCell.Clear
-211:    End If
-212:    Calculate
-213: End Sub
+208:    If Application.Dialogs(xlDialogFunctionWizard).Show = False Then
+209:        ActiveCell.Clear
+210:    End If
+211:    Calculate
+212: End Sub
      Private Sub onParserVBA(control As IRibbonControl)
-215:    If VBAIsTrusted Then
-216:        Call N_ObfParserVBA.StartParser
-217:    End If
-218: End Sub
+214:    If VBAIsTrusted Then
+215:        Call N_ObfParserVBA.StartParser
+216:    End If
+217: End Sub
      Private Sub onObfuscator(ByRef control As IRibbonControl)
-220:    If VBAIsTrusted Then
-221:        Call N_ObfMainNew.StartObfuscation
-222:    End If
-223: End Sub
+219:    If VBAIsTrusted Then
+220:        Call N_ObfMainNew.StartObfuscation
+221:    End If
+222: End Sub
      Private Sub onFormatsDel(control As IRibbonControl)
-225:    If VBAIsTrusted Then
-226:        Call ObfuscationCode.Show
-227:    End If
-228: End Sub
+224:    If VBAIsTrusted Then
+225:        Call ObfuscationCode.Show
+226:    End If
+227: End Sub
      Private Sub BtnInfoFile(control As IRibbonControl)
-230:    Call InfoFile.Show
-231: End Sub
-     Sub ParserStrings(control As IRibbonControl)
-233:    Call ZA_ParserString.ParserStringWB
-234: End Sub
+229:    Call InfoFile.Show
+230: End Sub
+     Private Sub ParserStrings(control As IRibbonControl)
+232:    Call ZA_ParserString.ParserStringWB
+233: End Sub
 
-Sub ReNameParserString(control As IRibbonControl)
-237:    Call ZA_ParserString.ReNameStr
+     Private Sub ReNameParserString(control As IRibbonControl)
+236:    Call ZA_ParserString.ReNameStr
+237: End Sub
+     Private Sub onDeleteAllLinks(control As IRibbonControl)
+239:    Call ZB_DeleteLinksFile.deleteAllLinksInFile
+240: End Sub
+     Private Sub onAddListLinks(control As IRibbonControl)
+242:    Call ZB_DeleteLinksFile.getListAllLinksInFile
+243: End Sub
+Private Sub onDeleteLinksOnList(control As IRibbonControl)
+245:    Call ZB_DeleteLinksFile.deleteLinksOnList
 End Sub

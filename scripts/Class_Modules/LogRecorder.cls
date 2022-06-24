@@ -35,125 +35,124 @@ Public maxLogSizeBeforeSave As Long
 Public LogSeparator As String
 
     Public Property Let LogFileName(ByVal LogFileName As String)
-29:    If LogFileName = vbNullString Then
-30:        LogFileFullName = PathWorkbook & DefaultNameLogFile
-31:    Else
-32:        LogFileFullName = PathWorkbook & LogFileName & DefaultTypeExtenFile
-33:    End If
-34: End Property
+21:    If LogFileName = vbNullString Then
+22:        LogFileFullName = PathWorkbook & DefaultNameLogFile
+23:    Else
+24:        LogFileFullName = PathWorkbook & LogFileName & DefaultTypeExtenFile
+25:    End If
+26: End Property
 
     Public Sub WriteErrorLog(Optional ByVal sNameFunction As String = vbNullString)
-37:    Dim Txt    As String
-38: If sNameFunction = vbNullString Then sNameFunction = "Procedure name not specified"
-39: Txt = String(2, vbNewLine) & "Function/procedure name:" & sNameFunction & vbNewLine
-40:    Txt = Txt & "Error number:" & Err.Number & vbNewLine
-41:    Txt = Txt & "Line number:" & Erl
-42:    Call AddRecord(Txt, vbTab & vbTab & "Description:" & Err.Description, 0, LOG_SEPARATOR_BEFORE_AND_AFTER, True)
-43: End Sub
+29:    Dim Txt    As String
+30:    If sNameFunction = vbNullString Then sNameFunction = "Имя прцедуры не задано"
+31:    Txt = String(2, vbNewLine) & "Название функции/процедуры: " & sNameFunction & vbNewLine
+32:    Txt = Txt & "Номер ошибки: " & Err.Number & vbNewLine
+33:    Txt = Txt & "Номер строки: " & Erl
+34:    Call AddRecord(Txt, vbTab & vbTab & "Описание: " & Err.Description, 0, LOG_SEPARATOR_BEFORE_AND_AFTER, True)
+35: End Sub
 
     Public Sub SaveLog()
-46:    If AddIntoTXTfile(LogFileFullName, Buffer) Then
-47:        Buffer = Empty
-48:    Else
-49:        Debug.Print "Error writing the log to the file" & LogFileFullName
-50:    End If
-51: End Sub
+38:    If AddIntoTXTfile(LogFileFullName, Buffer) Then
+39:        Buffer = Empty
+40:    Else
+41:        Debug.Print "Ошибка записи лога в файл " & LogFileFullName
+42:    End If
+43: End Sub
 
     Public Sub ClearLog()
-54:    Buffer = vbNullString                                        ' очистка буфера
-55:    SaveTXTfile LogFileFullName, vbNullString                    ' сохранение пустого файла
-56: End Sub
+46:    Buffer = vbNullString                                        ' очистка буфера
+47:    SaveTXTfile LogFileFullName, vbNullString                    ' сохранение пустого файла
+48: End Sub
 
     Public Sub OpenLog()
-59:    Buffer = vbNullString                                             ' очистка буфера
-60:    SaveTXTfile LogFileFullName, vbNullString                         ' сохранение пустого файла
-61:    AddRecord "Starting Log Record...", , , LOG_SEPARATOR_BEFORE, True    ' стартовая запись
-62: End Sub
+51:    Buffer = vbNullString                                             ' очистка буфера
+52:    SaveTXTfile LogFileFullName, vbNullString                         ' сохранение пустого файла
+53:    AddRecord "Starting Log Record...", , , LOG_SEPARATOR_BEFORE, True    ' стартовая запись
+54: End Sub
 
     Sub CloseLog()
-65:    AddRecord "Finishing Log Record...", , , LOG_SEPARATOR_AFTER, True    ' конечная запись
-66:    Buffer = vbNullString                                             ' очистка буфера
-67: End Sub
+57:    AddRecord "Finishing Log Record...", , , LOG_SEPARATOR_AFTER, True    ' конечная запись
+58:    Buffer = vbNullString                                             ' очистка буфера
+59: End Sub
 
     Public Sub ShowLog(Optional ShowAsDebugWindow As Boolean = False)
-70:    On Error Resume Next
-71:    Dim sPath$
-72:    If ShowAsDebugWindow Then
-73:        Debug.Print ReadTXTfile(LogFileFullName)
-74:    Else
-75:        sPath$ = Chr(34) & LogFileFullName & Chr(34)
-76:        CreateObject("wscript.shell").Run sPath$
-77:    End If
-78: End Sub
+62:    On Error Resume Next
+63:    Dim sPath$
+64:    If ShowAsDebugWindow Then
+65:        Debug.Print ReadTXTfile(LogFileFullName)
+66:    Else
+67:        sPath$ = Chr(34) & LogFileFullName & Chr(34)
+68:        CreateObject("wscript.shell").Run sPath$
+69:    End If
+70: End Sub
 
     Public Sub AddRecord(ByVal EventX As String, Optional ByVal Info As String, _
-                Optional ByVal Level As Integer = 0, _
-                Optional ByVal LogSeparatorType As LOG_SEPARATOR_TYPE = LOG_SEPARATOR_NONE, _
-                Optional ByVal ForceSavingLog As Boolean = False)
-84:    Dim Txt    As String
-85:    Txt = String(160, " "): Mid(Txt, 1) = Left(EventX, 200): Mid(Txt, 100) = Info
-86:    Txt = String(Level, vbTab) & Format(Now, "YYYY-MM-DD HH:NN:SS") & String(2, vbTab) & Trim(Txt) & vbNewLine
-87:
-88:    Txt = IIf(LogSeparatorType = LOG_SEPARATOR_BEFORE Or LogSeparatorType = LOG_SEPARATOR_BEFORE_AND_AFTER, LogSeparator, "") & _
-                  Txt & IIf(LogSeparatorType = LOG_SEPARATOR_AFTER Or LogSeparatorType = LOG_SEPARATOR_BEFORE_AND_AFTER, LogSeparator, "")
-90:
-91:    Buffer = Buffer & Txt
-92:    If ForceSavingLog Or (Len(Buffer) > maxLogSizeBeforeSave) Then SaveLog
-93: End Sub
+            Optional ByVal Level As Integer = 0, _
+            Optional ByVal LogSeparatorType As LOG_SEPARATOR_TYPE = LOG_SEPARATOR_NONE, _
+            Optional ByVal ForceSavingLog As Boolean = False)
+76:    Dim Txt    As String
+77:    Txt = String(160, " "): Mid(Txt, 1) = Left(EventX, 200): Mid(Txt, 100) = Info
+78:    Txt = String(Level, vbTab) & Format(Now, "YYYY-MM-DD HH:NN:SS") & String(2, vbTab) & Trim(Txt) & vbNewLine
+79:
+80:    Txt = IIf(LogSeparatorType = LOG_SEPARATOR_BEFORE Or LogSeparatorType = LOG_SEPARATOR_BEFORE_AND_AFTER, LogSeparator, "") & _
+               Txt & IIf(LogSeparatorType = LOG_SEPARATOR_AFTER Or LogSeparatorType = LOG_SEPARATOR_BEFORE_AND_AFTER, LogSeparator, "")
+82:
+83:    Buffer = Buffer & Txt
+84:    If ForceSavingLog Or (Len(Buffer) > maxLogSizeBeforeSave) Then SaveLog
+85: End Sub
 
 
-     Public Sub SaveLogAs(ByVal sFileName As String, Optional ByVal Overwrite As Boolean = False)
-97:    On Error Resume Next
-98:    Dim Txt    As String
-99:    sFileName = PathWorkbook & sFileName
-100:    If Not sFileName Like "*" & DefaultTypeExtenFile Then sFileName = sFileName & DefaultTypeExtenFile
-101:    Txt = ReadTXTfile(LogFileFullName)
-102:    If Overwrite Then
-103:        SaveTXTfile sFileName, Txt
-104:    Else
-105:        AddIntoTXTfile sFileName, Txt
-106:    End If
-107: End Sub
+    Public Sub SaveLogAs(ByVal sfileName As String, Optional ByVal Overwrite As Boolean = False)
+89:    On Error Resume Next
+90:    Dim Txt    As String
+91:    sfileName = PathWorkbook & sfileName
+92:    If Not sfileName Like "*" & DefaultTypeExtenFile Then sfileName = sfileName & DefaultTypeExtenFile
+93:    Txt = ReadTXTfile(LogFileFullName)
+94:    If Overwrite Then
+95:        SaveTXTfile sfileName, Txt
+96:    Else
+97:        AddIntoTXTfile sfileName, Txt
+98:    End If
+99: End Sub
 
 ' ================================================================================================================================
      Private Sub Class_Terminate()
-111:    Buffer = vbNullString    'CloseLog
-112: End Sub
+103:    Buffer = vbNullString    'CloseLog
+104: End Sub
 
      Private Sub Class_Initialize()
-115:    PathWorkbook = ThisWorkbook.Path & Application.PathSeparator
-116:    LogSeparator = String(100, "=") & vbNewLine
-117:    If maxLogSizeBeforeSave = 0 Then maxLogSizeBeforeSave = 5000
-118:    LogFileFullName = PathWorkbook & DefaultNameLogFile
-119: End Sub
+107:    PathWorkbook = ThisWorkbook.Path & Application.PathSeparator
+108:    LogSeparator = String(100, "=") & vbNewLine
+109:    If maxLogSizeBeforeSave = 0 Then maxLogSizeBeforeSave = 5000
+110:    LogFileFullName = PathWorkbook & DefaultNameLogFile
+111: End Sub
 
-     Private Function ReadTXTfile(ByVal sFileName As String) As String
+     Private Function ReadTXTfile(ByVal sfileName As String) As String
+114:    Dim FSO    As Object
+115:    Dim ts     As Object
+116:    Set FSO = CreateObject("scripting.filesystemobject")
+117:    Set ts = FSO.OpenTextFile(sfileName, 1, True): ReadTXTfile = ts.ReadAll: ts.Close
+118:    Set ts = Nothing: Set FSO = Nothing
+119: End Function
+
+     Private Function SaveTXTfile(ByVal sfileName As String, ByVal Txt As String) As Boolean
 122:    Dim FSO    As Object
 123:    Dim ts     As Object
-124:    Set FSO = CreateObject("scripting.filesystemobject")
-125:    Set ts = FSO.OpenTextFile(sFileName, 1, True): ReadTXTfile = ts.ReadAll: ts.Close
-126:    Set ts = Nothing: Set FSO = Nothing
-127: End Function
+124:    On Error Resume Next: Err.Clear
+125:    Set FSO = CreateObject("scripting.filesystemobject")
+126:    Set ts = FSO.CreateTextFile(sfileName, True)
+127:    ts.Write Txt: ts.Close
+128:    SaveTXTfile = Err = 0
+129:    Set ts = Nothing: Set FSO = Nothing
+130: End Function
 
-     Private Function SaveTXTfile(ByVal sFileName As String, ByVal Txt As String) As Boolean
-130:    Dim FSO    As Object
-131:    Dim ts     As Object
-132:    On Error Resume Next: Err.Clear
-133:    Set FSO = CreateObject("scripting.filesystemobject")
-134:    Set ts = FSO.CreateTextFile(sFileName, True)
-135:    ts.Write Txt: ts.Close
-136:    SaveTXTfile = Err = 0
-137:    Set ts = Nothing: Set FSO = Nothing
-138: End Function
-
-     Private Function AddIntoTXTfile(ByVal sFileName As String, ByVal Txt As String) As Boolean
-141:    Dim FSO    As Object
-142:    Dim ts     As Object
-143:    On Error Resume Next: Err.Clear
-144:    Set FSO = CreateObject("scripting.filesystemobject")
-145:    Set ts = FSO.OpenTextFile(sFileName, 8, True)
-146:    ts.Write Txt: ts.Close
-147:    Set ts = Nothing: Set FSO = Nothing
-148:    AddIntoTXTfile = Err = 0
-149: End Function
-
+     Private Function AddIntoTXTfile(ByVal sfileName As String, ByVal Txt As String) As Boolean
+133:    Dim FSO    As Object
+134:    Dim ts     As Object
+135:    On Error Resume Next: Err.Clear
+136:    Set FSO = CreateObject("scripting.filesystemobject")
+137:    Set ts = FSO.OpenTextFile(sfileName, 8, True)
+138:    ts.Write Txt: ts.Close
+139:    Set ts = Nothing: Set FSO = Nothing
+140:    AddIntoTXTfile = Err = 0
+141: End Function

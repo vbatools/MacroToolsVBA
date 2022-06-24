@@ -22,7 +22,7 @@ Option Explicit
 21:    str_arr = Split(CreateLineProcedure, "|")
 22:    str_search = str_arr(1)
 23:    If str_search = vbNullString Then
-24:        Debug.Print "Nothing is selected!"
+24:        Debug.Print "Ничего не выбрано!"
 25:        Exit Sub
 26:    End If
 27:    code_arr = Split(str_search, " ")
@@ -31,7 +31,7 @@ Option Explicit
 30:        code_flag = True
 31:    End If
 32:    Set snippets = SHSNIPPETS.ListObjects(C_Const.TB_SNIPPETS)
-33:    On Error GoTo errmsg
+33:    On Error GoTo errMsg
 34:    i_row = snippets.ListColumns(2).DataBodyRange.Find(What:=str_search, LookIn:=xlValues, LookAt:=xlWhole).Row
 35:    code = snippets.Range(i_row, 4)
 36:    space_i = CInt(str_arr(2))
@@ -47,11 +47,11 @@ Option Explicit
 46:    End With
 47:    Application.DisplayAlerts = True
 48:    Exit Sub
-errmsg:
+errMsg:
 50:    If Err.Number = 91 Then
-51:        Debug.Print "Snippet not found, selected:" & str_search
+51:        Debug.Print "Снипет не найден, выбрано: " & str_search
 52:    Else
-53:        Debug.Print "Error in Insert Code!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+53:        Debug.Print "Ошибка в InsertCode!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 54:        Call WriteErrorLog("InsertCode")
 55:    End If
 56:    Err.Clear
@@ -90,11 +90,11 @@ errmsg:
 89:    Next i
 90:    AddSpaceCode = new_code
 91: End Function
-    Private Function AddCodeStr(ByRef strVar() As String) As String
+Private Function AddCodeStr(ByRef strVar() As String) As String
 93:    Dim i           As Long
 94:    AddCodeStr = vbNullString
 95:    For i = 1 To UBound(strVar)
 96:        AddCodeStr = AddCodeStr & " " & strVar(i)
 97:    Next
-98: End Function
+End Function
 

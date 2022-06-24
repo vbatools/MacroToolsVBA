@@ -80,42 +80,42 @@ Dim Flag            As Boolean
 79: End Function
 
     Private Function MyDialogBoxParam(ByVal hInstance As LongPtr, _
-                ByVal pTemplateName As LongPtr, ByVal hWndParent As LongPtr, _
-                ByVal lpDialogFunc As LongPtr, ByVal dwInitParam As LongPtr) As Integer
+            ByVal pTemplateName As LongPtr, ByVal hWndParent As LongPtr, _
+            ByVal lpDialogFunc As LongPtr, ByVal dwInitParam As LongPtr) As Integer
 84:
 85:    If pTemplateName = 4070 Then
 86:        MyDialogBoxParam = 1
 87:    Else
 88:        RecoverBytes
 89:        MyDialogBoxParam = DialogBoxParam(hInstance, pTemplateName, _
-                      hWndParent, lpDialogFunc, dwInitParam)
+                   hWndParent, lpDialogFunc, dwInitParam)
 91:        fHook
 92:    End If
 93: End Function
 
      Public Sub unprotected()
-96:    If MsgBox("Remove passwords from VBA projects ?", vbInformation + vbYesNo, "Removing passwords:") = vbYes Then
+96:    If MsgBox("Снять пароли с проектов VBA ?", vbInformation + vbYesNo, "Снятие паролей:") = vbYes Then
 97:        If fHook Then
-98:            Call MsgBox("Passwords from VBA projects are disabled!", vbInformation, "******")
+98:            Call MsgBox("Пароли с проектов VBA отключены!", vbInformation, "******")
 99:        Else
-100:            Call MsgBox("Passwords from VBA projects could not be disabled!", vbInformation, "******")
+100:            Call MsgBox("Пароли с проектов VBA не удалось отключить!", vbInformation, "******")
 101:        End If
 102:    End If
 103: End Sub
 '******************************************************************************************************************************************
 'Delete Paswort Sheets
      Public Sub DeletePaswortSheets()
-107:    Dim sFileName As String, sMsgErr As String, sMsg As String, Msg As String
+107:    Dim sfileName As String, sMsgErr As String, sMsg As String, Msg As String
 108:    Dim sFileNameFull As Variant
 109:    Dim bFlag       As Boolean
 110:    Dim i As Long, LastRow As Long
 111:
-112:    On Error GoTo errmsg
+112:    On Error GoTo errMsg
 113:
 114:    sFileNameFull = SelectedFile(vbNullString, True, "*.xls;*.xlsm;*.xlsx")
 115:    If TypeName(sFileNameFull) = "Empty" Then Exit Sub
 116:
-117:    If MsgBox("Create backup files ?", vbYesNo + vbQuestion, "Removing passwords:") = vbYes Then
+117:    If MsgBox("Создавать BackUp файлов ?", vbYesNo + vbQuestion, "Снятие паролей:") = vbYes Then
 118:        bFlag = True
 119:    End If
 120:
@@ -124,17 +124,17 @@ Dim Flag            As Boolean
 123:
 124:    ActiveWorkbook.Sheets.Add After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count)
 125:    With ActiveSheet
-126:        .Name = "Passwords_" & Replace(Now(), ":", ".")
-127:        .Cells(1, 1).Value = "Book Title"
-128:        .Cells(1, 2).Value = "Sheet Name"
-129:        .Cells(1, 3).Value = "Description"
+126:        .Name = "Пароли_" & Replace(Now(), ":", ".")
+127:        .Cells(1, 1).Value = "Название Книги"
+128:        .Cells(1, 2).Value = "Название Листа"
+129:        .Cells(1, 3).Value = "Описание"
 130:        For i = 1 To UBound(sFileNameFull)
-131:            sFileName = sGetFileName(sFileNameFull(i))
+131:            sfileName = sGetFileName(sFileNameFull(i))
 132:            If IsFileOpen(CStr(sFileNameFull(i))) = True Then
 133:                LastRow = .Cells(Rows.Count, 1).End(xlUp).Row + 1
-134:                .Cells(LastRow, 1).Value = sFileName
-135:                .Cells(LastRow, 2).Value = "Error"
-136:                .Cells(LastRow, 3).Value = "The book is not closed, close the book!"
+134:                .Cells(LastRow, 1).Value = sfileName
+135:                .Cells(LastRow, 2).Value = "Ошибка!"
+136:                .Cells(LastRow, 3).Value = "Книга не закрыта, закройте книгу!"
 137:                ActiveSheet.Cells(LastRow, 3).Interior.Color = 255
 138:            Else
 139:                Call XMLFileDelNodes(sFileNameFull(i), bFlag)
@@ -146,44 +146,44 @@ Dim Flag            As Boolean
 145:    End With
 146:    Application.Calculation = xlCalculationAutomatic
 147:    Application.ScreenUpdating = True
-148:    Call MsgBox("Password deletion is over!", vbInformation, "Deleting passwords:")
+148:    Call MsgBox("Удаление паролей - окончено!", vbInformation, "Удаление паролей:")
 149:    Exit Sub
-errmsg:
+errMsg:
 151:    Select Case Err.Number
         Case Else
-153:            Call MsgBox("Error in DeletePaswortSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+153:            Call MsgBox("Ошибка в DeletePaswortSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 154:            Call WriteErrorLog("DeletePaswortSheets")
 155:    End Select
 156:    Application.ScreenUpdating = True
 157:    Application.Calculation = xlCalculationAutomatic
 158: End Sub
 
-     Private Sub XMLFileDelNodes(ByVal sFileName As String, Optional bBackUp As Boolean = False)
+     Private Sub XMLFileDelNodes(ByVal sfileName As String, Optional bBackUp As Boolean = False)
 161:    Const PartWorksheets As String = "worksheets\"
 162:    Dim i           As Integer
 163:    Dim cEditOpenXML As clsEditOpenXML
 164:    Dim sWBName     As String
 165:    Dim LastRow     As Long
 166:
-167:    On Error GoTo errmsg
+167:    On Error GoTo errMsg
 168:
 169:    Set cEditOpenXML = New clsEditOpenXML
 170:    With cEditOpenXML
 171:        .CreateBackupXML = bBackUp
-172:        .SourceFile = sFileName
+172:        .SourceFile = sfileName
 173:        .UnzipFile
 174:        i = 1
-175:        sWBName = sGetFileName(sFileName)
+175:        sWBName = sGetFileName(sfileName)
 176:        Do While FileHave(.XLFolder & PartWorksheets & "sheet" & i & ".xml")
 177:            LastRow = ActiveSheet.Cells(Rows.Count, 1).End(xlUp).Row + 1
 178:            ActiveSheet.Cells(LastRow, 1).Value = sWBName
 179:            If .DelPartXMLFromFile(PartWorksheets & "sheet" & i & ".xml", sheetProtection) Then
 180:                ActiveSheet.Cells(LastRow, 2).Value = .GetSheetNameFromId(CStr(i - 1))
-181:                ActiveSheet.Cells(LastRow, 3).Value = "the password from the sheet was removed"
+181:                ActiveSheet.Cells(LastRow, 3).Value = "пароль c листа снят"
 182:                ActiveSheet.Cells(LastRow, 3).Interior.Color = 13434828
 183:            Else
 184:                ActiveSheet.Cells(LastRow, 2).Value = .GetSheetNameFromId(CStr(i - 1))
-185:                ActiveSheet.Cells(LastRow, 3).Value = "and there was no password"
+185:                ActiveSheet.Cells(LastRow, 3).Value = "пароля не было"
 186:                ActiveSheet.Cells(LastRow, 3).Interior.Color = 13421823
 187:            End If
 188:            i = i + 1
@@ -191,22 +191,22 @@ errmsg:
 190:        LastRow = ActiveSheet.Cells(Rows.Count, 1).End(xlUp).Row + 1
 191:        ActiveSheet.Cells(LastRow, 1).Value = sWBName
 192:        If .DelPartXMLFromFile("workbook.xml", workbookProtection) Then
-193:            ActiveSheet.Cells(LastRow, 2).Value = sGetFileName(sFileName)
-194:            ActiveSheet.Cells(LastRow, 3).Value = "the password was removed from the structure"
+193:            ActiveSheet.Cells(LastRow, 2).Value = sGetFileName(sfileName)
+194:            ActiveSheet.Cells(LastRow, 3).Value = "пароль cо структуры книги снят"
 195:            ActiveSheet.Cells(LastRow, 3).Interior.Color = 3381555
 196:        Else
-197:            ActiveSheet.Cells(LastRow, 2).Value = sGetFileName(sFileName)
-198:            ActiveSheet.Cells(LastRow, 3).Value = "of the book there was no password on the structure of the book"
+197:            ActiveSheet.Cells(LastRow, 2).Value = sGetFileName(sfileName)
+198:            ActiveSheet.Cells(LastRow, 3).Value = "пароля на структуре книги не было"
 199:            ActiveSheet.Cells(LastRow, 3).Interior.Color = 26367
 200:        End If
 201:        .ZipAllFilesInFolder
 202:    End With
 203:    Set cEditOpenXML = Nothing
 204:    Exit Sub
-errmsg:
+errMsg:
 206:    Select Case Err.Number
         Case Else
-208:            Call MsgBox("Error in XMLFileDelNodes" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+208:            Call MsgBox("Ошибка в XMLFileDelNodes" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 209:            Call WriteErrorLog("XMLFileDelNodes")
 210:    End Select
 211: End Sub
@@ -216,31 +216,31 @@ errmsg:
 215:    Dim varFileNameFull As Variant
 216:    Dim sFileNameFull As String
 217:
-218:    On Error GoTo errmsg
+218:    On Error GoTo errMsg
 219:
 220:    varFileNameFull = SelectedFile(vbNullString, False, "*.xlsm;*.xlsb;*.xlam;*.docm;*.dotm")
 221:    If TypeName(varFileNameFull) = "Empty" Then Exit Sub
 222:    sFileNameFull = CStr(varFileNameFull(1))
 223:    If IsFileOpen(sFileNameFull) Then
-224:        Call MsgBox("Close the file for processing!", vbCritical, "Error:")
+224:        Call MsgBox("Закройте файл для обработки!", vbCritical, "Ошибка:")
 225:        Exit Sub
 226:    End If
 227:
 228:    Call WriteBinFileVBAProject(sFileNameFull)
 229:
-230:    Call MsgBox("Deleting the Unicable password is over" & vbNewLine & "Open the file", vbInformation, "Deleting the Unviewable password:")
+230:    Call MsgBox("Удаление пароля Univable - окончено" & vbNewLine & "Откройте файл", vbInformation, "Удаление пароля Unviewable:")
 231:    Exit Sub
-errmsg:
+errMsg:
 233:    Select Case Err.Number
         Case Else
-235:            Call MsgBox("Error in DelPasswordVBAProjectUnisible" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+235:            Call MsgBox("Ошибка в DelPasswordVBAProjectUnivable" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 236:            Call WriteErrorLog("DelPasswordVBAProjectUnivable")
 237:    End Select
 238: End Sub
      Private Sub WriteBinFileVBAProject(ByVal sFileNameFull As String)
 240:    Dim cEditOpenXML As clsEditOpenXML
 241:
-242:    On Error GoTo errmsg
+242:    On Error GoTo errMsg
 243:
 244:    Set cEditOpenXML = New clsEditOpenXML
 245:    With cEditOpenXML
@@ -253,10 +253,10 @@ errmsg:
 252:    End With
 253:    Set cEditOpenXML = Nothing
 254:    Exit Sub
-errmsg:
+errMsg:
 256:    Select Case Err.Number
         Case Else
-258:            Call MsgBox("Error in WriteBinFileVBAProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+258:            Call MsgBox("Ошибка в WriteBinFileVBAProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 259:            Call WriteErrorLog("WriteBinFileVBAProject")
 260:    End Select
 261:    Set cEditOpenXML = Nothing
@@ -296,26 +296,26 @@ errmsg:
 '******************************************************************************************************************************************
 'Set Paswort In VBAProject with "Unviewable"
      Public Sub SetPasswordVBAProjectUnviewable()
-298:    Dim sFileName   As String
+298:    Dim sfileName   As String
 299:    Dim varFileNameFull As Variant
 300:    varFileNameFull = SelectedFile(vbNullString, False, "*.xlsm;*.xlsb;*.xlam;*.docm;*.dotm")
 301:    If TypeName(varFileNameFull) = "Empty" Then Exit Sub
-302:    sFileName = CStr(varFileNameFull(1))
+302:    sfileName = CStr(varFileNameFull(1))
 303:
-304:    Select Case sGetExtensionName(sFileName)
+304:    Select Case sGetExtensionName(sfileName)
             'только для Excel
         Case "xlsm", "xlsb", "xlam":
-307:            If AddModule(sFileName) = False Then
-308:                Call MsgBox("Remove the password from the VBA project!", vbCritical, "File protected:")
+307:            If AddModule(sfileName) = False Then
+308:                Call MsgBox("Снимите пароль с проекта VBA!", vbCritical, "Файл защищен:")
 309:                Exit Sub
 310:            End If
 311:    End Select
 312:
-313:    Call BinFile(sFileName)
-314:    Call MsgBox("The file is encrypted!", vbInformation, "Encryption:")
+313:    Call BinFile(sfileName)
+314:    Call MsgBox("Файл зашифрован!", vbInformation, "Шифрование:")
 315: End Sub
 
-     Private Sub BinFile(ByVal sFileName As String)
+     Private Sub BinFile(ByVal sfileName As String)
 318:    Const printerSettings As String = "printerSettings"
 319:    Const printerSettingsBin As String = printerSettings & ".bin"
 320:    Const vbaProjectBin As String = "vbaProject.bin"
@@ -327,7 +327,7 @@ errmsg:
 326:
 327:    With cEditOpenXML
 328:        .CreateBackupXML = True
-329:        .SourceFile = sFileName
+329:        .SourceFile = sfileName
 330:        .UnzipFile
 331:        sFolder = .XLFolder
 332:
@@ -402,7 +402,7 @@ errmsg:
 401:    Dim MyBook As Workbook, EBook As Workbook
 402:    Set MyExcel = CreateObject("Excel.Application")
 403:
-404:    On Error GoTo errmsg
+404:    On Error GoTo errMsg
 405:
 406:    MyExcel.visible = False
 407:    MyExcel.DisplayAlerts = False
@@ -419,10 +419,10 @@ errmsg:
 418:    MyExcel.Quit
 419:    AddModule = True
 420:    Exit Function
-errmsg:
+errMsg:
 422:    Select Case Err.Number
         Case Else
-424:            Call MsgBox("Error in AddModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+424:            Call MsgBox("Ошибка в AddModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 425:            Call WriteErrorLog("AddModule")
 426:    End Select
 427:    MyExcel.Quit
@@ -431,7 +431,7 @@ errmsg:
      Private Sub AddModuleToProject(ByVal VBName As String, ByVal TypeModule As String, ByRef MyExcel As Application, sCapiton As String)
 431:    Dim vbComp      As VBIDE.VBComponent
 432:
-433:    On Error GoTo errmsg
+433:    On Error GoTo errMsg
 434:
 435:    Set vbComp = MyExcel.VBE.ActiveVBProject.VBComponents.Add(TypeModule)
 436:    vbComp.Name = VBName
@@ -440,16 +440,15 @@ errmsg:
 439:    End If
 440:    Set vbComp = Nothing
 441:    Exit Sub
-errmsg:
+errMsg:
 443:    Select Case Err.Number
         Case 50135
 445:            'ничего не делаем
 446:            Err.Clear
 447:        Case Else
-448:            Call MsgBox("Error in Add Module To Project" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbOKOnly + vbCritical, "Error:")
+448:            Call MsgBox("Ошибка в AddModuleToProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
 449:            Call WriteErrorLog("AddModuleToProject")
 450:    End Select
 451:    Set vbComp = Nothing
 452: End Sub
-
 

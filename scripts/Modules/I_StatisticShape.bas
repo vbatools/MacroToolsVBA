@@ -11,69 +11,69 @@ Option Explicit
 Option Private Module
 
 Public Sub AddShapeStatistic()
-13:    Dim fForm  As AddStatistic
-14:    Dim wb_name As String, macro_name As String
-15:    Dim shp    As Shape
-16:    Dim SH     As Worksheet
-17:    Dim i      As Integer
-18:    Const SH_SHAPE As String = "Statistic_share"
-19:
-20:    On Error GoTo errmsg
-21:
-22:    Set fForm = New AddStatistic
-23:    With fForm
-24:        .lbOK.Caption = "CREATE"
-25:        .Show
-26:        wb_name = .cmbMain.Value
-27:        If wb_name = vbNullString Then Exit Sub
-28:    End With
-29:    Application.ScreenUpdating = False
-30:    ActiveWorkbook.Sheets.Add After:=Sheets(Sheets.Count)
-31:    With ActiveSheet
-32:        .Name = SH_SHAPE
-33:        .Cells(1, 1).Value = "Sheet name"
-34:        .Cells(1, 2).Value = "Name of the shape"
-35:        .Cells(1, 3).Value = "Shape text"
-36:        .Cells(1, 4).Value = "Macro name"
-37:        i = 1
-38:        For Each SH In Workbooks(wb_name).Worksheets
-39:            For Each shp In SH.Shapes
-40:                i = i + 1
-41:                .Hyperlinks.Add Anchor:=Cells(i, 1), Address:="", SubAddress:=SH.Name & "!A1", TextToDisplay:=SH.Name
-42:                .Cells(i, 2).Value = shp.Name
-43:
-44:                Select Case shp.Type
+5:    Dim fForm  As AddStatistic
+6:    Dim wb_name As String, macro_name As String
+7:    Dim shp    As Shape
+8:    Dim SH     As Worksheet
+9:    Dim i      As Integer
+10:    Const SH_SHAPE As String = "Статистика_shape"
+11:
+12:    On Error GoTo errMsg
+13:
+14:    Set fForm = New AddStatistic
+15:    With fForm
+16:        .lbOK.Caption = "СОЗДАТЬ"
+17:        .Show
+18:        wb_name = .cmbMain.Value
+19:        If wb_name = vbNullString Then Exit Sub
+20:    End With
+21:    Application.ScreenUpdating = False
+22:    ActiveWorkbook.Sheets.Add After:=Sheets(Sheets.Count)
+23:    With ActiveSheet
+24:        .Name = SH_SHAPE
+25:        .Cells(1, 1).Value = "Название листа"
+26:        .Cells(1, 2).Value = "Название фигуры"
+27:        .Cells(1, 3).Value = "Текст фигуры"
+28:        .Cells(1, 4).Value = "Имя макроса"
+29:        i = 1
+30:        For Each SH In Workbooks(wb_name).Worksheets
+31:            For Each shp In SH.Shapes
+32:                i = i + 1
+33:                .Hyperlinks.Add Anchor:=Cells(i, 1), Address:="", SubAddress:=SH.Name & "!A1", TextToDisplay:=SH.Name
+34:                .Cells(i, 2).Value = shp.Name
+35:
+36:                Select Case shp.Type
                     Case msoAutoShape
-46:                        .Cells(i, 3).Value = shp.TextFrame2.TextRange.Characters.Text
-47:                    Case msoFormControl, msoOLEControlObject
-48:                        .Cells(i, 3).Value = shp.AlternativeText
-49:                    Case Else
-50:                        .Cells(i, 3).Value = "no"
-51:                End Select
-52:
-53:                macro_name = shp.OnAction
-54:                If macro_name = vbNullString Then
-55:                    .Cells(i, 4).Value = "no macro"
-56:                Else
-57:                    .Cells(i, 4).Value = Split(shp.OnAction, "!")(1)
-58:                End If
-59:            Next
-60:        Next
-61:        .Columns("A:D").EntireColumn.AutoFit
-62:    End With
-63:    Application.ScreenUpdating = True
-64:    Exit Sub
-errmsg:
-66:    If Err.Number = 1004 Then
-67:        Application.DisplayAlerts = False
-68:        ActiveWorkbook.Sheets(SH_SHAPE).Delete
-69:        Application.DisplayAlerts = True
-70:        ActiveSheet.Name = SH_SHAPE
-71:        Err.Clear
-72:        Resume Next
-73:    Else
-74:        Application.ScreenUpdating = True
-75:        Call MsgBox("Error in AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl, vbCritical, "Error:")
-76:        Call WriteErrorLog("AddShapeStatistic")
-77:    End If
+38:                        .Cells(i, 3).Value = shp.TextFrame2.TextRange.Characters.Text
+39:                    Case msoFormControl, msoOLEControlObject
+40:                        .Cells(i, 3).Value = shp.AlternativeText
+41:                    Case Else
+42:                        .Cells(i, 3).Value = "нет"
+43:                End Select
+44:
+45:                macro_name = shp.OnAction
+46:                If macro_name = vbNullString Then
+47:                    .Cells(i, 4).Value = "нет макроса"
+48:                Else
+49:                    .Cells(i, 4).Value = Split(shp.OnAction, "!")(1)
+50:                End If
+51:            Next
+52:        Next
+53:        .Columns("A:D").EntireColumn.AutoFit
+54:    End With
+55:    Application.ScreenUpdating = True
+56:    Exit Sub
+errMsg:
+58:    If Err.Number = 1004 Then
+59:        Application.DisplayAlerts = False
+60:        ActiveWorkbook.Sheets(SH_SHAPE).Delete
+61:        Application.DisplayAlerts = True
+62:        ActiveSheet.Name = SH_SHAPE
+63:        Err.Clear
+64:        Resume Next
+65:    Else
+66:        Application.ScreenUpdating = True
+67:        Call MsgBox("Ошибка в AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+68:        Call WriteErrorLog("AddShapeStatistic")
+69:    End If
 End Sub

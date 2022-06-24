@@ -20,14 +20,14 @@ Public WithEvents EvtHandler As CommandBarButton
 Attribute EvtHandler.VB_VarHelpID = -1
 Private Sub EvtHandler_Click(ByVal Ctrl As CommandBarButton, CancelDefault As Boolean)
 12:    On Error GoTo ErrorHandler
-13:    sTagNameConrol = Ctrl.Tag
-14:    Application.Run Ctrl.OnAction
-15:    Exit Sub
+14:    sTagNameConrol = Ctrl.Tag
+15:    Application.Run Ctrl.OnAction
+16:    Exit Sub
 ErrorHandler:
-17:    If Err.Number <> 0 Then
-18:        Debug.Print "Error in Eventhandler_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
-19:        Call WriteErrorLog("EvtHandler_Click")
-20:        Err.Clear
-21:        Resume Next
-22:    End If
+18:    If Err.Number <> 0 Then
+19:        Debug.Print "ќшибка! в EvtHandler_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+20:        Call WriteErrorLog("EvtHandler_Click")
+21:        Err.Clear
+22:        Resume Next
+23:    End If
 End Sub

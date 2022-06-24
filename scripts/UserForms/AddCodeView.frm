@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddCodeView 
-   Caption         =   "Snippet'S Database:"
+   Caption         =   "База SNIPPET's:"
    ClientHeight    =   7140
    ClientLeft      =   45
    ClientTop       =   375
@@ -87,7 +87,7 @@ Private m_clsAnchors As CAnchors
 72:        If .ListIndex > -1 Then
 73:            row_i = snippets.ListColumns(2).DataBodyRange.Find(What:=.List(.ListIndex, 2), LookIn:=xlValues, LookAt:=xlWhole).Row
 74:            If txtCode.Text <> txtCodeBackCap.Text And txtCodeBackCap.Text <> vbNullString Then
-75:                If MsgBox("Save Code changes ?", vbYesNo, "Saving the code:") = vbYes Then
+75:                If MsgBox("Сохранить изменения Кода ?", vbYesNo, "Сохранение кода:") = vbYes Then
 76:                    snippets.ListColumns(4).Range(CLng(txtRow.Text), 1).Value = txtCode.Text
 77:                End If
 78:            End If
@@ -166,6 +166,6 @@ Private Sub SerchSnippet()
 151:    Exit Sub
 MyBtnSerch_Err:
 153:    Unload Me
-154:    MsgBox Err.Description & vbCrLf & "в AddCodeView.SerchSnippet " & vbCrLf & "in the line " & Erl, vbExclamation + vbOKOnly, "Error:"
+154:    MsgBox Err.Description & vbCrLf & "в AddCodeView.SerchSnippet " & vbCrLf & "в строке " & Erl, vbExclamation + vbOKOnly, "Ошибка:"
 155:    Call WriteErrorLog("AddCodeView.SerchSnippet")
 End Sub

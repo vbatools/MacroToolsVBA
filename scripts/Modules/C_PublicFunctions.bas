@@ -28,10 +28,10 @@ Private Declare Function GetKeyboardState Lib "USER32" (pbKeyState As Byte) As L
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Sub SetTextIntoClipboard(ByVal Txt As String)
-30:    Dim MyDataObj   As New DataObject
-31:    MyDataObj.SetText Txt
-32:    MyDataObj.PutInClipboard
-33: End Sub
+19:    Dim MyDataObj   As New DataObject
+20:    MyDataObj.SetText Txt
+21:    MyDataObj.PutInClipboard
+22: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : SelectedLineColumnProcedure - получить номера строк и столбцов выделенных строк в модуле VBA
@@ -41,27 +41,27 @@ Private Declare Function GetKeyboardState Lib "USER32" (pbKeyState As Byte) As L
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Function SelectedLineColumnProcedure() As String
-43:    Dim lStartLine   As Long
-44:    Dim lStartColumn As Long
-45:    Dim lEndLine     As Long
-46:    Dim lEndColumn   As Long
-47:
-48:    On Error GoTo ErrorHandler
-49:
-50:    With Application.VBE.ActiveCodePane
-51:        .GetSelection lStartLine, lStartColumn, lEndLine, lEndColumn
-52:        SelectedLineColumnProcedure = lStartLine & "|" & lStartColumn & "|" & lEndLine & "|" & lEndColumn
-53:    End With
-54:    Exit Function
+25:    Dim lStartLine   As Long
+26:    Dim lStartColumn As Long
+27:    Dim lEndLine     As Long
+28:    Dim lEndColumn   As Long
+29:
+30:    On Error GoTo ErrorHandler
+31:
+32:    With Application.VBE.ActiveCodePane
+33:        .GetSelection lStartLine, lStartColumn, lEndLine, lEndColumn
+34:        SelectedLineColumnProcedure = lStartLine & "|" & lStartColumn & "|" & lEndLine & "|" & lEndColumn
+35:    End With
+36:    Exit Function
 ErrorHandler:
-56:    Select Case Err
+38:    Select Case Err
         Case 91:
-58:            Debug.Print "Error!, the module for inserting code is not activated!" & vbNewLine & Err.Number & vbNewLine & Err.Description
-59:        Case Else:
-60:            Debug.Print "An error occurred in SelectedLineColumnProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
-61:            Call WriteErrorLog("SelectedLineColumnProcedure")
-62:    End Select
-63: End Function
+40:            Debug.Print "Ошибка!, не активирован модуль для вставки кода!" & vbNewLine & Err.Number & vbNewLine & Err.Description
+41:        Case Else:
+42:            Debug.Print "Произошла ошибка в SelectedLineColumnProcedure" & vbNewLine & Err.Number & vbNewLine & Err.Description
+43:            Call WriteErrorLog("SelectedLineColumnProcedure")
+44:    End Select
+45: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : DirLoadFiles - Диалоговое окно выбора директории
@@ -75,12 +75,12 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Function DirLoadFiles(ByVal sPath As String) As String
-77:    With Application.FileDialog(msoFileDialogFolderPicker)     ' вывод диалогового окна
-78:        .ButtonName = "Choose": .Title = "VBATools": .InitialFileName = sPath
-79: If .Show <> -1 Then Exit Function   ' если пользователь отказался от выбора папки
-80:        DirLoadFiles = .SelectedItems(1) & Application.PathSeparator
-81:    End With
-82: End Function
+47:    With Application.FileDialog(msoFileDialogFolderPicker)     ' вывод диалогового окна
+48:        .ButtonName = "Выбрать": .Title = "VBATools": .InitialFileName = sPath
+49:         If .Show <> -1 Then Exit Function    ' если пользователь отказался от выбора папки
+50:        DirLoadFiles = .SelectedItems(1) & Application.PathSeparator
+51:    End With
+52: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : Num_Not_Stable определение состояния NumLock
@@ -89,21 +89,21 @@ ErrorHandler:
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function Num_Not_Stable() As Boolean
-92:    ' Определяет, изменчивое ли состояние у NumLock или нет
-93:    ' Возвращает false - стабильный, true - изменчевый
-94:    Dim keystat(0 To 255) As Byte
-95:    Dim state       As String
-96:
-97:    GetKeyboardState keystat(0)
-98:    state = keystat(vbKeyNumlock)
-99:
-100:    If (state = 0) Then
-101:        Num_Not_Stable = False
-102:    Else
-103:        Num_Not_Stable = True
-104:    End If
-105: End Function
+    Public Function Num_Not_Stable() As Boolean
+55:    ' Определяет, изменчивое ли состояние у NumLock или нет
+56:    ' Возвращает false - стабильный, true - изменчевый
+57:    Dim keystat(0 To 255) As Byte
+58:    Dim state       As String
+59:
+60:    GetKeyboardState keystat(0)
+61:    state = keystat(vbKeyNumlock)
+62:
+63:    If (state = 0) Then
+64:        Num_Not_Stable = False
+65:    Else
+66:        Num_Not_Stable = True
+67:    End If
+68: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : WriteErrorLog - процедура ведения Log файла
@@ -116,11 +116,11 @@ ErrorHandler:
 '* ByVal sNameFunc As String :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Sub WriteErrorLog(ByVal sNameFunc As String)
-119:    Dim LR          As LogRecorder
-120:    Set LR = New LogRecorder
-121:    LR.WriteErrorLog (sNameFunc)
-122: End Sub
+    Public Sub WriteErrorLog(ByVal sNameFunc As String)
+71:    Dim LR          As LogRecorder
+72:    Set LR = New LogRecorder
+73:    LR.WriteErrorLog (sNameFunc)
+74: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : URLLinks открытие в брайзере URL ссылки
@@ -133,23 +133,23 @@ ErrorHandler:
 '* ByVal url_str As String :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Sub URLLinks(ByVal url_str As String)
-136:    On Error GoTo ErrorHandler
-137:
-138:    Dim appEX       As Object
-139:    Set appEX = CreateObject("Wscript.Shell")
-140:    appEX.Run url_str
-141:    Set appEX = Nothing
-142:    Exit Sub
+    Public Sub URLLinks(ByVal url_str As String)
+77:    On Error GoTo ErrorHandler
+78:
+79:    Dim appEX       As Object
+80:    Set appEX = CreateObject("Wscript.Shell")
+81:    appEX.Run url_str
+82:    Set appEX = Nothing
+83:    Exit Sub
 ErrorHandler:
-144:    Select Case Err
+85:    Select Case Err
         Case Else:
-146:            Call MsgBox("An error occurred in the URL Links" & vbNewLine & Err.Number & vbNewLine & Err.Description, vbOKOnly + vbCritical, "Error in URL Links")
-147:            Call WriteErrorLog("URLLinks")
-148:    End Select
-149:    Set appEX = Nothing
-150:    Err.Clear
-151: End Sub
+87:            Call MsgBox("Произошла ошибка в URLLinks" & vbNewLine & Err.Number & vbNewLine & Err.Description, vbOKOnly + vbCritical, "Ошибка в URLLinks")
+88:            Call WriteErrorLog("URLLinks")
+89:    End Select
+90:    Set appEX = Nothing
+91:    Err.Clear
+92: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : FileSize - определить размер файла
@@ -163,15 +163,15 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function FileSize(sPath As String) As Long
-165:    'sPathFile - строка, полный путь к файлу.
-166:    'возвращает размер файла в байтах.
-167:    Dim sz          As Long
-168:    Dim FSO As Object, objFile As Object
-169:    Set FSO = CreateObject("Scripting.FileSystemObject")
-170:    Set objFile = FSO.GetFile(sPath)
-171:    FileSize = objFile.Size
-172:    Set FSO = Nothing: Set objFile = Nothing
-173: End Function
+95:    'sPathFile - строка, полный путь к файлу.
+96:    'возвращает размер файла в байтах.
+97:    Dim sz          As Long
+98:    Dim FSO As Object, objFile As Object
+99:    Set FSO = CreateObject("Scripting.FileSystemObject")
+100:    Set objFile = FSO.GetFile(sPath)
+101:    FileSize = objFile.Size
+102:    Set FSO = Nothing: Set objFile = Nothing
+103: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : sGetExtensionName возвращает расширение последнего компонента в заданном пути
@@ -185,19 +185,19 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function sGetExtensionName(ByVal sPathFile As String) As String
-187:    Dim FSO         As Object
-188:    Set FSO = CreateObject("Scripting.FileSystemObject")
-189:    sGetExtensionName = FSO.GetExtensionName(sPathFile)
-190:    Set FSO = Nothing
-191: End Function
+108:    Dim FSO         As Object
+109:    Set FSO = CreateObject("Scripting.FileSystemObject")
+110:    sGetExtensionName = FSO.GetExtensionName(sPathFile)
+111:    Set FSO = Nothing
+112: End Function
      Public Function sGetFileName(ByVal sPathFile As String) As String
-193:    'sPathFile - строка, путь.
-194:    'возвращает имя (с расширением) последнего компонента в заданном пути.
-195:    Dim FSO         As Object
-196:    Set FSO = CreateObject("Scripting.FileSystemObject")
-197:    sGetFileName = FSO.GetFileName(sPathFile)
-198:    Set FSO = Nothing
-199: End Function
+114:    'sPathFile - строка, путь.
+115:    'возвращает имя (с расширением) последнего компонента в заданном пути.
+116:    Dim FSO         As Object
+117:    Set FSO = CreateObject("Scripting.FileSystemObject")
+118:    sGetFileName = FSO.GetFileName(sPathFile)
+119:    Set FSO = Nothing
+120: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : sGetBaseName -  возвращает имя (без расширения) последнего компонента в заданном пути.
 '* Created    : 04-03-2020 13:34
@@ -210,11 +210,11 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function sGetBaseName(ByVal sPathFile As String) As String
-212:    Dim objFSO      As Object
-213:    Set objFSO = CreateObject("Scripting.FileSystemObject")
-214:    sGetBaseName = objFSO.GetBaseName(sPathFile)
-215:    Set objFSO = Nothing
-216: End Function
+133:    Dim objFso      As Object
+134:    Set objFso = CreateObject("Scripting.FileSystemObject")
+135:    sGetBaseName = objFso.GetBaseName(sPathFile)
+136:    Set objFso = Nothing
+137: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : SelectedFile - диалоговое окно выбора файлов из директории
@@ -230,30 +230,30 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function SelectedFile(ByVal sPath As String, Optional bMultiSelect As Boolean = True, Optional ExcelExtens As String = "*.xl*") As Variant
-232:    Dim oFd         As FileDialog
-233:    Dim s()         As String
-234:    Dim lf          As Long
-235:    Set oFd = Application.FileDialog(msoFileDialogFilePicker)
-236:
-237:    With oFd     'используем короткое обращение к объекту
-238:        .AllowMultiSelect = bMultiSelect
-239:        .Title = "VBA Tools: Select an Excel file"     'заголовок окна диалога
-240:        .Filters.Clear     'очищаем установленные ранее типы файлов
-241:        .Filters.Add "Microsoft Excel Files", ExcelExtens, 1     'устанавливаем возможность выбора только файлов Excel
-242:        .InitialFileName = sPath     'назначаем папку отображения и имя файла по умолчанию
-243:        .InitialView = msoFileDialogViewDetails     'вид диалогового окна(доступно 9 вариантов)
-244:        If .Show = 0 Then
-245:            SelectedFile = Empty
-246: Exit Function   'показывает диалог
-247:        End If
-248:        ReDim Preserve s(1 To .SelectedItems.Count)
-249:        For lf = 1 To .SelectedItems.Count
-250:            s(lf) = CStr(.SelectedItems.Item(lf))     'считываем полный путь к файлу
-251:        Next
-252:    End With
-253:    SelectedFile = s
-254:    Set oFd = Nothing
-255: End Function
+139:    Dim oFd         As FileDialog
+140:    Dim s()         As String
+141:    Dim lf          As Long
+142:    Set oFd = Application.FileDialog(msoFileDialogFilePicker)
+143:
+144:    With oFd     'используем короткое обращение к объекту
+145:        .AllowMultiSelect = bMultiSelect
+146:        .Title = "VBATools: Выберите файл Excel"     'заголовок окна диалога
+147:        .Filters.Clear     'очищаем установленные ранее типы файлов
+148:        .Filters.Add "Microsoft Excel Files", ExcelExtens, 1     'устанавливаем возможность выбора только файлов Excel
+149:        .InitialFileName = sPath     'назначаем папку отображения и имя файла по умолчанию
+150:        .InitialView = msoFileDialogViewDetails     'вид диалогового окна(доступно 9 вариантов)
+151:        If .Show = 0 Then
+152:            SelectedFile = Empty
+153:             Exit Function    'показывает диалог
+154:        End If
+155:        ReDim Preserve s(1 To .SelectedItems.Count)
+156:        For lf = 1 To .SelectedItems.Count
+157:            s(lf) = CStr(.SelectedItems.Item(lf))     'считываем полный путь к файлу
+158:        Next
+159:    End With
+160:    SelectedFile = s
+161:    Set oFd = Nothing
+162: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : FileHave - проверка существования файла
@@ -268,9 +268,9 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function FileHave(sPath As String, Optional Atributes As FileAttribute = vbNormal) As Boolean
-270:    FileHave = (Dir(sPath, Atributes) <> "")
-271:    If sPath = vbNullString Then FileHave = False
-272: End Function
+164:    FileHave = (Dir(sPath, Atributes) <> "")
+165:    If sPath = vbNullString Then FileHave = False
+166: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : WorkbookIsOpen - Возвращает ИСТИНА если открыта книга под названием wname
@@ -284,11 +284,11 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function WorkbookIsOpen(ByRef wname As String) As Boolean
-286:    Dim WB          As Workbook
-287:    On Error Resume Next
-288:    Set WB = Workbooks(wname)
-289:    If Err.Number = 0 Then WorkbookIsOpen = True
-290: End Function
+169:    Dim wb          As Workbook
+170:    On Error Resume Next
+171:    Set wb = Workbooks(wname)
+172:    If Err.Number = 0 Then WorkbookIsOpen = True
+173: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : IsFileOpen - если файл открыт то закрывает его
@@ -301,37 +301,37 @@ ErrorHandler:
 '* sFileName As String :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function IsFileOpen(sFileName As String) As Boolean
-304:    Dim filenum As Integer, errnum As Integer
-305:
-306:    On Error Resume Next
-307:    filenum = FreeFile()
-308:    ' Attempt to open the file and lock it.
-309:    Open sFileName For Input Lock Read As #filenum
-310:    Close filenum
-311:    errnum = Err
-312:    On Error GoTo 0
-313:
-314:    Select Case errnum
+     Public Function IsFileOpen(sfileName As String) As Boolean
+176:    Dim filenum As Integer, errnum As Integer
+177:
+178:    On Error Resume Next
+179:    filenum = FreeFile()
+180:    ' Attempt to open the file and lock it.
+181:    Open sfileName For Input Lock Read As #filenum
+182:    Close filenum
+183:    errnum = Err
+184:    On Error GoTo 0
+185:
+186:    Select Case errnum
         Case 0
-316:            IsFileOpen = False
-317:            ' Error number for "Permission Denied."
-318:            ' File is already opened by another user.
-319:        Case 70
-320:            IsFileOpen = True
-321:            ' Another error occurred.
-322:        Case Else
-323:            Error errnum
-324:    End Select
-325: End Function
+188:            IsFileOpen = False
+189:            ' Error number for "Permission Denied."
+190:            ' File is already opened by another user.
+191:        Case 70
+192:            IsFileOpen = True
+193:            ' Another error occurred.
+194:        Case Else
+195:            Error errnum
+196:    End Select
+197: End Function
      Public Function sFolderHave(ByVal sPathFile As String) As Boolean
-327:    'sPathFile - строка, путь.
-328:    'возвращает True, если указанный каталог сущесвтвует, и False в противном случае.
-329:    Dim FSO         As Object
-330:    Set FSO = CreateObject("Scripting.FileSystemObject")
-331:    sFolderHave = FSO.FolderExists(sPathFile)
-332:    Set FSO = Nothing
-333: End Function
+199:    'sPathFile - строка, путь.
+200:    'возвращает True, если указанный каталог сущесвтвует, и False в противном случае.
+201:    Dim FSO         As Object
+202:    Set FSO = CreateObject("Scripting.FileSystemObject")
+203:    sFolderHave = FSO.FolderExists(sPathFile)
+204:    Set FSO = Nothing
+205: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : CopyFile - копирование файла
 '* Created    : 04-03-2020 13:37
@@ -344,14 +344,14 @@ ErrorHandler:
 '* ByVal sNewFileName As String : куда
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Sub CopyFileFSO(ByVal sFileName As String, ByVal sNewFileName As String)
-347:    Dim objFSO As Object, objFile As Object
-348:
-349:    Set objFSO = CreateObject("Scripting.FileSystemObject")
-350:    Set objFile = objFSO.GetFile(sFileName)
-351:    objFile.Copy sNewFileName
-352:    Set objFSO = Nothing
-353: End Sub
+     Public Sub CopyFileFSO(ByVal sfileName As String, ByVal sNewFileName As String)
+219:    Dim objFso As Object, objFile As Object
+220:
+221:    Set objFso = CreateObject("Scripting.FileSystemObject")
+222:    Set objFile = objFso.GetFile(sfileName)
+223:    objFile.Copy sNewFileName
+224:    Set objFso = Nothing
+225: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : TXTReadALLFile строковая переменая, возращающает текст файла
 '* Created    : 06-03-2020 10:07
@@ -364,29 +364,29 @@ ErrorHandler:
 '* Optional AddFile As Boolean = True : логическа переменая, по умолчанию True, если нет файла то создаст его
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function TXTReadALLFile(ByVal sFileName As String, Optional AddFile As Boolean = True) As String
-367:
-368:    Dim FSO         As Object
-369:    Dim ts          As Object
-370:    On Error Resume Next: Err.Clear
-371:    Set FSO = CreateObject("scripting.filesystemobject")
-372:    Set ts = FSO.OpenTextFile(sFileName, 1, AddFile): TXTReadALLFile = ts.ReadAll: ts.Close
-373:    Set ts = Nothing: Set FSO = Nothing
-374: End Function
-     Public Function TXTAddIntoTXTFile(ByVal sFileName As String, ByVal Txt As String, Optional AddFile As Boolean = True) As Boolean
-376:    'TXTAddIntoTXTFile - логическа переменая, True - добавление удалось, False - нет
-377:    'FileName - строковая переменая, полный путь файла
-378:    'txt - текст добавляемый в фаил
-379:    'AddFile - логическа переменая, по умолчанию True, если нет файла то создаст его
-380:
-381:    Dim FSO         As Object
-382:    Dim ts          As Object
-383:    On Error Resume Next: Err.Clear
-384:    Set FSO = CreateObject("scripting.filesystemobject")
-385:    Set ts = FSO.OpenTextFile(sFileName, 8, AddFile): ts.Write Txt: ts.Close
-386:    TXTAddIntoTXTFile = Err = 0
-387:    Set ts = Nothing: Set FSO = Nothing
-388: End Function
+     Public Function TXTReadALLFile(ByVal sfileName As String, Optional AddFile As Boolean = True) As String
+239:
+240:    Dim FSO         As Object
+241:    Dim ts          As Object
+242:    On Error Resume Next: Err.Clear
+243:    Set FSO = CreateObject("scripting.filesystemobject")
+244:    Set ts = FSO.OpenTextFile(sfileName, 1, AddFile): TXTReadALLFile = ts.ReadAll: ts.Close
+245:    Set ts = Nothing: Set FSO = Nothing
+246: End Function
+     Public Function TXTAddIntoTXTFile(ByVal sfileName As String, ByVal Txt As String, Optional AddFile As Boolean = True) As Boolean
+248:    'TXTAddIntoTXTFile - логическа переменая, True - добавление удалось, False - нет
+249:    'FileName - строковая переменая, полный путь файла
+250:    'txt - текст добавляемый в фаил
+251:    'AddFile - логическа переменая, по умолчанию True, если нет файла то создаст его
+252:
+253:    Dim FSO         As Object
+254:    Dim ts          As Object
+255:    On Error Resume Next: Err.Clear
+256:    Set FSO = CreateObject("scripting.filesystemobject")
+257:    Set ts = FSO.OpenTextFile(sfileName, 8, AddFile): ts.Write Txt: ts.Close
+258:    TXTAddIntoTXTFile = Err = 0
+259:    Set ts = Nothing: Set FSO = Nothing
+260: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : ReplceCode - функция поиска в коде названий и замена их на новое
@@ -402,26 +402,26 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function ReplceCode(ByVal sInCode As String, sOldName As String, sNewName As String) As String
-404:    Dim sCode       As String
-405:    sCode = sInCode
-406:    sCode = VBA.Replace(sCode, " " & sOldName & ".", " " & sNewName & ".", 1, -1, vbTextCompare)
-407:    sCode = VBA.Replace(sCode, " " & sOldName & ",", " " & sNewName & ",", 1, -1, vbTextCompare)
-408:    sCode = VBA.Replace(sCode, " " & sOldName & ")", " " & sNewName & ")", 1, -1, vbTextCompare)
-409:    sCode = VBA.Replace(sCode, "(" & sOldName & ".", "(" & sNewName & ".", 1, -1, vbTextCompare)
-410:    sCode = VBA.Replace(sCode, "(" & sOldName & ",", "(" & sNewName & ",", 1, -1, vbTextCompare)
-411:    sCode = VBA.Replace(sCode, "=" & sOldName & ".", "=" & sNewName & ".", 1, -1, vbTextCompare)
-412:    sCode = VBA.Replace(sCode, "=" & sOldName & vbNewLine, "=" & sNewName & vbNewLine, , , vbTextCompare)
-413:    sCode = VBA.Replace(sCode, "(" & sOldName & " ", "(" & sNewName & " ", 1, -1, vbTextCompare)
-414:    sCode = VBA.Replace(sCode, "(" & sOldName & ")", "(" & sNewName & ")", 1, -1, vbTextCompare)
-415:    sCode = VBA.Replace(sCode, "." & sOldName & ".", "." & sNewName & ".", 1, -1, vbTextCompare)
-416:    sCode = VBA.Replace(sCode, "." & sOldName & vbNewLine, "." & sNewName & vbNewLine, , , vbTextCompare)
-417:    sCode = VBA.Replace(sCode, " " & sOldName & "_", " " & sNewName & "_", 1, -1, vbTextCompare)
-418:    sCode = VBA.Replace(sCode, vbNewLine & sOldName & "_", vbNewLine & sNewName & "_", 1, -1, vbTextCompare)
-419:    sCode = VBA.Replace(sCode, """ & sOldName & """, """ & sNewName & """, 1, -1, vbTextCompare)
-420:    sCode = VBA.Replace(sCode, " " & sOldName & " ", " " & sNewName & " ", 1, -1, vbTextCompare)
-421:    sCode = VBA.Replace(sCode, " " & sOldName & vbNewLine, " " & sNewName & vbNewLine, 1, -1, vbTextCompare)
-422:    ReplceCode = sCode
-423: End Function
+276:    Dim sCode       As String
+277:    sCode = sInCode
+278:    sCode = VBA.Replace(sCode, " " & sOldName & ".", " " & sNewName & ".", 1, -1, vbTextCompare)
+279:    sCode = VBA.Replace(sCode, " " & sOldName & ",", " " & sNewName & ",", 1, -1, vbTextCompare)
+280:    sCode = VBA.Replace(sCode, " " & sOldName & ")", " " & sNewName & ")", 1, -1, vbTextCompare)
+281:    sCode = VBA.Replace(sCode, "(" & sOldName & ".", "(" & sNewName & ".", 1, -1, vbTextCompare)
+282:    sCode = VBA.Replace(sCode, "(" & sOldName & ",", "(" & sNewName & ",", 1, -1, vbTextCompare)
+283:    sCode = VBA.Replace(sCode, "=" & sOldName & ".", "=" & sNewName & ".", 1, -1, vbTextCompare)
+284:    sCode = VBA.Replace(sCode, "=" & sOldName & vbNewLine, "=" & sNewName & vbNewLine, , , vbTextCompare)
+285:    sCode = VBA.Replace(sCode, "(" & sOldName & " ", "(" & sNewName & " ", 1, -1, vbTextCompare)
+286:    sCode = VBA.Replace(sCode, "(" & sOldName & ")", "(" & sNewName & ")", 1, -1, vbTextCompare)
+287:    sCode = VBA.Replace(sCode, "." & sOldName & ".", "." & sNewName & ".", 1, -1, vbTextCompare)
+288:    sCode = VBA.Replace(sCode, "." & sOldName & vbNewLine, "." & sNewName & vbNewLine, , , vbTextCompare)
+289:    sCode = VBA.Replace(sCode, " " & sOldName & "_", " " & sNewName & "_", 1, -1, vbTextCompare)
+290:    sCode = VBA.Replace(sCode, vbNewLine & sOldName & "_", vbNewLine & sNewName & "_", 1, -1, vbTextCompare)
+291:    sCode = VBA.Replace(sCode, """ & sOldName & """, """ & sNewName & """, 1, -1, vbTextCompare)
+292:    sCode = VBA.Replace(sCode, " " & sOldName & " ", " " & sNewName & " ", 1, -1, vbTextCompare)
+293:    sCode = VBA.Replace(sCode, " " & sOldName & vbNewLine, " " & sNewName & vbNewLine, 1, -1, vbTextCompare)
+294:    ReplceCode = sCode
+295: End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : TrimSpace - удаление всех не одиночных пробелов
@@ -435,16 +435,16 @@ ErrorHandler:
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Public Function TrimSpace(ByVal sTxt As String) As String
-437:    Dim sTemp As String
-438:    Const LENGHT_CELLS As Long = 32767
-439:    sTemp = sTxt
-440:    If VBA.Len(sTemp) <= LENGHT_CELLS Then
-441:        sTemp = Application.WorksheetFunction.Trim(sTemp)
-442:    Else
-443:        Dim i As Long
-444:        For i = 1 To VBA.Len(sTxt) Step LENGHT_CELLS
-445:            sTemp = sTemp & Application.WorksheetFunction.Trim(VBA.Mid$(sTxt, i, LENGHT_CELLS))
-446:        Next i
-447:    End If
-448:    TrimSpace = sTemp
+297:    Dim sTemp As String
+298:    Const LENGHT_CELLS As Long = 32767
+299:    sTemp = sTxt
+300:    If VBA.Len(sTemp) <= LENGHT_CELLS Then
+301:        sTemp = Application.WorksheetFunction.Trim(sTemp)
+302:    Else
+303:        Dim i As Long
+304:        For i = 1 To VBA.Len(sTxt) Step LENGHT_CELLS
+305:            sTemp = sTemp & Application.WorksheetFunction.Trim(VBA.Mid$(sTxt, i, LENGHT_CELLS))
+306:        Next i
+307:    End If
+308:    TrimSpace = sTemp
 End Function

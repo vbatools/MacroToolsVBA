@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} VersionSistemControls 
-   Caption         =   "Version Control:"
+   Caption         =   "Контроль версий:"
    ClientHeight    =   8160
    ClientLeft      =   45
    ClientTop       =   375
@@ -118,7 +118,7 @@ End Enum
 103:    End If
 104:
 105:    If Me.txtCommentariy.Text = vbNullString Then
-106:        Me.txtMsg.Text = "Add a comment to the version before creating it"
+106:        Me.txtMsg.Text = "Добавте комментарий к версии, перед ее созданием"
 107:        Me.txtMsg.ForeColor = myRedColor
 108:        Exit Sub
 109:    End If
@@ -143,11 +143,11 @@ End Enum
 128:    'формированияе комментария
 129:    sCommentariy = VBA.Replace(VBA.Trim(Me.txtCommentariy.Text), vbNewLine, " vbNewLine ")
 130:    sCongig = GetTypeCoomment(VersionList.verNameFileVer) & sNewDirForFile & ";" & _
-                                    GetTypeCoomment(VersionList.verVersion) & sVersion & ";" & _
-                                    GetTypeCoomment(VersionList.verDateAdd) & sDate & ";" & _
-                                    GetTypeCoomment(VersionList.verOldVersion) & sOldVer & ";" & _
-                                    GetTypeCoomment(VersionList.verModuleNames) & AddListModuleName(Me.cmbFile.Value) & ";" & _
-                                    GetTypeCoomment(VersionList.verComment) & sCommentariy & vbNewLine
+                                GetTypeCoomment(VersionList.verVersion) & sVersion & ";" & _
+                                GetTypeCoomment(VersionList.verDateAdd) & sDate & ";" & _
+                                GetTypeCoomment(VersionList.verOldVersion) & sOldVer & ";" & _
+                                GetTypeCoomment(VersionList.verModuleNames) & AddListModuleName(Me.cmbFile.Value) & ";" & _
+                                GetTypeCoomment(VersionList.verComment) & sCommentariy & vbNewLine
 136:    'обновление или создание файла Config.cvs
 137:    Call C_PublicFunctions.TXTAddIntoTXTFile(sPath & CONFIG, sCongig)
 138:    sVersionInfo = C_PublicFunctions.TXTReadALLFile(sPath & Application.PathSeparator & CONFIG, False)
@@ -157,13 +157,13 @@ End Enum
 142:
 143:    Call CheckSourcePath
 144:    'Me.ListVersion.Selected(Me.ListVersion.ListCount - 1) = True
-145:    Me.txtMsg.Text = "File version added to storage:" & vbNewLine & "[ " & sNewDirForFile & " ]"
+145:    Me.txtMsg.Text = "В хранилище добавлена версия файла:" & vbNewLine & "[ " & sNewDirForFile & " ]"
 146:    Me.txtMsg.ForeColor = myGreenColor
 147:    Me.txtCommentariy.Text = vbNullString
 148:
 149:    Exit Sub
 ErrorHandler:
-151:    Debug.Print "Error in VersionSistemControls. lbAddSource_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+151:    Debug.Print "Ошибка! в VersionSistemControls.lbAddSource_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 152:    Call WriteErrorLog("VersionSistemControls.lbAddSource_Click")
 153: End Sub
      Private Sub lbChoseFile_Click()
@@ -178,36 +178,36 @@ ErrorHandler:
 163: End Sub
      Private Sub lbOpenFileVersion_Click()
 165:    Dim i      As Long
-166:    Dim sFileName As String
+166:    Dim sfileName As String
 167:
 168:    On Error GoTo ErrorHandler
 169:
 170:    i = GetNomerItemSelectedList()
 171:
 172:    If i = -1 Then
-173:        Me.txtMsg.Text = "No file version selected to open!"
+173:        Me.txtMsg.Text = "Не выбрана версия файла, для открытия!"
 174:        Me.txtMsg.ForeColor = myRedColor
 175:        Exit Sub
 176:    End If
 177:
-178:    sFileName = Me.txtPath & Me.ListVersion.List(i, 1)
-179:    If C_PublicFunctions.FileHave(sFileName, Normal) Then
+178:    sfileName = Me.txtPath & Me.ListVersion.List(i, 1)
+179:    If C_PublicFunctions.FileHave(sfileName, Normal) Then
 180:        Workbooks.Open Filename:=Me.txtPath & Me.ListVersion.List(i, 1)
-181:        Me.txtMsg.Text = "File: [" & Me.ListVersion.List(i, 1) & "] open!"
+181:        Me.txtMsg.Text = "Файл: [" & Me.ListVersion.List(i, 1) & "] открыт!"
 182:        Me.txtMsg.ForeColor = myGreenColor
 183:    Else
-184:        Me.txtMsg.Text = "File: [" & Me.ListVersion.List(i, 1) & "] not found, in the storage!"
+184:        Me.txtMsg.Text = "Файл: [" & Me.ListVersion.List(i, 1) & "] не найден, в хранилище!"
 185:        Me.txtMsg.ForeColor = myRedColor
 186:    End If
 187:
 188:    Exit Sub
 ErrorHandler:
-190:    Debug.Print "Error in Version SystemControls.lbOpenFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+190:    Debug.Print "Ошибка! в VersionSistemControls.lbOpenFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 191:    Call WriteErrorLog("VersionSistemControls.lbOpenFileVersion_Click")
 192: End Sub
      Private Sub lbLoadFileVersion_Click()
 194:    Dim i      As Long
-195:    Dim sFileName As String
+195:    Dim sfileName As String
 196:    Dim sMainPath As String
 197:    Dim sLoadPath As String
 198:    Dim SelectFileName As String
@@ -217,7 +217,7 @@ ErrorHandler:
 202:    i = GetNomerItemSelectedList()
 203:
 204:    If i = -1 Then
-205:        Me.txtMsg.Text = "No file version selected to download!"
+205:        Me.txtMsg.Text = "Не выбрана версия файла, для загрузки!"
 206:        Me.txtMsg.ForeColor = myRedColor
 207:        Exit Sub
 208:    End If
@@ -226,12 +226,12 @@ ErrorHandler:
 211:
 212:    If Not C_PublicFunctions.FileHave(Me.txtPath & SelectFileName, Normal) Then
 213:
-214:        Me.txtMsg.Text = "File: [" & SelectFileName & "] not found, in the storage!"
+214:        Me.txtMsg.Text = "Файл: [" & SelectFileName & "] не найден, в хранилище!"
 215:        Me.txtMsg.ForeColor = myRedColor
 216:
-217:    ElseIf MsgBox("Upload a file: [" & SelectFileName & " ]" & vbNewLine & vbNewLine & _
-                                    "Attention, the current file [" & Workbooks(Me.cmbFile.Value).Name & "] will be overwritten!", _
-                                    vbYesNo + vbQuestion, "Download version:") = vbYes Then
+217:    ElseIf MsgBox("Загрузить файл: [ " & SelectFileName & " ]" & vbNewLine & vbNewLine & _
+                                "Внимание, текущий файл [ " & Workbooks(Me.cmbFile.Value).Name & " ] будет перезаписан!", _
+                                vbYesNo + vbQuestion, "Загрузка версии:") = vbYes Then
 220:        sMainPath = Workbooks(Me.cmbFile.Value).FullName
 221:        sLoadPath = Me.txtPath & SelectFileName
 222:
@@ -241,14 +241,14 @@ ErrorHandler:
 226:        Call C_PublicFunctions.CopyFileFSO(sLoadPath, sMainPath)
 227:        Workbooks.Open Filename:=sMainPath
 228:
-229:        Me.txtMsg.Text = "Uploading a file: [" & SelectFileName & " ]" & vbNewLine & "Completed"
+229:        Me.txtMsg.Text = "Загрузка файла: [ " & SelectFileName & " ]" & vbNewLine & "Выполнена"
 230:        Me.txtMsg.ForeColor = myGreenColor
 231:
 232:    End If
 233:
 234:    Exit Sub
 ErrorHandler:
-236:    Debug.Print "Error in VersionSistemControls.lbLoadFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+236:    Debug.Print "Ошибка! в VersionSistemControls.lbLoadFileVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 237:    Call WriteErrorLog("VersionSistemControls.lbLoadFileVersion_Click")
 238: End Sub
      Private Sub ListVersion_Click()
@@ -259,12 +259,12 @@ ErrorHandler:
 244:    i = GetNomerItemSelectedList()
 245:    If i = -1 Then Exit Sub
 246:
-247:    Me.txtCommentariy.Text = "Previous version:" & ParserCommet(i, VersionList.verOldVersion) & vbNewLine & "Comment:" & vbNewLine & ParserCommet(i, VersionList.verComment)
+247:    Me.txtCommentariy.Text = "Предыдущая верися: " & ParserCommet(i, VersionList.verOldVersion) & vbNewLine & "Комментарий: " & vbNewLine & ParserCommet(i, VersionList.verComment)
 248:    Me.txtCommentariyByfer.Text = Me.txtCommentariy.Text
 249:
 250:    Exit Sub
 ErrorHandler:
-252:    Debug.Print "Error d Version SystemControls.ListVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+252:    Debug.Print "Ошибка! в VersionSistemControls.ListVersion_Click" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 253:    Call WriteErrorLog("VersionSistemControls.ListVersion_Click")
 254: End Sub
      Private Sub cmbFile_Change()
@@ -327,7 +327,7 @@ ErrorHandler:
 312:    Call ChangeColor
 313:    Exit Sub
 ErrorHandler:
-315:    Debug.Print "Error in VersionSistemControls.UserForm_Initialize" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+315:    Debug.Print "Ошибка! в VersionSistemControls.UserForm_Initialize" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 316:    Call WriteErrorLog("VersionSistemControls.UserForm_Initialize")
 317: End Sub
      Private Sub UserForm_Terminate()
@@ -363,15 +363,15 @@ ErrorHandler:
 348:    If C_PublicFunctions.FileHave(sPath, vbDirectory) Then
 349:        Me.txtPath.Text = sPath
 350:    Else
-351:        sMsg = "No storage created for the file:" & vbNewLine & "[ " & Me.cmbFile.Value & " ]"
-352:        Me.txtCommentariy.Text = "Creating the first version"
+351:        sMsg = "Не создано хранилище для файла:" & vbNewLine & "[ " & Me.cmbFile.Value & " ]"
+352:        Me.txtCommentariy.Text = "Создание первой версии"
 353:        Me.txtMsg.Text = sMsg
 354:        Exit Sub
 355:    End If
 356:
 357:    If Not C_PublicFunctions.FileHave(sPath & CONFIG, vbDirectory) Then
-358:        sMsg = "File not found: Config.sys"
-359:        Me.txtCommentariy.Text = "Creating the first version"
+358:        sMsg = "Не найден файл: Config.cvs"
+359:        Me.txtCommentariy.Text = "Создание первой версии"
 360:    End If
 361:
 362:    Me.txtMsg.Text = sMsg
@@ -380,7 +380,7 @@ ErrorHandler:
 365:
 366:    Exit Sub
 ErrorHandler:
-368:    Debug.Print "Error in Version SystemControls.CheckSourcePath" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+368:    Debug.Print "Ошибка! в VersionSistemControls.CheckSourcePath" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 369:    Call WriteErrorLog("VersionSistemControls.CheckSourcePath")
 370: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -417,7 +417,7 @@ ErrorHandler:
 402:
 403:    Exit Sub
 ErrorHandler:
-405:    Debug.Print "Error in VersionSistemControls.RefrashListVersion" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+405:    Debug.Print "Ошибка! в VersionSistemControls.RefrashListVersion" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 406:    Call WriteErrorLog("VersionSistemControls.RefrashListVersion")
 407: End Sub
 
@@ -445,7 +445,7 @@ ErrorHandler:
 430:    Exit Function
 ErrorHandler:
 432:    GetNomerItemSelectedList = -1
-433:    Debug.Print "Error in VersionSistemControls.Get NumberItemSelectedList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+433:    Debug.Print "Ошибка! в VersionSistemControls.GetNomerItemSelectedList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 434:    Call WriteErrorLog("VersionSistemControls.GetNomerItemSelectedList")
 435: End Function
 
@@ -494,13 +494,13 @@ ErrorHandler:
 479:    Dim sNewString As String
 480:    Dim vTemp  As Variant
 481:
-482:    On Error GoTo errmsg
+482:    On Error GoTo errMsg
 483:
 484:    sStrSerch = VBA.Trim$(addString())
 485:    k = VBA.Len(sStrSerch)
 486:    i = VBA.InStr(1, sCode, sStrSerch)
 487:    j = VBA.InStrRev(sCode, sStrSerch, -1)
-488:    If i = 0 And j = 0 Then GoTo errmsg
+488:    If i = 0 And j = 0 Then GoTo errMsg
 489:    sNewString = VBA.Left$(sCode, j + k)
 490:    sNewString = VBA.Right$(sNewString, VBA.Len(sNewString) - i + 1)
 491:    sNewString = VBA.Replace(sNewString, sStrSerch, vbNullString)
@@ -510,7 +510,7 @@ ErrorHandler:
 495:
 496:    GetPathFormCode = VBA.Trim$(sNewString)
 497:    Exit Function
-errmsg:
+errMsg:
 499:    Err.Clear
 500:    GetPathFormCode = vbNullString
 501: End Function
@@ -534,7 +534,7 @@ errmsg:
 519:    AddListModuleName = sTemp
 520:    Exit Function
 ErrorHandler:
-522:    Debug.Print "Error in VersionSistemControls.AddListModuleName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+522:    Debug.Print "Ошибка! в VersionSistemControls.AddListModuleName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 523:    Call WriteErrorLog("VersionSistemControls.AddListModuleName")
 524: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -570,7 +570,7 @@ ErrorHandler:
 555:
 556:    Exit Function
 ErrorHandler:
-558:    Debug.Print "Error in VersionSistemControls.Add CommentForModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+558:    Debug.Print "Ошибка! в VersionSistemControls.AddCommentForModule" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 559:    Call WriteErrorLog("VersionSistemControls.AddCommentForModule")
 560: End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -616,7 +616,7 @@ ErrorHandler:
 601:    Set objModuleWB = Nothing
 602:    Exit Sub
 ErrorHandler:
-604:    Debug.Print "Error in VersionSistemControls.AddCommentVSC" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+604:    Debug.Print "Ошибка! в VersionSistemControls.AddCommentVSC" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 605:    Call WriteErrorLog("VersionSistemControls.AddCommentVSC")
 606: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -626,14 +626,13 @@ ErrorHandler:
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function addString() As String
+Private Function addString() As String
 615:    Dim strTemp As String
 616:    On Error GoTo ErrorHandler
 617:    strTemp = VBA.Replace(VBA.String(20, "*"), "*", "* ")
 618:    addString = "'" & strTemp & " VSC VBATools " & strTemp
 619:    Exit Function
 ErrorHandler:
-621:    Debug.Print "Error in VersionSistemControls.AddString" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+621:    Debug.Print "Ошибка! в VersionSistemControls.AddString" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 622:    Call WriteErrorLog("VersionSistemControls.AddString")
-623: End Function
-
+End Function

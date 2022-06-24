@@ -10,91 +10,108 @@ Attribute VB_Name = "Y_Options"
 Option Explicit
 Option Private Module
 
-    Public Sub subOptions()
-13:    Dim sOptions    As String
-14:    Dim moCM        As CodeModule
-15:    Dim vbComp      As VBIDE.VBComponent
-16:    Dim objForm     As AddOptions
-17:    Dim sActiveVBProject As String
-18:
-19:    On Error Resume Next
-20:    sActiveVBProject = Application.VBE.ActiveVBProject.Filename
-21:    On Error GoTo 0
-22:
-23:    On Error GoTo ErrorHandler
-24:    Set objForm = New AddOptions
-25:
-26:    With objForm
-27:
-28:        If sActiveVBProject <> vbNullString Then .lbNameProject.Caption = sGetFileName(sActiveVBProject)
-29:        .Show
-30:        If .chOptionExplicit.Value Then
-31:            sOptions = "Option Explicit" & vbNewLine
-32:        End If
-33:        If .chOptionPrivate.Value Then
-34:            sOptions = sOptions & "Option Private Module" & vbNewLine
-35:        End If
-36:        If .chOptionCompare.Value Then
-37:            sOptions = sOptions & "Option Compare Text" & vbNewLine
-38:        End If
-39:        If .chOptionBase.Value Then
-40:            sOptions = sOptions & "Option Base 1" & vbNewLine
-41:        End If
-42:        If sOptions = vbNullString Then Exit Sub
-43:        sOptions = VBA.Left$(sOptions, VBA.Len(sOptions) - 2)
-44:        If sOptions = vbNullString Then Exit Sub
-45:
-46:        If .obtnModule Then
-47:            Set moCM = Application.VBE.ActiveCodePane.CodeModule
-48:            Call addString(moCM, sOptions)
-49:        Else
-50:            For Each vbComp In Application.VBE.ActiveVBProject.VBComponents
-51:                Set moCM = vbComp.CodeModule
-52:                Call addString(moCM, sOptions)
-53:            Next vbComp
-54:        End If
-55:    End With
-56:    Set objForm = Nothing
-57:    Exit Sub
+Public Sub subOptions()
+    Dim sOptions    As String
+    Dim moCM        As CodeModule
+    Dim vbComp      As VBIDE.VBComponent
+    Dim objForm     As AddOptions
+    Dim sActiveVBProject As String
+
+    On Error Resume Next
+    sActiveVBProject = Application.VBE.ActiveVBProject.Filename
+    On Error GoTo 0
+
+    On Error GoTo ErrorHandler
+    Set objForm = New AddOptions
+
+    With objForm
+
+        If sActiveVBProject <> vbNullString Then .lbNameProject.Caption = sGetFileName(sActiveVBProject)
+        .Show
+        If .chOptionExplicit.Value Then
+            sOptions = "Option Explicit" & vbNewLine
+        End If
+        If .chOptionPrivate.Value Then
+            sOptions = sOptions & "Option Private Module" & vbNewLine
+        End If
+        If .chOptionCompare.Value Then
+            sOptions = sOptions & "Option Compare Text" & vbNewLine
+        End If
+        If .chOptionBase.Value Then
+            sOptions = sOptions & "Option Base 1" & vbNewLine
+        End If
+        If sOptions = vbNullString Then Exit Sub
+        sOptions = VBA.Left$(sOptions, VBA.Len(sOptions) - 2)
+        If sOptions = vbNullString Then Exit Sub
+
+        If .obtnModule Then
+            Set moCM = Application.VBE.ActiveCodePane.CodeModule
+            Call addString(moCM, sOptions)
+        Else
+            For Each vbComp In Application.VBE.ActiveVBProject.VBComponents
+                Set moCM = vbComp.CodeModule
+                Call addString(moCM, sOptions)
+            Next vbComp
+        End If
+    End With
+    Set objForm = Nothing
+    Exit Sub
 ErrorHandler:
-59:    Select Case Err.Number
+    Select Case Err.Number
         Case 91:
-61:            Exit Sub
-62:        Case Else:
-63:            Debug.Print "Error in add Options" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
-64:            Call WriteErrorLog("addOptions")
-65:    End Select
-66:    Err.Clear
-67: End Sub
+            Exit Sub
+        Case Else:
+            Debug.Print "Ошибка! в addOptions" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Call WriteErrorLog("addOptions")
+    End Select
+    Err.Clear
+End Sub
+
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Sub        : insertOptionsExplicitAndPrivateModule - быстрое создание толко опций Explicit и Private Module
+'* Created    : 23-06-2022 11:20
+'* Author     : VBATools
+'* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
+'* Copyright  : VBATools.ru
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Public Sub insertOptionsExplicitAndPrivateModule()
+    Dim moCM        As CodeModule
+    On Error Resume Next
+    Set moCM = Application.VBE.ActiveCodePane.CodeModule
+    On Error GoTo 0
+    If Not moCM Is Nothing Then
+        Call addString(moCM, "Option Explicit" & vbNewLine & "Option Private Module")
+    End If
+End Sub
 
 Private Sub addString(ByRef moCM As CodeModule, ByVal sOptions As String)
-70:    Dim i           As Long
-71:    Dim sLines      As String
-72:    With moCM
-73:        i = .CountOfDeclarationLines
-74:        If i > 0 Then
-75:            sLines = .Lines(1, i)
-76:            Call .DeleteLines(1, i)
-77:        End If
-78:        sLines = VBA.Replace(sLines, "Option Explicit", vbNullString)
-79:        sLines = VBA.Replace(sLines, "Option Private Module", vbNullString)
-80:        sLines = VBA.Replace(sLines, "Option Base 1", vbNullString)
-81:        sLines = VBA.Replace(sLines, "Option Base 0", vbNullString)
-82:        sLines = VBA.Replace(sLines, "Option Compare Text", vbNullString)
-83:        sLines = VBA.Replace(sLines, "Option Compare Binary", vbNullString)
-84:
-85:        If .Parent.Type <> vbext_ct_StdModule Then
-86:            sOptions = VBA.Replace(sOptions, "Option Private Module" & vbNewLine, vbNullString)
-87:            sOptions = VBA.Replace(sOptions, "Option Private Module", vbNullString)
-88:        End If
-89:
-90:        sLines = VBA.Replace(sLines, vbNewLine & vbNewLine, "||")
-91:        sLines = VBA.Replace(sLines, vbNewLine, "||")
-92:        If sLines = vbNullString Then
-93:            sLines = sOptions
-94:        Else
-95:            sLines = sOptions & vbNewLine & VBA.Replace(sLines, "||", vbNewLine)
-96:        End If
-97:        Call .InsertLines(1, sLines)
-98:    End With
+    Dim i           As Long
+    Dim sLines      As String
+    With moCM
+        i = .CountOfDeclarationLines
+        If i > 0 Then
+            sLines = .Lines(1, i)
+            Call .DeleteLines(1, i)
+        End If
+        sLines = VBA.Replace(sLines, "Option Explicit", vbNullString)
+        sLines = VBA.Replace(sLines, "Option Private Module", vbNullString)
+        sLines = VBA.Replace(sLines, "Option Base 1", vbNullString)
+        sLines = VBA.Replace(sLines, "Option Base 0", vbNullString)
+        sLines = VBA.Replace(sLines, "Option Compare Text", vbNullString)
+        sLines = VBA.Replace(sLines, "Option Compare Binary", vbNullString)
+
+        If .Parent.Type <> vbext_ct_StdModule Then
+            sOptions = VBA.Replace(sOptions, "Option Private Module" & vbNewLine, vbNullString)
+            sOptions = VBA.Replace(sOptions, "Option Private Module", vbNullString)
+        End If
+
+        sLines = VBA.Replace(sLines, vbNewLine & vbNewLine, "||")
+        sLines = VBA.Replace(sLines, vbNewLine, "||")
+        If sLines = vbNullString Then
+            sLines = sOptions
+        Else
+            sLines = sOptions & vbNewLine & VBA.Replace(sLines, "||", vbNewLine)
+        End If
+        Call .InsertLines(1, sLines)
+    End With
 End Sub

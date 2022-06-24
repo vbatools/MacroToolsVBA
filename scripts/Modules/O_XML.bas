@@ -44,24 +44,24 @@ Private Declare Function SetCurrentDirectoryA Lib "kernel32" (ByVal lpPathName A
 
 'Распоковать или Запоковать файл Ecxel
     Public Function OpenAndCloseExcelFileInFolder(ByVal bOpenFile As Boolean, Optional bBackUp As Boolean = True, Optional sFilePath As String = vbNullString) As String
-46:    Dim sFileName As Variant
+46:    Dim sfileName As Variant
 47:    Dim strFileName As String
 48:
-49:    On Error GoTo errmsg
-50:    sFileName = SelectedFile(sFilePath, False, "*.xlsm;*.xlsb;*.xlam;*.xlsx;*.docm;*.dotm;*.dotx;*.docx;*.pptx;*.pptm;*.potx;*.potm")
-51:    If TypeName(sFileName) = "Empty" Then Exit Function
+49:    On Error GoTo errMsg
+50:    sfileName = SelectedFile(sFilePath, False, "*.xlsm;*.xlsb;*.xlam;*.xlsx;*.docm;*.dotm;*.dotx;*.docx;*.pptx;*.pptm;*.potx;*.potm")
+51:    If TypeName(sfileName) = "Empty" Then Exit Function
 52:
-53:    strFileName = sFileName(1)
+53:    strFileName = sfileName(1)
 54:    OpenAndCloseExcelFileInFolder = OpenAndCloseExcelFile(bOpenFile, bBackUp, True, strFileName)
 55:
 56:    Exit Function
-errmsg:
+errMsg:
 58:    Select Case Err.Number
         Case 70:
-60:            Call MsgBox("Error No access to the file!" & vbLf & "Perhaps the file is open, to continue, close it and try again.", vbCritical, "No file access:")
+60:            Call MsgBox("Ошибка! Нет доступа к файлу!" & vbLf & "Возможно файл открыт, для продолжения закройте его и повторите попытку.", vbCritical, "Нет доступа к файлу:")
 61:            Exit Function
 62:        Case Else:
-63:            Call MsgBox("Error! in Open And Close Excel File In Folder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl, vbCritical, "Error:")
+63:            Call MsgBox("Ошибка! в OpenAndCloseExcelFileInFolder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
 64:            Call WriteErrorLog("OpenAndCloseExcelFileInFolder")
 65:    End Select
 66:    Err.Clear
@@ -71,7 +71,7 @@ errmsg:
 70:    Dim cEditOpenXML As clsEditOpenXML
 71:    Dim sMsg As String, sTitleMsg As String
 72:
-73:    On Error GoTo errmsg
+73:    On Error GoTo errMsg
 74:
 75:    Set cEditOpenXML = New clsEditOpenXML
 76:    With cEditOpenXML
@@ -84,28 +84,28 @@ errmsg:
 83:            'Распоковка файла
 84:            .UnzipFile
 85:            OpenAndCloseExcelFile = .XMLFolder(XMLFolder_root)
-86:            sMsg = "Unpacking the file has been completed!"
-87:            sTitleMsg = "Unpacking an Excel file:"
+86:            sMsg = "Распоковка файла выполнена!"
+87:            sTitleMsg = "Распоковка файла Excel:"
 88:        Else
 89:            .CreateBackupXML = bBackUp
 90:            .SourceFile = sFilePath
 91:            'Запоковка файла
 92:            .ZipAllFilesInFolder
-93:            sMsg = "The file has been packed!" & vbLf & "Also created a Backup file"
-94:            sTitleMsg = "Packing an Excel file:"
+93:            sMsg = "Запоковка файла выполнена!" & vbLf & "Так же создан Backup файла"
+94:            sTitleMsg = "Запоковка файла Excel:"
 95:        End If
 96:    End With
 97:    Set cEditOpenXML = Nothing
 98:    If bShowMsg Then Call MsgBox(sMsg, vbInformation, sTitleMsg)
 99:
 100:    Exit Function
-errmsg:
+errMsg:
 102:    Select Case Err.Number
         Case 70:
-104:            Call MsgBox("Error No access to the file!" & vbLf & "Perhaps the file is open, to continue, close it and try again.", vbCritical, "No file access:")
+104:            Call MsgBox("Ошибка! Нет доступа к файлу!" & vbLf & "Возможно файл открыт, для продолжения закройте его и повторите попытку.", vbCritical, "Нет доступа к файлу:")
 105:            Exit Function
 106:        Case Else:
-107:            Call MsgBox("Error! in Open And Close Excel File In Folder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the row" & Erl, vbCritical, "Error:")
+107:            Call MsgBox("Ошибка! в OpenAndCloseExcelFileInFolder" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
 108:            Call WriteErrorLog("OpenAndCloseExcelFileInFolder")
 109:    End Select
 110:    Err.Clear
@@ -127,13 +127,13 @@ errmsg:
 126:    'and the directory attribute is set
 127:    'the folder exists
 128:    FolderExists = (hFile <> INVALID_HANDLE_VALUE) And _
-                    (WFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY)
+                (WFD.dwFileAttributes And FILE_ATTRIBUTE_DIRECTORY)
 130:
 131:    'clean up
 132:    Call FindClose(hFile)
 133: End Function
 
-     Private Function UnQualifyPath(ByVal sFolder As String) As String
+Private Function UnQualifyPath(ByVal sFolder As String) As String
 136:
 137:    'trim and remove any trailing slash
 138:    sFolder = Trim$(sFolder)
@@ -143,5 +143,4 @@ errmsg:
 142:    Else
 143:        UnQualifyPath = sFolder
 144:    End If
-145: End Function
-
+End Function

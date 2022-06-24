@@ -126,14 +126,14 @@ Private Const ctFormat = "dd-mm-yyyy hh:nn"
 125:
 126:        'создание текстового блока для вставки
 127:        sTemp = "'" & sTemp & vbCrLf & _
-                           "'" & sType & vbTab & sProc & vbCrLf & _
-                           "'* Created    :" & vbTab & sTime & vbTab & vbCrLf & _
-                           "'* Author     :" & vbTab & txtName & vbCrLf & _
-                           txtContacts & _
-                           txtCopyright & _
-                           txtOther & _
-                           sProcArguments & _
-                           "'" & sTemp
+                       "'" & sType & vbTab & sProc & vbCrLf & _
+                       "'* Created    :" & vbTab & sTime & vbTab & vbCrLf & _
+                       "'* Author     :" & vbTab & txtName & vbCrLf & _
+                       txtContacts & _
+                       txtCopyright & _
+                       txtOther & _
+                       sProcArguments & _
+                       "'" & sTemp
 136:        'вставка
 137:        .CodeModule.InsertLines nLine, sTemp
 138:    End With
@@ -301,9 +301,9 @@ Private Const ctFormat = "dd-mm-yyyy hh:nn"
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Function TypeProcedyreComment(ByRef StrDeclarationProcedure As String) As String
 302:    If StrDeclarationProcedure Like "*Sub*" Then
-303: TypeProcedyreComment = "* Sub        :"
+197:        TypeProcedyreComment = "* Sub        :"
 304:    ElseIf StrDeclarationProcedure Like "*Function*" Then
-305: TypeProcedyreComment = "* Function   :"
+199:        TypeProcedyreComment = "* Function   :"
 306:    ElseIf StrDeclarationProcedure Like "*Property Set*" Then
 307:        TypeProcedyreComment = "* Prop Set   :"
 308:    ElseIf StrDeclarationProcedure Like "*Property Get*" Then

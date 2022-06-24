@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ModuleTODO 
-   Caption         =   "VBA Project Manager:"
+   Caption         =   "Менеджер проектов VBA:"
    ClientHeight    =   7695
    ClientLeft      =   45
    ClientTop       =   375
@@ -39,7 +39,7 @@ Private m_clsAnchors As CAnchors
 24:    Dim vbProj      As VBIDE.VBProject
 25:    If Workbooks.Count = 0 Then
 26:        Unload Me
-27:        Call MsgBox("No open ones" & Chr(34) & "Excel files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Error:")
+27:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
 28:        Exit Sub
 29:    End If
 30:    With Me.cmbMain
@@ -69,16 +69,16 @@ Private m_clsAnchors As CAnchors
 54: End Sub
     Private Sub ListCode_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
 56:    Dim i           As Long
-57:    Dim WB          As Workbook
+57:    Dim wb          As Workbook
 58:    Dim VBC         As VBIDE.VBComponent
 59:
 60:    On Error GoTo ErrorHandler
 61:
 62:    If cmbMain.Value = vbNullString Then Exit Sub
-63:    Set WB = Workbooks(cmbMain.Value)
+63:    Set wb = Workbooks(cmbMain.Value)
 64:    For i = 0 To ListCode.ListCount
 65:        If ListCode.Selected(i) = True Then
-66:            Set VBC = WB.VBProject.VBComponents(ListCode.List(i, 2))
+66:            Set VBC = wb.VBProject.VBComponents(ListCode.List(i, 2))
 67:            If VBC.Type = vbext_ct_MSForm Then
 68:                VBC.CodeModule.CodePane.Show
 69:            Else
@@ -92,7 +92,7 @@ ErrorHandler:
 77:    Unload Me
 78:    Select Case Err.Number
         Case Else:
-80:            Call MsgBox("Error in Module TODO.List Code_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
+80:            Call MsgBox("Ошибка! в ModuleTODO.ListCode_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
 81:            Call WriteErrorLog("ModuleTODO.ListCode_DblClick")
 82:    End Select
 83:    Err.Clear
@@ -100,26 +100,26 @@ ErrorHandler:
 
      Private Sub AddTODOList(sWb As String)    'As String
 87:    Dim iFile       As Integer
-88:    Dim WB          As Workbook
+88:    Dim wb          As Workbook
 89:    On Error GoTo ErrorHandler
-90:    Set WB = Workbooks(sWb)
-91:    If WB.VBProject.Protection = vbext_pp_none Then
+90:    Set wb = Workbooks(sWb)
+91:    If wb.VBProject.Protection = vbext_pp_none Then
 92:        ListCode.Clear
-93:        For iFile = 1 To WB.VBProject.VBComponents.Count
-94:            Call listLinesinModuleWhereFound(WB.VBProject.VBComponents(iFile), "'* TODO Created:")
+93:        For iFile = 1 To wb.VBProject.VBComponents.Count
+94:            Call listLinesinModuleWhereFound(wb.VBProject.VBComponents(iFile), "'* TODO Created:")
 95:        Next iFile
 96:    Else
 97:        ListCode.Clear
-98:        Call MsgBox("VBA project in the book -" & WB.Name & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Error:")
+98:        Call MsgBox("VBA проект в книге - " & wb.Name & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
 99:    End If
 100:    Exit Sub
 ErrorHandler:
 102:    Select Case Err.Number
         Case 4160:
 104:            ListCode.Clear
-105:            Call MsgBox("Error No access to the VBA project!", vbOKOnly + vbExclamation, "Error:")
+105:            Call MsgBox("Ошибка! Отсутствует доступ к проекту VBA!", vbOKOnly + vbExclamation, "Ошибка:")
 106:        Case Else:
-107:            Call MsgBox("Error in AddTODOList.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
+107:            Call MsgBox("Ошибка! в AddTODOList.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
 108:            Call WriteErrorLog("AddTODOList.UserForm_Activate")
 109:    End Select
 110:    Err.Clear
@@ -152,7 +152,7 @@ ErrorHandler:
 137:    Unload Me
 138:    Select Case Err.Number
         Case Else:
-140:            Call MsgBox("Error in ModuleTODO.listLinesinModuleWhereFound" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in a row" & Erl, vbOKOnly + vbExclamation, "Error:")
+140:            Call MsgBox("Ошибка! в ModuleTODO.listLinesinModuleWhereFound" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
 141:            Call WriteErrorLog("ModuleTODO.listLinesinModuleWhereFound")
 142:    End Select
 143:    Err.Clear

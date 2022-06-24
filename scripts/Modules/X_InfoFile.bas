@@ -7,7 +7,7 @@ Attribute VB_Name = "X_InfoFile"
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Option Explicit
-
+Option Private Module
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : ShowProp функция создания списка свойств файла
 '* Created    : 20-07-2020 12:32
@@ -19,14 +19,14 @@ Option Explicit
 '* ByRef WB As Workbook : ссылка на книгу
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    Public Function ShowProp(ByRef WB As Workbook) As String
+    Public Function ShowProp(ByRef wb As Workbook) As String
 22:    Dim DP          As DocumentProperty
 23:    Dim Txt         As String
 24:
-25:    With WB
+25:    With wb
 26:        On Error Resume Next
 27:        For Each DP In .BuiltinDocumentProperties
-28:            Txt = Txt & DP.Name & ":" & " " & DP.Value & vbNewLine
+28:            Txt = Txt & DP.Name & "||" & " " & DP.Value & vbNewLine
 29:        Next
 30:        On Error GoTo 0
 31:    End With
@@ -44,10 +44,10 @@ Option Explicit
 '* ByRef WB As Workbook : ссылка на книгу
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    Public Function DelAllProp(ByRef WB As Workbook) As Byte
+    Public Function DelAllProp(ByRef wb As Workbook) As Byte
 47:    Dim DP          As DocumentProperty
 48:    Dim byItem      As Byte
-49:    With WB
+49:    With wb
 50:        On Error Resume Next
 51:        For Each DP In .BuiltinDocumentProperties
 52:            If DP.Value <> vbNullString Then
@@ -73,14 +73,14 @@ Option Explicit
 '* ByVal Val As String      : новое значение свойства
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    Public Function WriteOneProp(ByRef WB As Workbook, ByVal NameProp As String, ByVal Val As String) As String
+    Public Function WriteOneProp(ByRef wb As Workbook, ByVal NameProp As String, ByVal Val As String) As String
 76:    Dim DP          As DocumentProperty
-77:    On Error GoTo errmsg
-78:    Set DP = WB.BuiltinDocumentProperties(NameProp)
+77:    On Error GoTo errMsg
+78:    Set DP = wb.BuiltinDocumentProperties(NameProp)
 79:    DP.Value = Val
 80:    WriteOneProp = True
 81:    Exit Function
-errmsg:
+errMsg:
 83:    WriteOneProp = Err.Description
 84:    On Error GoTo 0
 85: End Function
@@ -96,13 +96,13 @@ errmsg:
 '* ByRef WB As Workbook : ссылка на книгу
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function ShowCustomProp(ByRef WB As Workbook) As String
+     Public Function ShowCustomProp(ByRef wb As Workbook) As String
 99:    Dim i           As Integer
 100:    Dim Txt         As String
-101:    With WB
+101:    With wb
 102:        If .CustomDocumentProperties.Count > 0 Then
 103:            For i = 1 To .CustomDocumentProperties.Count
-104:                Txt = Txt & .CustomDocumentProperties(i).Name & ":" & " " & .CustomDocumentProperties(i).Value & vbNewLine
+104:                Txt = Txt & .CustomDocumentProperties(i).Name & "||" & " " & .CustomDocumentProperties(i).Value & vbNewLine
 105:            Next i
 106:        End If
 107:    End With
@@ -120,10 +120,10 @@ errmsg:
 '* ByRef WB As Workbook : ссылка на книгу
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function DelAllCustomProp(ByRef WB As Workbook) As Byte
+     Public Function DelAllCustomProp(ByRef wb As Workbook) As Byte
 123:    Dim i           As Integer
 124:    Dim byItem      As Byte
-125:    With WB
+125:    With wb
 126:        If .CustomDocumentProperties.Count > 0 Then
 127:            For i = .CustomDocumentProperties.Count To 1 Step -1
 128:                .CustomDocumentProperties(i).Delete
@@ -146,9 +146,9 @@ errmsg:
 '* ByVal NameProp As String : название совйства
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function DelOneCustomProp(ByRef WB As Workbook, ByVal NameProp As String) As Boolean
+     Public Function DelOneCustomProp(ByRef wb As Workbook, ByVal NameProp As String) As Boolean
 149:    Dim i           As Integer
-150:    With WB
+150:    With wb
 151:        If .CustomDocumentProperties.Count > 0 Then
 152:            For i = 1 To .CustomDocumentProperties.Count
 153:                If .CustomDocumentProperties(i).Name = NameProp Then
@@ -174,10 +174,10 @@ errmsg:
 '* ByVal Val As Variant     : значение свойства
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Sub AddOneCustomProp(ByRef WB As Workbook, ByVal NameProp As String, ByVal Val As Variant)
-177:    Call DelOneCustomProp(WB, NameProp)
-178:    Call WB.CustomDocumentProperties.Add(NameProp, False, msoPropertyTypeString, VBA.CStr(Val))
+     Public Sub AddOneCustomProp(ByRef wb As Workbook, ByVal NameProp As String, ByVal Val As Variant)
+177:    Call DelOneCustomProp(wb, NameProp)
+178:    Call wb.CustomDocumentProperties.Add(NameProp, False, msoPropertyTypeString, VBA.CStr(Val))
 179: End Sub
-Public Function GetOneProp(ByRef WB As Workbook, ByVal NameProp As String) As String
-181:    GetOneProp = WB.BuiltinDocumentProperties(NameProp).Value
+Public Function GetOneProp(ByRef wb As Workbook, ByVal NameProp As String) As String
+181:    GetOneProp = wb.BuiltinDocumentProperties(NameProp).Value
 End Function

@@ -75,33 +75,33 @@ Dim mbIndentCompilerStuff As Boolean, mbAlignIgnoreOps As Boolean
 'Variables to hold operational information
 Dim mbInitialised As Boolean, mbContinued As Boolean, mbInIf As Boolean, mbNoIndent As Boolean, mbFirstProcLine As Boolean
 Dim msEOLComment As String
-     Public Sub ReBild()
-78:    Dim moCM   As CodeModule
-79:    Dim cmb_txt As String
-80:    Dim vbComp As VBIDE.VBComponent
-81:    On Error GoTo ErrorHandler
-82:    cmb_txt = B_CreateMenus.WhatIsTextInComboBoxHave
-83:    Select Case cmb_txt
+    Public Sub ReBild()
+70:    Dim moCM   As CodeModule
+71:    Dim cmb_txt As String
+72:    Dim vbComp As VBIDE.VBComponent
+73:    On Error GoTo ErrorHandler
+74:    cmb_txt = B_CreateMenus.WhatIsTextInComboBoxHave
+75:    Select Case cmb_txt
         Case C_Const.ALLVBAPROJECT:
-85:            For Each vbComp In Application.VBE.ActiveVBProject.VBComponents
-86:                Set moCM = vbComp.CodeModule
-87:                Call RebuildModule(moCM, moCM.Parent.Name, 1, moCM.CountOfLines, 0)
-88:            Next vbComp
-89:        Case C_Const.SELECTEDMODULE:
-90:            Set moCM = Application.VBE.ActiveCodePane.CodeModule
-91:            Call RebuildModule(moCM, moCM.Parent.Name, 1, moCM.CountOfLines, 0)
-92:    End Select
-93:    Exit Sub
+77:            For Each vbComp In Application.VBE.ActiveVBProject.VBComponents
+78:                Set moCM = vbComp.CodeModule
+79:                Call RebuildModule(moCM, moCM.Parent.Name, 1, moCM.CountOfLines, 0)
+80:            Next vbComp
+81:        Case C_Const.SELECTEDMODULE:
+82:            Set moCM = Application.VBE.ActiveCodePane.CodeModule
+83:            Call RebuildModule(moCM, moCM.Parent.Name, 1, moCM.CountOfLines, 0)
+84:    End Select
+85:    Exit Sub
 ErrorHandler:
-95:    Select Case Err.Number
+87:    Select Case Err.Number
         Case 91:
-97:            Exit Sub
-98:        Case Else:
-99:            Debug.Print "Error in Rebuild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
-100:            Call WriteErrorLog("ReBild")
-101:    End Select
-102:    Err.Clear
-103: End Sub
+89:            Exit Sub
+90:        Case Else:
+91:            Debug.Print "Ошибка! в ReBild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+92:            Call WriteErrorLog("ReBild")
+93:    End Select
+94:    Err.Clear
+95: End Sub
 ''''''''''''''''''''''''''''''''''
 ' Function:   RebuildModule
 '
@@ -115,472 +115,472 @@ ErrorHandler:
 '             iProgDone  - Value giving how much indenting has been done in total
 '
      Private Sub RebuildModule( _
-                  ByRef modCode As CodeModule, _
-                  ByRef sName As String, _
-                  ByRef iStartLine As Long, _
-                  ByRef iEndline As Long, _
-                  ByRef iProgDone As Long, _
-                  Optional ByRef mbEnableUndo As Boolean = True)
-123:    Dim asCode() As String, asOriginal() As String, i As Long
-124: If iEndline = 0 Then Exit Sub   'On Error Resume Next
-125:    ReDim asCode(0 To iEndline - iStartLine)
-126:    ReDim asOriginal(0 To iEndline - iStartLine)
-127:    'Это позволило отменить? Если это так, настройте наше хранилище
-128:    If mbEnableUndo Then
-129:        piUndoCount = piUndoCount + 1
-130:        'Make some space in our undo array
-131:        If piUndoCount = 1 Then
-132:            ReDim pauUndo(1 To 1)
-133:        Else
-134:            ReDim Preserve pauUndo(1 To piUndoCount)
-135:        End If
-136:        'Store the undo information
-137:        With pauUndo(piUndoCount)
-138:            Set .oMod = modCode
-139:            .sName = sName
-140:            .lStartLine = iStartLine
-141:            .lEndLine = iEndline
-142:            ReDim .asIndented(0 To iEndline - iStartLine)
-143:            ReDim .asOriginal(0 To iEndline - iStartLine)
-144:        End With
-145:    End If
-146:    'Read code module into an array and store the original code in our undo array
+             ByRef modCode As CodeModule, _
+             ByRef sName As String, _
+             ByRef iStartLine As Long, _
+             ByRef iEndline As Long, _
+             ByRef iProgDone As Long, _
+             Optional ByRef mbEnableUndo As Boolean = True)
+115:    Dim asCode() As String, asOriginal() As String, i As Long
+        If iEndline = 0 Then Exit Sub    'On Error Resume Next
+117:    ReDim asCode(0 To iEndline - iStartLine)
+118:    ReDim asOriginal(0 To iEndline - iStartLine)
+119:    'Это позволило отменить? Если это так, настройте наше хранилище
+120:    If mbEnableUndo Then
+121:        piUndoCount = piUndoCount + 1
+122:        'Make some space in our undo array
+123:        If piUndoCount = 1 Then
+124:            ReDim pauUndo(1 To 1)
+125:        Else
+126:            ReDim Preserve pauUndo(1 To piUndoCount)
+127:        End If
+128:        'Store the undo information
+129:        With pauUndo(piUndoCount)
+130:            Set .oMod = modCode
+131:            .sName = sName
+132:            .lStartLine = iStartLine
+133:            .lEndLine = iEndline
+134:            ReDim .asIndented(0 To iEndline - iStartLine)
+135:            ReDim .asOriginal(0 To iEndline - iStartLine)
+136:        End With
+137:    End If
+138:    'Read code module into an array and store the original code in our undo array
+139:    For i = 0 To iEndline - iStartLine
+140:        asCode(i) = modCode.Lines(iStartLine + i, 1)
+141:        asOriginal(i) = asCode(i)
+142:        If mbEnableUndo Then pauUndo(piUndoCount).asOriginal(i) = asCode(i)
+143:    Next
+144:    'Indent the array, showing the progress
+145:    RebuildCodeArray asCode, sName, iProgDone
+146:    'Copy the changed code back into the module and store in our undo array
 147:    For i = 0 To iEndline - iStartLine
-148:        asCode(i) = modCode.Lines(iStartLine + i, 1)
-149:        asOriginal(i) = asCode(i)
-150:        If mbEnableUndo Then pauUndo(piUndoCount).asOriginal(i) = asCode(i)
-151:    Next
-152:    'Indent the array, showing the progress
-153:    RebuildCodeArray asCode, sName, iProgDone
-154:    'Copy the changed code back into the module and store in our undo array
-155:    For i = 0 To iEndline - iStartLine
-156:        If asOriginal(i) <> asCode(i) Then
-157:                On Error Resume Next
-158:            modCode.ReplaceLine iStartLine + i, asCode(i)
-159:                On Error GoTo 0
-160:        End If
-161:        If mbEnableUndo Then pauUndo(piUndoCount).asIndented(i) = asCode(i)
-162:    Next
-163: End Sub
+148:        If asOriginal(i) <> asCode(i) Then
+                On Error Resume Next
+149:            modCode.ReplaceLine iStartLine + i, asCode(i)
+                On Error GoTo 0
+150:        End If
+151:        If mbEnableUndo Then pauUndo(piUndoCount).asIndented(i) = asCode(i)
+152:    Next
+153: End Sub
      Public Sub RebuildCodeArray( _
-                  ByRef asCodeLines() As String, _
-                  ByRef sName As String, _
-                  ByRef iProgDone As Long)
-168:    'Переменные, используемые для кода отступа
-169:    'Variables used for the indenting code
-170:    Dim X As Integer, i As Integer, j As Integer, k As Integer, iGap As Integer, iLineAdjust As Integer
-171:    Dim lLineCount As Long, iCommentStart As Long, iStart As Long, iScan As Long, iDebugAdjust As Integer
-172:    Dim iIndents As Integer, iIndentNext As Integer, iIn As Integer, iOut As Integer
-173:    Dim iFunctionStart As Long, iParamStart As Long
-174:    Dim bInCmt As Boolean, bProcStart As Boolean, bAlign As Boolean, bFirstCont As Boolean
-175:    Dim bAlreadyPadded As Boolean, bFirstDim As Boolean
-176:    Dim sLine As String, sLeft As String, sRight As String, sMatch As String, sItem As String
-177:    Dim vaScope As Variant, vaStatic As Variant, vaType As Variant, vaInProc As Variant
-178:    Dim iCodeLineNum As Long, sCodeLineNum As String, sOrigLine As String
-179:    Dim OptionsTb As ListObject
-180:    Set OptionsTb = SHSNIPPETS.ListObjects(C_Const.TB_OPTIONSIDEDENT)
-181:    On Error Resume Next
-182:    With OptionsTb.ListColumns(2)
-183:        mbNoIndent = False
-184:        mbInIf = False
-185:        'Read the indenting options from the registry
-186:        miIndentSpaces = .Range(2, 1)    'Read VB's own setting for tab width
-187:        mbIndentProc = .Range(3, 1)
-188:        mbIndentFirst = .Range(4, 1)
-189:        mbIndentDim = .Range(5, 1)
-190:        mbIndentCmt = .Range(6, 1)
-191:        mbIndentCase = .Range(7, 1)
-192:        mbAlignCont = .Range(8, 1)
-193:        mbAlignIgnoreOps = .Range(9, 1)
-194:        mbDebugCol1 = .Range(10, 1)
-195:        mbAlignDim = .Range(11, 1)
-196:        miAlignDimCol = .Range(12, 1)
-197:
-198:        mbCompilerStuffCol1 = .Range(13, 1)
-199:        mbIndentCompilerStuff = .Range(14, 1)
-200:
-201:        msEOLComment = .Range(15, 1)
-202:        miEOLAlignCol = .Range(16, 1)
-203:    End With
-204:
-205:    If mbCompilerStuffCol1 = True Or mbIndentCompilerStuff = True Then
-206:        mbInitialised = False
-207:    End If
-208:
-209:    ' Create the list of items to match for the indenting at procedure level
-210:    If Not mbInitialised Then
-211:        vaScope = Array(vbNullString, "Public ", "Private ", "Friend ")
-212:        vaStatic = Array(vbNullString, "Static ")
-213:        vaType = Array("Sub", "Function", "Property Let", "Property Get", "Property Set", "Type", "Enum")
-214:        X = 1
-215:        ReDim vaInProc(1)
-216:        For i = 1 To UBound(vaScope)
-217:            For j = 1 To UBound(vaStatic)
-218:                For k = 1 To UBound(vaType)
-219:                    ReDim Preserve vaInProc(X)
-220:                    vaInProc(X) = vaScope(i) & vaStatic(j) & vaType(k)
-221:                    X = X + 1
-222:                Next
-223:            Next
-224:        Next
-225:        ArrayFromVariant masInProc, vaInProc
-226:        'Items to match when outdenting at procedure level
-227:        ArrayFromVariant masOutProc, Array("End Sub", "End Function", "End Property", "End Type", "End Enum")
-228:        If mbIndentCompilerStuff Then
-229:            'Items to match when indenting within a procedure
-230:            ArrayFromVariant masInCode, Array("If", "ElseIf", "Else", "#If", "#ElseIf", "#Else", "Select Case", "Case", "With", "For", "Do", "While")
-231:            'Items to match when outdenting within a procedure
-232:            ArrayFromVariant masOutCode, Array("ElseIf", "Else", "End If", "#ElseIf", "#Else", "#End If", "Case", "End Select", "End With", "Next", "Loop", "Wend")
-233:        Else
-234:            'Items to match when indenting within a procedure
-235:            ArrayFromVariant masInCode, Array("If", "ElseIf", "Else", "Select Case", "Case", "With", "For", "Do", "While")
-236:            'Items to match when outdenting within a procedure
-237:            ArrayFromVariant masOutCode, Array("ElseIf", "Else", "End If", "Case", "End Select", "End With", "Next", "Loop", "Wend")
-238:        End If
-239:        'Items to match for declarations
-240:        ArrayFromVariant masDeclares, Array("Dim", "Const", "Static", "Public", "Private", "#Const")
-241:        'Things to look for within a line of code for special handling
-242:        ArrayFromVariant masLookFor, Array("""", ": ", " As ", "'", "Rem ", "Stop ", "#If ", "#ElseIf ", "#Else ", "#End If ", "#Const ", "Debug.Print ", "Debug.Assert ")
-243:        mbInitialised = True
-244:    End If
-245:    'Things to skip when finding the function start of a line
-246:    ArrayFromVariant masFnAlign, Array("Set ", "Let ", "LSet ", "RSet ", "Declare Function", "Declare Sub", "Private Declare Function", "Private Declare Sub", "Public Declare Function", "Public Declare Sub")
-247:    If masInCode(UBound(masInCode)) <> "Select Case" And mbIndentCase Then
-248:        'If extra-indenting within Select Case, ensure that we have two items in the arrays
-249:        ReDim Preserve masInCode(UBound(masInCode) + 1)
-250:        masInCode(UBound(masInCode)) = "Select Case"
-251:        ReDim Preserve masOutCode(UBound(masOutCode) + 1)
-252:        masOutCode(UBound(masOutCode)) = "End Select"
-253:    ElseIf masInCode(UBound(masInCode)) = "Select Case" And Not mbIndentCase Then
-254:        'If not extra-indenting within Select Case, ensure that we have one item in the arrays
-255:        ReDim Preserve masInCode(UBound(masInCode) - 1)
-256:        ReDim Preserve masOutCode(UBound(masOutCode) - 1)
-257:    End If
-258:    'Flag if the lines are at the top of a procedure
-259:    bProcStart = False
-260:    bFirstDim = False
-261:    bFirstCont = True
-262:    'Loop through all the lines to indent
-263:    For lLineCount = LBound(asCodeLines) To UBound(asCodeLines)
-264:        iLineAdjust = 0
-265:        bAlreadyPadded = False
-266:        iCodeLineNum = -1
-267:        sOrigLine = asCodeLines(lLineCount)
-268:        'Read the line of code to indent
-269:        sLine = Trim$(asCodeLines(lLineCount))
-270:        'If we're not in a continued line, initialise some variables
-271:        If Not (mbContinued Or bInCmt) Then
-272:            mbFirstProcLine = False
-273:            iIndentNext = 0
-274:            iCommentStart = 0
-275:            iIndents = iIndents + iDebugAdjust
-276:            iDebugAdjust = 0
-277:            iFunctionStart = 0
-278:            iParamStart = 0
-279:            i = InStr(1, sLine, " ")
-280:            If i > 0 Then
-281:                If IsNumeric(Left$(sLine, i - 1)) Then
-282:                    iCodeLineNum = Val(Left$(sLine, i - 1))
-283:                    sLine = Trim$(Mid$(sLine, i + 1))
-284:                    sOrigLine = Space(i) & Mid$(sOrigLine, i + 1)
-285:                End If
-286:            End If
-287:        End If
-288:        'Is there anything on the line?
-289:        If Len(sLine) > 0 Then
-290:            ' Remove leading Tabs
-291:            Do Until Left$(sLine, 1) <> Chr$(miTAB)
-292:                sLine = Mid$(sLine, 2)
-293:            Loop
-294:            ' Add an extra space on the end
-295:            sLine = sLine & " "
-296:            If bInCmt Then
-297:                'Within a multi-line comment - indent to line up the comment text
-298:                sLine = Space$(iCommentStart) & sLine
-299:                'Remember if we're in a continued comment line
-300:                bInCmt = Right$(Trim$(sLine), 2) = " _"
-301:                GoTo PTR_REPLACE_LINE
-302:            End If
-303:            'Remember the position of the line segment
-304:            iStart = 1
-305:            iScan = 0
-306:            If mbContinued And mbAlignCont Then
-307:                If mbAlignIgnoreOps And Left$(sLine, 2) = ", " Then iParamStart = iFunctionStart - 2
-308:                If mbAlignIgnoreOps And (Mid$(sLine, 2, 1) = " " Or Left$(sLine, 2) = ":=") And Left$(sLine, 2) <> ", " Then
-309:                    sLine = Space$(iParamStart - 3) & sLine
-310:                    iLineAdjust = iLineAdjust + iParamStart - 3
-311:                    iScan = iScan + iParamStart - 3
-312:                Else
-313:                    sLine = Space$(iParamStart - 1) & sLine
-314:                    iLineAdjust = iLineAdjust + iParamStart - 1
-315:                    iScan = iScan + iParamStart - 1
-316:                End If
-317:                bAlreadyPadded = True
-318:            End If
-319:            'Scan through the line, character by character, checking for
-320:            'strings, multi-statement lines and comments
-321:            Do
-322:                iScan = iScan + 1
-323:                sItem = fnFindFirstItem(sLine, iScan)
-324:                Select Case sItem
+             ByRef asCodeLines() As String, _
+             ByRef sName As String, _
+             ByRef iProgDone As Long)
+158:    'Переменные, используемые для кода отступа
+159:    'Variables used for the indenting code
+160:    Dim X As Integer, i As Integer, j As Integer, k As Integer, iGap As Integer, iLineAdjust As Integer
+161:    Dim lLineCount As Long, iCommentStart As Long, iStart As Long, iScan As Long, iDebugAdjust As Integer
+162:    Dim iIndents As Integer, iIndentNext As Integer, iIn As Integer, iOut As Integer
+163:    Dim iFunctionStart As Long, iParamStart As Long
+164:    Dim bInCmt As Boolean, bProcStart As Boolean, bAlign As Boolean, bFirstCont As Boolean
+165:    Dim bAlreadyPadded As Boolean, bFirstDim As Boolean
+166:    Dim sLine As String, sLeft As String, sRight As String, sMatch As String, sItem As String
+167:    Dim vaScope As Variant, vaStatic As Variant, vaType As Variant, vaInProc As Variant
+168:    Dim iCodeLineNum As Long, sCodeLineNum As String, sOrigLine As String
+169:    Dim OptionsTb As ListObject
+170:    Set OptionsTb = SHSNIPPETS.ListObjects(C_Const.TB_OPTIONSIDEDENT)
+171:    On Error Resume Next
+172:    With OptionsTb.ListColumns(2)
+173:        mbNoIndent = False
+174:        mbInIf = False
+175:        'Read the indenting options from the registry
+176:        miIndentSpaces = .Range(2, 1)    'Read VB's own setting for tab width
+177:        mbIndentProc = .Range(3, 1)
+178:        mbIndentFirst = .Range(4, 1)
+179:        mbIndentDim = .Range(5, 1)
+180:        mbIndentCmt = .Range(6, 1)
+181:        mbIndentCase = .Range(7, 1)
+182:        mbAlignCont = .Range(8, 1)
+183:        mbAlignIgnoreOps = .Range(9, 1)
+184:        mbDebugCol1 = .Range(10, 1)
+185:        mbAlignDim = .Range(11, 1)
+186:        miAlignDimCol = .Range(12, 1)
+187:
+188:        mbCompilerStuffCol1 = .Range(13, 1)
+189:        mbIndentCompilerStuff = .Range(14, 1)
+190:
+191:        msEOLComment = .Range(15, 1)
+192:        miEOLAlignCol = .Range(16, 1)
+193:    End With
+194:
+195:    If mbCompilerStuffCol1 = True Or mbIndentCompilerStuff = True Then
+196:        mbInitialised = False
+197:    End If
+198:
+199:    ' Create the list of items to match for the indenting at procedure level
+200:    If Not mbInitialised Then
+201:        vaScope = Array(vbNullString, "Public ", "Private ", "Friend ")
+202:        vaStatic = Array(vbNullString, "Static ")
+203:        vaType = Array("Sub", "Function", "Property Let", "Property Get", "Property Set", "Type", "Enum")
+204:        X = 1
+205:        ReDim vaInProc(1)
+206:        For i = 1 To UBound(vaScope)
+207:            For j = 1 To UBound(vaStatic)
+208:                For k = 1 To UBound(vaType)
+209:                    ReDim Preserve vaInProc(X)
+210:                    vaInProc(X) = vaScope(i) & vaStatic(j) & vaType(k)
+211:                    X = X + 1
+212:                Next
+213:            Next
+214:        Next
+215:        ArrayFromVariant masInProc, vaInProc
+216:        'Items to match when outdenting at procedure level
+217:        ArrayFromVariant masOutProc, Array("End Sub", "End Function", "End Property", "End Type", "End Enum")
+218:        If mbIndentCompilerStuff Then
+219:            'Items to match when indenting within a procedure
+220:            ArrayFromVariant masInCode, Array("If", "ElseIf", "Else", "#If", "#ElseIf", "#Else", "Select Case", "Case", "With", "For", "Do", "While")
+221:            'Items to match when outdenting within a procedure
+222:            ArrayFromVariant masOutCode, Array("ElseIf", "Else", "End If", "#ElseIf", "#Else", "#End If", "Case", "End Select", "End With", "Next", "Loop", "Wend")
+223:        Else
+224:            'Items to match when indenting within a procedure
+225:            ArrayFromVariant masInCode, Array("If", "ElseIf", "Else", "Select Case", "Case", "With", "For", "Do", "While")
+226:            'Items to match when outdenting within a procedure
+227:            ArrayFromVariant masOutCode, Array("ElseIf", "Else", "End If", "Case", "End Select", "End With", "Next", "Loop", "Wend")
+228:        End If
+229:        'Items to match for declarations
+230:        ArrayFromVariant masDeclares, Array("Dim", "Const", "Static", "Public", "Private", "#Const")
+231:        'Things to look for within a line of code for special handling
+232:        ArrayFromVariant masLookFor, Array("""", ": ", " As ", "'", "Rem ", "Stop ", "#If ", "#ElseIf ", "#Else ", "#End If ", "#Const ", "Debug.Print ", "Debug.Assert ")
+233:        mbInitialised = True
+234:    End If
+235:    'Things to skip when finding the function start of a line
+236:    ArrayFromVariant masFnAlign, Array("Set ", "Let ", "LSet ", "RSet ", "Declare Function", "Declare Sub", "Private Declare Function", "Private Declare Sub", "Public Declare Function", "Public Declare Sub")
+237:    If masInCode(UBound(masInCode)) <> "Select Case" And mbIndentCase Then
+238:        'If extra-indenting within Select Case, ensure that we have two items in the arrays
+239:        ReDim Preserve masInCode(UBound(masInCode) + 1)
+240:        masInCode(UBound(masInCode)) = "Select Case"
+241:        ReDim Preserve masOutCode(UBound(masOutCode) + 1)
+242:        masOutCode(UBound(masOutCode)) = "End Select"
+243:    ElseIf masInCode(UBound(masInCode)) = "Select Case" And Not mbIndentCase Then
+244:        'If not extra-indenting within Select Case, ensure that we have one item in the arrays
+245:        ReDim Preserve masInCode(UBound(masInCode) - 1)
+246:        ReDim Preserve masOutCode(UBound(masOutCode) - 1)
+247:    End If
+248:    'Flag if the lines are at the top of a procedure
+249:    bProcStart = False
+250:    bFirstDim = False
+251:    bFirstCont = True
+252:    'Loop through all the lines to indent
+253:    For lLineCount = LBound(asCodeLines) To UBound(asCodeLines)
+254:        iLineAdjust = 0
+255:        bAlreadyPadded = False
+256:        iCodeLineNum = -1
+257:        sOrigLine = asCodeLines(lLineCount)
+258:        'Read the line of code to indent
+259:        sLine = Trim$(asCodeLines(lLineCount))
+260:        'If we're not in a continued line, initialise some variables
+261:        If Not (mbContinued Or bInCmt) Then
+262:            mbFirstProcLine = False
+263:            iIndentNext = 0
+264:            iCommentStart = 0
+265:            iIndents = iIndents + iDebugAdjust
+266:            iDebugAdjust = 0
+267:            iFunctionStart = 0
+268:            iParamStart = 0
+269:            i = InStr(1, sLine, " ")
+270:            If i > 0 Then
+271:                If IsNumeric(Left$(sLine, i - 1)) Then
+272:                    iCodeLineNum = Val(Left$(sLine, i - 1))
+273:                    sLine = Trim$(Mid$(sLine, i + 1))
+274:                    sOrigLine = Space(i) & Mid$(sOrigLine, i + 1)
+275:                End If
+276:            End If
+277:        End If
+278:        'Is there anything on the line?
+279:        If Len(sLine) > 0 Then
+280:            ' Remove leading Tabs
+281:            Do Until Left$(sLine, 1) <> Chr$(miTAB)
+282:                sLine = Mid$(sLine, 2)
+283:            Loop
+284:            ' Add an extra space on the end
+285:            sLine = sLine & " "
+286:            If bInCmt Then
+287:                'Within a multi-line comment - indent to line up the comment text
+288:                sLine = Space$(iCommentStart) & sLine
+289:                'Remember if we're in a continued comment line
+290:                bInCmt = Right$(Trim$(sLine), 2) = " _"
+291:                GoTo PTR_REPLACE_LINE
+292:            End If
+293:            'Remember the position of the line segment
+294:            iStart = 1
+295:            iScan = 0
+296:            If mbContinued And mbAlignCont Then
+297:                If mbAlignIgnoreOps And Left$(sLine, 2) = ", " Then iParamStart = iFunctionStart - 2
+298:                If mbAlignIgnoreOps And (Mid$(sLine, 2, 1) = " " Or Left$(sLine, 2) = ":=") And Left$(sLine, 2) <> ", " Then
+299:                    sLine = Space$(iParamStart - 3) & sLine
+300:                    iLineAdjust = iLineAdjust + iParamStart - 3
+301:                    iScan = iScan + iParamStart - 3
+302:                Else
+303:                    sLine = Space$(iParamStart - 1) & sLine
+304:                    iLineAdjust = iLineAdjust + iParamStart - 1
+305:                    iScan = iScan + iParamStart - 1
+306:                End If
+307:                bAlreadyPadded = True
+308:            End If
+309:            'Scan through the line, character by character, checking for
+310:            'strings, multi-statement lines and comments
+311:            Do
+312:                iScan = iScan + 1
+313:                sItem = fnFindFirstItem(sLine, iScan)
+314:                Select Case sItem
                     Case vbNullString
-326:                        iScan = iScan + 1
-327:                        'Nothing found => Skip the rest of the line
-328:                        GoTo PTR_NEXT_PART
-329:                    Case """"
-330:                        'Start of a string => Jump to the end of it
-331:                        iScan = InStr(iScan + 1, sLine, """")
-332:                        If iScan = 0 Then iScan = Len(sLine) + 1
-333:                    Case ": "
-334:                        'A multi-statement line separator => Tidy up and continue
-335:                        If Right$(Left$(sLine, iScan), 6) <> " Then:" Then
-336:                            sLine = Left$(sLine, iScan + 1) & Trim$(Mid$(sLine, iScan + 2))
-337:                            'And check the indenting for the line segment
-338:                            CheckLine Mid$(sLine, iStart, iScan - 1), iIn, iOut, bProcStart
-339:                            If bProcStart Then bFirstDim = True
-340:                            If iStart = 1 Then
-341:                                iIndents = iIndents - iOut
-342:                                If iIndents < 0 Then iIndents = 0
-343:                                iIndentNext = iIndentNext + iIn
-344:                            Else
-345:                                iIndentNext = iIndentNext + iIn - iOut
-346:                            End If
-347:                        End If
-348:                        'Update the pointer and continue
-349:                        iStart = iScan + 2
-350:                    Case " As "
-351:                        'An " As " in a declaration => Line up to required column
-352:                        If mbAlignDim Then
-353:                            bAlign = mbNoIndent    'Don't need to check within Type
-354:                            If Not bAlign Then
-355:                                ' Check if we start with a declaration item
-356:                                For i = LBound(masDeclares) To UBound(masDeclares)
-357:                                    sMatch = masDeclares(i) & " "
-358:                                    If Left$(sLine, Len(sMatch)) = sMatch Then
-359:                                        bAlign = True
-360:                                        Exit For
-361:                                    End If
-362:                                Next
-363:                            End If
-364:                            If bAlign Then
-365:                                i = InStr(iScan + 3, sLine, " As ")
-366:                                If i = 0 Then
-367:                                    'OK to indent
-368:                                    If mbIndentProc And bFirstDim And Not mbIndentDim And Not mbNoIndent Then
-369:                                        iGap = miAlignDimCol - Len(RTrim$(Left$(sLine, iScan)))
-370:                                        'Adjust for a line number at the start of the line
-371:                                        If iCodeLineNum > -1 Then iGap = iGap - Len(CStr(iCodeLineNum)) - 1
-372:                                    Else
-373:                                        iGap = miAlignDimCol - Len(RTrim$(Left$(sLine, iScan))) - iIndents * miIndentSpaces
-374:                                        'Adjust for a line number at the start of the line
-375:                                        If iCodeLineNum > -1 Then
-376:                                            If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
-377:                                                iGap = iGap - (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) - 1
-378:                                            End If
-379:                                        End If
-380:                                    End If
-381:                                    If iGap < 1 Then iGap = 1
-382:                                Else
-383:                                    'Multiple declarations on the line, so don't space out
-384:                                    iGap = 1
-385:                                End If
-386:                                'Work out the new spacing
-387:                                sLeft = RTrim$(Left$(sLine, iScan))
-388:                                sLine = sLeft & Space$(iGap) & Mid$(sLine, iScan + 1)
-389:                                'Update the counters
-390:                                iLineAdjust = iLineAdjust + iGap + Len(sLeft) - iScan
-391:                                iScan = Len(sLeft) + iGap + 3
-392:                            End If
-393:                        Else
-394:                            'Not aligning Dims, so remove any existing spacing
-395:                            iScan = Len(RTrim$(Left$(sLine, iScan)))
-396:                            sLine = RTrim$(Left$(sLine, iScan)) & " " & Trim$(Mid$(sLine, iScan + 1))
-397:                            iScan = iScan + 3
-398:                        End If
-399:                    Case "'", "Rem "
-400:                        'The start of a comment => Handle end-of-line comments properly
-401:                        If iScan = 1 Then
-402:                            'New comment at start of line
-403:                            If bProcStart And Not mbIndentFirst And Not mbNoIndent Then
-404:                                'No indenting
-405:                            ElseIf mbIndentCmt Or bProcStart Or mbNoIndent Then
-406:                                'Inside the procedure, so indent to align with code
-407:                                sLine = Space$(iIndents * miIndentSpaces) & sLine
-408:                                iCommentStart = iScan + iIndents * miIndentSpaces
-409:                            ElseIf iIndents > 0 And mbIndentProc And Not bProcStart Then
-410:                                'At the top of the procedure, so indent once if required
-411:                                sLine = Space$(miIndentSpaces) & sLine
-412:                                iCommentStart = iScan + miIndentSpaces
-413:                            End If
-414:                        Else
-415:                            'New comment at the end of a line
-416:                            'Make sure it's a proper 'Rem'
-417:                            If sItem = "Rem " And Mid$(sLine, iScan - 1, 1) <> " " And Mid$(sLine, iScan - 1, 1) <> ":" Then GoTo PTR_NEXT_PART
-418:                            'Check the indenting of the previous code segment
-419:                            CheckLine Mid$(sLine, iStart, iScan - 1), iIn, iOut, bProcStart
-420:                            If bProcStart Then bFirstDim = True
-421:                            If iStart = 1 Then
-422:                                iIndents = iIndents - iOut
-423:                                If iIndents < 0 Then iIndents = 0
-424:                                iIndentNext = iIndentNext + iIn
-425:                            Else
-426:                                iIndentNext = iIndentNext + iIn - iOut
-427:                            End If
-428:                            'Get the text before the comment, and the comment text
-429:                            sLeft = Trim$(Left$(sLine, iScan - 1))
-430:                            sRight = Trim$(Mid$(sLine, iScan))
-431:                            'Indent the code part of the line
-432:                            If bAlreadyPadded Then
-433:                                sLine = RTrim$(Left$(sLine, iScan - 1))
-434:                            Else
-435:                                If mbContinued Then
-436:                                    sLine = Space$((iIndents + 2) * miIndentSpaces) & sLeft
-437:                                Else
-438:                                    If mbIndentProc And bFirstDim And Not mbIndentDim Then
-439:                                        sLine = sLeft
-440:                                    Else
-441:                                        sLine = Space$(iIndents * miIndentSpaces) & sLeft
-442:                                    End If
-443:                                End If
-444:                            End If
-445:                            mbContinued = (Right$(Trim$(sLine), 2) = " _")
-446:                            'How do we handle end-of-line comments?
-447:                            Select Case msEOLComment
+316:                        iScan = iScan + 1
+317:                        'Nothing found => Skip the rest of the line
+318:                        GoTo PTR_NEXT_PART
+319:                    Case """"
+320:                        'Start of a string => Jump to the end of it
+321:                        iScan = InStr(iScan + 1, sLine, """")
+322:                        If iScan = 0 Then iScan = Len(sLine) + 1
+323:                    Case ": "
+324:                        'A multi-statement line separator => Tidy up and continue
+325:                        If Right$(Left$(sLine, iScan), 6) <> " Then:" Then
+326:                            sLine = Left$(sLine, iScan + 1) & Trim$(Mid$(sLine, iScan + 2))
+327:                            'And check the indenting for the line segment
+328:                            CheckLine Mid$(sLine, iStart, iScan - 1), iIn, iOut, bProcStart
+329:                            If bProcStart Then bFirstDim = True
+330:                            If iStart = 1 Then
+331:                                iIndents = iIndents - iOut
+332:                                If iIndents < 0 Then iIndents = 0
+333:                                iIndentNext = iIndentNext + iIn
+334:                            Else
+335:                                iIndentNext = iIndentNext + iIn - iOut
+336:                            End If
+337:                        End If
+338:                        'Update the pointer and continue
+339:                        iStart = iScan + 2
+340:                    Case " As "
+341:                        'An " As " in a declaration => Line up to required column
+342:                        If mbAlignDim Then
+343:                            bAlign = mbNoIndent    'Don't need to check within Type
+344:                            If Not bAlign Then
+345:                                ' Check if we start with a declaration item
+346:                                For i = LBound(masDeclares) To UBound(masDeclares)
+347:                                    sMatch = masDeclares(i) & " "
+348:                                    If Left$(sLine, Len(sMatch)) = sMatch Then
+349:                                        bAlign = True
+350:                                        Exit For
+351:                                    End If
+352:                                Next
+353:                            End If
+354:                            If bAlign Then
+355:                                i = InStr(iScan + 3, sLine, " As ")
+356:                                If i = 0 Then
+357:                                    'OK to indent
+358:                                    If mbIndentProc And bFirstDim And Not mbIndentDim And Not mbNoIndent Then
+359:                                        iGap = miAlignDimCol - Len(RTrim$(Left$(sLine, iScan)))
+360:                                        'Adjust for a line number at the start of the line
+361:                                        If iCodeLineNum > -1 Then iGap = iGap - Len(CStr(iCodeLineNum)) - 1
+362:                                    Else
+363:                                        iGap = miAlignDimCol - Len(RTrim$(Left$(sLine, iScan))) - iIndents * miIndentSpaces
+364:                                        'Adjust for a line number at the start of the line
+365:                                        If iCodeLineNum > -1 Then
+366:                                            If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
+367:                                                iGap = iGap - (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) - 1
+368:                                            End If
+369:                                        End If
+370:                                    End If
+371:                                    If iGap < 1 Then iGap = 1
+372:                                Else
+373:                                    'Multiple declarations on the line, so don't space out
+374:                                    iGap = 1
+375:                                End If
+376:                                'Work out the new spacing
+377:                                sLeft = RTrim$(Left$(sLine, iScan))
+378:                                sLine = sLeft & Space$(iGap) & Mid$(sLine, iScan + 1)
+379:                                'Update the counters
+380:                                iLineAdjust = iLineAdjust + iGap + Len(sLeft) - iScan
+381:                                iScan = Len(sLeft) + iGap + 3
+382:                            End If
+383:                        Else
+384:                            'Not aligning Dims, so remove any existing spacing
+385:                            iScan = Len(RTrim$(Left$(sLine, iScan)))
+386:                            sLine = RTrim$(Left$(sLine, iScan)) & " " & Trim$(Mid$(sLine, iScan + 1))
+387:                            iScan = iScan + 3
+388:                        End If
+389:                    Case "'", "Rem "
+390:                        'The start of a comment => Handle end-of-line comments properly
+391:                        If iScan = 1 Then
+392:                            'New comment at start of line
+393:                            If bProcStart And Not mbIndentFirst And Not mbNoIndent Then
+394:                                'No indenting
+395:                            ElseIf mbIndentCmt Or bProcStart Or mbNoIndent Then
+396:                                'Inside the procedure, so indent to align with code
+397:                                sLine = Space$(iIndents * miIndentSpaces) & sLine
+398:                                iCommentStart = iScan + iIndents * miIndentSpaces
+399:                            ElseIf iIndents > 0 And mbIndentProc And Not bProcStart Then
+400:                                'At the top of the procedure, so indent once if required
+401:                                sLine = Space$(miIndentSpaces) & sLine
+402:                                iCommentStart = iScan + miIndentSpaces
+403:                            End If
+404:                        Else
+405:                            'New comment at the end of a line
+406:                            'Make sure it's a proper 'Rem'
+407:                            If sItem = "Rem " And Mid$(sLine, iScan - 1, 1) <> " " And Mid$(sLine, iScan - 1, 1) <> ":" Then GoTo PTR_NEXT_PART
+408:                            'Check the indenting of the previous code segment
+409:                            CheckLine Mid$(sLine, iStart, iScan - 1), iIn, iOut, bProcStart
+410:                            If bProcStart Then bFirstDim = True
+411:                            If iStart = 1 Then
+412:                                iIndents = iIndents - iOut
+413:                                If iIndents < 0 Then iIndents = 0
+414:                                iIndentNext = iIndentNext + iIn
+415:                            Else
+416:                                iIndentNext = iIndentNext + iIn - iOut
+417:                            End If
+418:                            'Get the text before the comment, and the comment text
+419:                            sLeft = Trim$(Left$(sLine, iScan - 1))
+420:                            sRight = Trim$(Mid$(sLine, iScan))
+421:                            'Indent the code part of the line
+422:                            If bAlreadyPadded Then
+423:                                sLine = RTrim$(Left$(sLine, iScan - 1))
+424:                            Else
+425:                                If mbContinued Then
+426:                                    sLine = Space$((iIndents + 2) * miIndentSpaces) & sLeft
+427:                                Else
+428:                                    If mbIndentProc And bFirstDim And Not mbIndentDim Then
+429:                                        sLine = sLeft
+430:                                    Else
+431:                                        sLine = Space$(iIndents * miIndentSpaces) & sLeft
+432:                                    End If
+433:                                End If
+434:                            End If
+435:                            mbContinued = (Right$(Trim$(sLine), 2) = " _")
+436:                            'How do we handle end-of-line comments?
+437:                            Select Case msEOLComment
                                 Case "Absolute"
-449:                                    iScan = iScan - iLineAdjust + Len(sOrigLine) - Len(LTrim$(sOrigLine))
-450:                                    iGap = iScan - Len(sLine) - 1
-451:                                Case "SameGap"
-452:                                    iScan = iScan - iLineAdjust + Len(sOrigLine) - Len(LTrim$(sOrigLine))
-453:                                    iGap = iScan - Len(RTrim$(Left$(sOrigLine, iScan - 1))) - 1
-454:                                Case "StandardGap"
-455:                                    iGap = miIndentSpaces * 2
-456:                                Case "AlignInCol"
-457:                                    iGap = miEOLAlignCol - Len(sLine) - 1
-458:                            End Select
-459:                            'Adjust for a line number at the start of the line
-460:                            If iCodeLineNum > -1 Then
-461:                                Select Case msEOLComment
+439:                                    iScan = iScan - iLineAdjust + Len(sOrigLine) - Len(LTrim$(sOrigLine))
+440:                                    iGap = iScan - Len(sLine) - 1
+441:                                Case "SameGap"
+442:                                    iScan = iScan - iLineAdjust + Len(sOrigLine) - Len(LTrim$(sOrigLine))
+443:                                    iGap = iScan - Len(RTrim$(Left$(sOrigLine, iScan - 1))) - 1
+444:                                Case "StandardGap"
+445:                                    iGap = miIndentSpaces * 2
+446:                                Case "AlignInCol"
+447:                                    iGap = miEOLAlignCol - Len(sLine) - 1
+448:                            End Select
+449:                            'Adjust for a line number at the start of the line
+450:                            If iCodeLineNum > -1 Then
+451:                                Select Case msEOLComment
                                     Case "Absolute", "AlignInCol"
-463:                                        If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
-464:                                            iGap = iGap - (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) - 1
-465:                                        End If
-466:                                End Select
-467:                            End If
-468:                            If iGap < 2 Then iGap = miIndentSpaces
-469:                            iCommentStart = Len(sLine) + iGap
-470:                            'Put the comment in the required column
-471:                            sLine = sLine & Space$(iGap) & sRight
-472:                        End If
-473:                        'Work out where the text of the comment starts, to align the next line
-474:                        If Mid$(sLine, iCommentStart, 4) = "Rem " Then iCommentStart = iCommentStart + 3
-475:                        If Mid$(sLine, iCommentStart, 1) = "'" Then iCommentStart = iCommentStart + 1
-476:                        Do Until Mid$(sLine, iCommentStart, 1) <> " "
-477:                            iCommentStart = iCommentStart + 1
-478:                        Loop
-479:                        iCommentStart = iCommentStart - 1
-480:                        'Adjust for a line number at the start of the line
-481:                        If iCodeLineNum > -1 Then
-482:                            If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
-483:                                iCommentStart = iCommentStart + (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) + 1
-484:                            End If
-485:                        End If
-486:                        'Remember if we're in a continued comment line
-487:                        bInCmt = Right$(Trim$(sLine), 2) = " _"
-488:                        'Rest of line is comment, so no need to check any more
-489:                        GoTo PTR_REPLACE_LINE
-490:                    Case "Stop ", "Debug.Print ", "Debug.Assert "
-491:                        'A debugging statement - do we want to force to column 1?
-492:                        If mbDebugCol1 And iStart = 1 And iScan = 1 Then
-493:                            iLineAdjust = iLineAdjust - (Len(sOrigLine) - LTrim$(Len(sOrigLine)))
-494:                            iDebugAdjust = iIndents
-495:                            iIndents = 0
-496:                        End If
-497:                    Case "#If ", "#ElseIf ", "#Else ", "#End If ", "#Const "
-498:                        'Do we want to force compiler directives to column 1?
-499:                        If mbCompilerStuffCol1 And iStart = 1 And iScan = 1 Then
-500:                            iLineAdjust = iLineAdjust - (Len(sOrigLine) - LTrim$(Len(sOrigLine)))
-501:                            iDebugAdjust = iIndents
-502:                            iIndents = 0
-503:                        End If
-504:                End Select
+453:                                        If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
+454:                                            iGap = iGap - (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) - 1
+455:                                        End If
+456:                                End Select
+457:                            End If
+458:                            If iGap < 2 Then iGap = miIndentSpaces
+459:                            iCommentStart = Len(sLine) + iGap
+460:                            'Put the comment in the required column
+461:                            sLine = sLine & Space$(iGap) & sRight
+462:                        End If
+463:                        'Work out where the text of the comment starts, to align the next line
+464:                        If Mid$(sLine, iCommentStart, 4) = "Rem " Then iCommentStart = iCommentStart + 3
+465:                        If Mid$(sLine, iCommentStart, 1) = "'" Then iCommentStart = iCommentStart + 1
+466:                        Do Until Mid$(sLine, iCommentStart, 1) <> " "
+467:                            iCommentStart = iCommentStart + 1
+468:                        Loop
+469:                        iCommentStart = iCommentStart - 1
+470:                        'Adjust for a line number at the start of the line
+471:                        If iCodeLineNum > -1 Then
+472:                            If Len(CStr(iCodeLineNum)) >= iIndents * miIndentSpaces Then
+473:                                iCommentStart = iCommentStart + (Len(CStr(iCodeLineNum)) - iIndents * miIndentSpaces) + 1
+474:                            End If
+475:                        End If
+476:                        'Remember if we're in a continued comment line
+477:                        bInCmt = Right$(Trim$(sLine), 2) = " _"
+478:                        'Rest of line is comment, so no need to check any more
+479:                        GoTo PTR_REPLACE_LINE
+480:                    Case "Stop ", "Debug.Print ", "Debug.Assert "
+481:                        'A debugging statement - do we want to force to column 1?
+482:                        If mbDebugCol1 And iStart = 1 And iScan = 1 Then
+483:                            iLineAdjust = iLineAdjust - (Len(sOrigLine) - LTrim$(Len(sOrigLine)))
+484:                            iDebugAdjust = iIndents
+485:                            iIndents = 0
+486:                        End If
+487:                    Case "#If ", "#ElseIf ", "#Else ", "#End If ", "#Const "
+488:                        'Do we want to force compiler directives to column 1?
+489:                        If mbCompilerStuffCol1 And iStart = 1 And iScan = 1 Then
+490:                            iLineAdjust = iLineAdjust - (Len(sOrigLine) - LTrim$(Len(sOrigLine)))
+491:                            iDebugAdjust = iIndents
+492:                            iIndents = 0
+493:                        End If
+494:                End Select
 PTR_NEXT_PART:
-506:            Loop Until iScan > Len(sLine)    'Part of the line
-507:            'Do we have some code left to check?
-508:            '(i.e. a line without a comment or the last segment of a multi-statement line)
-509:            If iStart < Len(sLine) Then
-510:                If Not mbContinued Then bProcStart = False
-511:                'Check the indenting of the remaining code segment
-512:                CheckLine Mid$(sLine, iStart), iIn, iOut, bProcStart
-513:                If bProcStart Then bFirstDim = True
-514:                If iStart = 1 Then
-515:                    iIndents = iIndents - iOut
-516:                    If iIndents < 0 Then iIndents = 0
-517:                    iIndentNext = iIndentNext + iIn
-518:                Else
-519:                    iIndentNext = iIndentNext + iIn - iOut
-520:                End If
-521:            End If
-522:            'Start from the left at each procedure start
-523:            If mbFirstProcLine Then iIndents = 0
-524:            ' What about line continuations?  Here, I indent the continued line by
-525:            ' two indents, and check for the end of the continuations.  Note
-526:            ' that Excel won't allow comments in the middle of line continuations
-527:            ' and that comments are treated differently above.
-528:            If mbContinued Then
-529:                If Not mbAlignCont Then
-530:                    sLine = Space$((iIndents + 2) * miIndentSpaces) & sLine
-531:                End If
-532:            Else
-533:                ' Check if we start with a declaration item
-534:                bAlign = False
-535:                If mbIndentProc And bFirstDim And Not mbIndentDim And Not bProcStart Then
-536:                    For i = LBound(masDeclares) To UBound(masDeclares)
-537:                        sMatch = masDeclares(i) & " "
-538:                        If Left$(sLine, Len(sMatch)) = sMatch Then
-539:                            bAlign = True
-540:                            Exit For
-541:                        End If
-542:                    Next
-543:                End If
-544:                'Not a declaration item to left-align, so pad it out
-545:                If Not bAlign Then
-546:                    If Not bProcStart Then bFirstDim = False
-547:                    sLine = Space$(iIndents * miIndentSpaces) & sLine
-548:                End If
-549:            End If
-550:            mbContinued = (Right$(Trim$(sLine), 2) = " _")
-551:        End If    'Anything there?
+496:            Loop Until iScan > Len(sLine)    'Part of the line
+497:            'Do we have some code left to check?
+498:            '(i.e. a line without a comment or the last segment of a multi-statement line)
+499:            If iStart < Len(sLine) Then
+500:                If Not mbContinued Then bProcStart = False
+501:                'Check the indenting of the remaining code segment
+502:                CheckLine Mid$(sLine, iStart), iIn, iOut, bProcStart
+503:                If bProcStart Then bFirstDim = True
+504:                If iStart = 1 Then
+505:                    iIndents = iIndents - iOut
+506:                    If iIndents < 0 Then iIndents = 0
+507:                    iIndentNext = iIndentNext + iIn
+508:                Else
+509:                    iIndentNext = iIndentNext + iIn - iOut
+510:                End If
+511:            End If
+512:            'Start from the left at each procedure start
+513:            If mbFirstProcLine Then iIndents = 0
+514:            ' What about line continuations?  Here, I indent the continued line by
+515:            ' two indents, and check for the end of the continuations.  Note
+516:            ' that Excel won't allow comments in the middle of line continuations
+517:            ' and that comments are treated differently above.
+518:            If mbContinued Then
+519:                If Not mbAlignCont Then
+520:                    sLine = Space$((iIndents + 2) * miIndentSpaces) & sLine
+521:                End If
+522:            Else
+523:                ' Check if we start with a declaration item
+524:                bAlign = False
+525:                If mbIndentProc And bFirstDim And Not mbIndentDim And Not bProcStart Then
+526:                    For i = LBound(masDeclares) To UBound(masDeclares)
+527:                        sMatch = masDeclares(i) & " "
+528:                        If Left$(sLine, Len(sMatch)) = sMatch Then
+529:                            bAlign = True
+530:                            Exit For
+531:                        End If
+532:                    Next
+533:                End If
+534:                'Not a declaration item to left-align, so pad it out
+535:                If Not bAlign Then
+536:                    If Not bProcStart Then bFirstDim = False
+537:                    sLine = Space$(iIndents * miIndentSpaces) & sLine
+538:                End If
+539:            End If
+540:            mbContinued = (Right$(Trim$(sLine), 2) = " _")
+541:        End If    'Anything there?
 PTR_REPLACE_LINE:
-553:        'Add the code line number back in
-554:        If iCodeLineNum > -1 Then
-555:            sCodeLineNum = CStr(iCodeLineNum)
-556:            If Len(Trim$(Left$(sLine, Len(sCodeLineNum) + 1))) = 0 Then
-557:                sLine = sCodeLineNum & Mid$(sLine, Len(sCodeLineNum) + 1)
-558:            Else
-559:                sLine = sCodeLineNum & " " & Trim$(sLine)
-560:            End If
-561:        End If
-562:        asCodeLines(lLineCount) = RTrim$(sLine)
-563:        'If it's not a continued line, update the indenting for the following lines
-564:        If Not mbContinued Then
-565:            iIndents = iIndents + iIndentNext
-566:            iIndentNext = 0
-567:            If iIndents < 0 Then iIndents = 0
-568:        Else
-569:            'A continued line, so if we're not in a comment and we want smart continuing,
-570:            'work out which to continue from
-571:            If mbAlignCont And Not bInCmt Then
-572:                If Left$(Trim$(sLine), 2) = "& " Or Left$(Trim$(sLine), 2) = "+ " Then sLine = "  " & sLine
-573:                iFunctionStart = fnAlignFunction(sLine, bFirstCont, iParamStart)
-574:                If iFunctionStart = 0 Then
-575:                    iFunctionStart = (iIndents + 2) * miIndentSpaces
-576:                    iParamStart = iFunctionStart
-577:                End If
-578:            End If
-579:        End If
-580:        bFirstCont = Not mbContinued
-581:    Next
-582: End Sub
+543:        'Add the code line number back in
+544:        If iCodeLineNum > -1 Then
+545:            sCodeLineNum = CStr(iCodeLineNum)
+546:            If Len(Trim$(Left$(sLine, Len(sCodeLineNum) + 1))) = 0 Then
+547:                sLine = sCodeLineNum & Mid$(sLine, Len(sCodeLineNum) + 1)
+548:            Else
+549:                sLine = sCodeLineNum & " " & Trim$(sLine)
+550:            End If
+551:        End If
+552:        asCodeLines(lLineCount) = RTrim$(sLine)
+553:        'If it's not a continued line, update the indenting for the following lines
+554:        If Not mbContinued Then
+555:            iIndents = iIndents + iIndentNext
+556:            iIndentNext = 0
+557:            If iIndents < 0 Then iIndents = 0
+558:        Else
+559:            'A continued line, so if we're not in a comment and we want smart continuing,
+560:            'work out which to continue from
+561:            If mbAlignCont And Not bInCmt Then
+562:                If Left$(Trim$(sLine), 2) = "& " Or Left$(Trim$(sLine), 2) = "+ " Then sLine = "  " & sLine
+563:                iFunctionStart = fnAlignFunction(sLine, bFirstCont, iParamStart)
+564:                If iFunctionStart = 0 Then
+565:                    iFunctionStart = (iIndents + 2) * miIndentSpaces
+566:                    iParamStart = iFunctionStart
+567:                End If
+568:            End If
+569:        End If
+570:        bFirstCont = Not mbContinued
+571:    Next
+572: End Sub
 '
 '  Find the first occurrence of one of our key items in the list
 '
@@ -588,270 +588,269 @@ PTR_REPLACE_LINE:
 '    Updates the iFrom parameter to point to the location of the found item
 '
      Private Function fnFindFirstItem(ByRef sLine As String, ByRef iFrom As Long) As String
-590:    Dim sItem As String, iFirst As Long, iFound As Long, iItem As Integer
-591:    On Error Resume Next
-592:    'Assume we don't find anything
-593:    iFirst = Len(sLine)
-594:    'Loop through the items to find within the line
-595:    For iItem = LBound(masLookFor) To UBound(masLookFor)
-596:        'What to find?
-597:        sItem = masLookFor(iItem)
-598:        'Is it there?
-599:        iFound = InStr(iFrom, sLine, sItem)
-600:        'Is it before any other items?
-601:        If iFound > 0 And iFound < iFirst Then
-602:            iFirst = iFound
-603:            fnFindFirstItem = sItem
-604:        End If
-605:    Next
-606:    'Update the location of the found item
-607:    iFrom = iFirst
-608: End Function
+580:    Dim sItem As String, iFirst As Long, iFound As Long, iItem As Integer
+581:    On Error Resume Next
+582:    'Assume we don't find anything
+583:    iFirst = Len(sLine)
+584:    'Loop through the items to find within the line
+585:    For iItem = LBound(masLookFor) To UBound(masLookFor)
+586:        'What to find?
+587:        sItem = masLookFor(iItem)
+588:        'Is it there?
+589:        iFound = InStr(iFrom, sLine, sItem)
+590:        'Is it before any other items?
+591:        If iFound > 0 And iFound < iFirst Then
+592:            iFirst = iFound
+593:            fnFindFirstItem = sItem
+594:        End If
+595:    Next
+596:    'Update the location of the found item
+597:    iFrom = iFirst
+598: End Function
 '
 '  Check the line (segment) to see if it needs in- or out-denting
 '
      Private Function CheckLine( _
-                  ByVal sLine As String, _
-                  ByRef iIndentNext As Integer, _
-                  ByRef iOutdentThis As Integer, _
-                  ByRef bProcStart As Boolean)
-617:    Dim i As Integer, j As Integer, sMatch As String
-618:    On Error Resume Next
-619:    'Assume we don't indent or outdent the code
-620:    iIndentNext = 0
-621:    iOutdentThis = 0
-622:    'Tidy up the line
-623:    sLine = Trim$(sLine) & " "
-624:    'We don't check within Type and Enums
-625:    If Not mbNoIndent Then
-626:        ' Check for indenting within the code
-627:        For i = LBound(masInCode) To UBound(masInCode)
-628:            sMatch = masInCode(i)
-629:            If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":")) Then
-630:                iIndentNext = iIndentNext + 1
-631:            End If
-632:        Next
-633:        ' Check for out-denting within the code
-634:        For i = LBound(masOutCode) To UBound(masOutCode)
-635:            sMatch = masOutCode(i)
-636:            'Check at start of line for 'real' outdenting
-637:            If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
-638:                iOutdentThis = iOutdentThis + 1
-639:            End If
-640:        Next
-641:    End If
-642:    'Check procedure-level indenting
-643:    For i = LBound(masInProc) To UBound(masInProc)
-644:        sMatch = masInProc(i)
-645:        If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
-646:            bProcStart = True
-647:            mbFirstProcLine = True
-648:            'Don't indent within Type or Enum constructs
-649:            If Right$(sMatch, 4) = "Type" Or Right$(sMatch, 4) = "Enum" Then
-650:                iIndentNext = iIndentNext + 1
-651:                mbNoIndent = True
-652:            ElseIf mbIndentProc And Not mbNoIndent Then
-653:                iIndentNext = iIndentNext + 1
-654:            End If
-655:            Exit For
-656:        End If
-657:    Next
-658:    'Check procedure-level outdenting
-659:    For i = LBound(masOutProc) To UBound(masOutProc)
-660:        sMatch = masOutProc(i)
-661:        If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
-662:            'Don't indent within Type or Enum constructs
-663:            If Right$(sMatch, 4) = "Type" Or Right$(sMatch, 4) = "Enum" Or mbIndentProc Then
-664:                iOutdentThis = iOutdentThis + 1
-665:                mbNoIndent = False
-666:            End If
-667:            Exit For
-668:        End If
-669:    Next
-670:    'If we're not indenting, no need to consider the special cases
-671:    If mbNoIndent Then Exit Function
-672:    ' Treat If as a special case.  If anything other than a comment follows
-673:    ' the Then, we don't indent
-674:    If Left$(sLine, 3) = "If " Or Left$(sLine, 4) = "#If " Or mbInIf Then
-675:        If mbInIf Then iIndentNext = 1
-676:        'Strip any strings from the line
-677:        i = InStr(1, sLine, """")
-678:        Do Until i = 0
-679:            j = InStr(i + 1, sLine, """")
-680:            If j = 0 Then j = Len(sLine)
-681:            sLine = Left$(sLine, i - 1) & Mid$(sLine, j + 1)
-682:            i = InStr(1, sLine, """")
-683:        Loop
-684:        'And strip comments
-685:        i = InStr(1, sLine, "'")
-686:        If i > 0 Then sLine = Left$(sLine, i - 1)
-687:        ' Do we have a Then statement in the line .  Adding a space on the
-688:        ' end of the test means we can test for Then being both within or
-689:        ' at the end of the line
-690:        sLine = " " & sLine & " "
-691:        i = InStr(1, sLine, " Then ")
-692:        ' Allow for line continuations within the If statement
-693:        mbInIf = (Right$(Trim$(sLine), 2) = " _")
-694:        If i > 0 Then
-695:            ' If there's something after the Then, we don't indent the If
-696:            If Trim$(Mid$(sLine, i + 5)) <> vbNullString Then iIndentNext = 0
-697:            ' No need to check next time around
-698:            mbInIf = False
-699:        End If
-700:        If mbInIf Then iIndentNext = 0
-701:    End If
-702: End Function
+             ByVal sLine As String, _
+             ByRef iIndentNext As Integer, _
+             ByRef iOutdentThis As Integer, _
+             ByRef bProcStart As Boolean)
+607:    Dim i As Integer, j As Integer, sMatch As String
+608:    On Error Resume Next
+609:    'Assume we don't indent or outdent the code
+610:    iIndentNext = 0
+611:    iOutdentThis = 0
+612:    'Tidy up the line
+613:    sLine = Trim$(sLine) & " "
+614:    'We don't check within Type and Enums
+615:    If Not mbNoIndent Then
+616:        ' Check for indenting within the code
+617:        For i = LBound(masInCode) To UBound(masInCode)
+618:            sMatch = masInCode(i)
+619:            If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":")) Then
+620:                iIndentNext = iIndentNext + 1
+621:            End If
+622:        Next
+623:        ' Check for out-denting within the code
+624:        For i = LBound(masOutCode) To UBound(masOutCode)
+625:            sMatch = masOutCode(i)
+626:            'Check at start of line for 'real' outdenting
+627:            If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
+628:                iOutdentThis = iOutdentThis + 1
+629:            End If
+630:        Next
+631:    End If
+632:    'Check procedure-level indenting
+633:    For i = LBound(masInProc) To UBound(masInProc)
+634:        sMatch = masInProc(i)
+635:        If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
+636:            bProcStart = True
+637:            mbFirstProcLine = True
+638:            'Don't indent within Type or Enum constructs
+639:            If Right$(sMatch, 4) = "Type" Or Right$(sMatch, 4) = "Enum" Then
+640:                iIndentNext = iIndentNext + 1
+641:                mbNoIndent = True
+642:            ElseIf mbIndentProc And Not mbNoIndent Then
+643:                iIndentNext = iIndentNext + 1
+644:            End If
+645:            Exit For
+646:        End If
+647:    Next
+648:    'Check procedure-level outdenting
+649:    For i = LBound(masOutProc) To UBound(masOutProc)
+650:        sMatch = masOutProc(i)
+651:        If (Left$(sLine, Len(sMatch)) = sMatch) And ((Mid$(sLine, Len(sMatch) + 1, 1) = " ") Or (Mid$(sLine, Len(sMatch) + 1, 1) = ":" And Mid$(sLine, Len(sMatch) + 2, 1) <> "=")) Then
+652:            'Don't indent within Type or Enum constructs
+653:            If Right$(sMatch, 4) = "Type" Or Right$(sMatch, 4) = "Enum" Or mbIndentProc Then
+654:                iOutdentThis = iOutdentThis + 1
+655:                mbNoIndent = False
+656:            End If
+657:            Exit For
+658:        End If
+659:    Next
+660:    'If we're not indenting, no need to consider the special cases
+661:    If mbNoIndent Then Exit Function
+662:    ' Treat If as a special case.  If anything other than a comment follows
+663:    ' the Then, we don't indent
+664:    If Left$(sLine, 3) = "If " Or Left$(sLine, 4) = "#If " Or mbInIf Then
+665:        If mbInIf Then iIndentNext = 1
+666:        'Strip any strings from the line
+667:        i = InStr(1, sLine, """")
+668:        Do Until i = 0
+669:            j = InStr(i + 1, sLine, """")
+670:            If j = 0 Then j = Len(sLine)
+671:            sLine = Left$(sLine, i - 1) & Mid$(sLine, j + 1)
+672:            i = InStr(1, sLine, """")
+673:        Loop
+674:        'And strip comments
+675:        i = InStr(1, sLine, "'")
+676:        If i > 0 Then sLine = Left$(sLine, i - 1)
+677:        ' Do we have a Then statement in the line.  Adding a space on the
+678:        ' end of the test means we can test for Then being both within or
+679:        ' at the end of the line
+680:        sLine = " " & sLine & " "
+681:        i = InStr(1, sLine, " Then ")
+682:        ' Allow for line continuations within the If statement
+683:        mbInIf = (Right$(Trim$(sLine), 2) = " _")
+684:        If i > 0 Then
+685:            ' If there's something after the Then, we don't indent the If
+686:            If Trim$(Mid$(sLine, i + 5)) <> vbNullString Then iIndentNext = 0
+687:            ' No need to check next time around
+688:            mbInIf = False
+689:        End If
+690:        If mbInIf Then iIndentNext = 0
+691:    End If
+692: End Function
 '
 ' Convert a Variant array to a string array for faster comparisons
 '
      Private Sub ArrayFromVariant(ByRef asString() As String, ByRef vaVariant As Variant)
-707:    Dim iLow As Integer, iHigh As Integer, i As Integer
-708:    On Error Resume Next
-709:    iLow = LBound(vaVariant)
-710:    iHigh = UBound(vaVariant)
-711:    ReDim asString(iLow To iHigh)
-712:    For i = iLow To iHigh
-713:        asString(i) = vaVariant(i)
-714:    Next
-715: End Sub
+697:    Dim iLow As Integer, iHigh As Integer, i As Integer
+698:    On Error Resume Next
+699:    iLow = LBound(vaVariant)
+700:    iHigh = UBound(vaVariant)
+701:    ReDim asString(iLow To iHigh)
+702:    For i = iLow To iHigh
+703:        asString(i) = vaVariant(i)
+704:    Next
+705: End Sub
 '
 ' Locate the start of the first parameter on the line
 '
-     Private Function fnAlignFunction(ByVal sLine As String, ByRef bFirstLine As Boolean, ByRef iParamStart As Long) As Long
-720:    Dim iLPad As Integer, iCheck As Long, iBrackets As Long, iChar As Long, sMatch As String, iSpace As Integer
-721:    Dim vAlign As Variant, bFound As Boolean, iAlign As Integer
-722:    Dim iFirstThisLine As Integer
-723:    Static coBrackets As Collection
-724:    On Error Resume Next
-725:    ReDim vAlign(1 To 2)
-726:    If bFirstLine Then Set coBrackets = New Collection
-727:    'Convert and numbers at the start of the line to spaces
-728:    iChar = InStr(1, sLine, " ")
-729:    If iChar > 1 Then
-730:        If IsNumeric(Left$(sLine, iChar - 1)) Then
-731:            sLine = Mid$(sLine, iChar + 1)
-732:            iLPad = iChar
-733:        End If
-734:    End If
-735:    iLPad = iLPad + Len(sLine) - Len(LTrim$(sLine))
-736:    iFirstThisLine = coBrackets.Count
-737:    sLine = Trim$(sLine)
-738:    iCheck = 1
-739:    'Skip over stuff that we don't want to locate the start off
-740:    For iChar = LBound(masFnAlign) To UBound(masFnAlign)
-741:        sMatch = masFnAlign(iChar)
-742:        If Left$(sLine, Len(sMatch)) = sMatch Then
-743:            iCheck = iCheck + Len(sMatch) + 1
-744:            Exit For
-745:        End If
-746:    Next
-747:    iBrackets = 0
-748:    iSpace = 999
-749:    For iChar = iCheck To Len(sLine)
-750:        Select Case Mid$(sLine, iChar, 1)
+Private Function fnAlignFunction(ByVal sLine As String, ByRef bFirstLine As Boolean, ByRef iParamStart As Long) As Long
+710:    Dim iLPad As Integer, iCheck As Long, iBrackets As Long, iChar As Long, sMatch As String, iSpace As Integer
+711:    Dim vAlign As Variant, bFound As Boolean, iAlign As Integer
+712:    Dim iFirstThisLine As Integer
+713:    Static coBrackets As Collection
+714:    On Error Resume Next
+715:    ReDim vAlign(1 To 2)
+716:    If bFirstLine Then Set coBrackets = New Collection
+717:    'Convert and numbers at the start of the line to spaces
+718:    iChar = InStr(1, sLine, " ")
+719:    If iChar > 1 Then
+720:        If IsNumeric(Left$(sLine, iChar - 1)) Then
+721:            sLine = Mid$(sLine, iChar + 1)
+722:            iLPad = iChar
+723:        End If
+724:    End If
+725:    iLPad = iLPad + Len(sLine) - Len(LTrim$(sLine))
+726:    iFirstThisLine = coBrackets.Count
+727:    sLine = Trim$(sLine)
+728:    iCheck = 1
+729:    'Skip over stuff that we don't want to locate the start off
+730:    For iChar = LBound(masFnAlign) To UBound(masFnAlign)
+731:        sMatch = masFnAlign(iChar)
+732:        If Left$(sLine, Len(sMatch)) = sMatch Then
+733:            iCheck = iCheck + Len(sMatch) + 1
+734:            Exit For
+735:        End If
+736:    Next
+737:    iBrackets = 0
+738:    iSpace = 999
+739:    For iChar = iCheck To Len(sLine)
+740:        Select Case Mid$(sLine, iChar, 1)
             Case """"
-752:                'A String => jump to the end of it
-753:                iChar = InStr(iChar + 1, sLine, """")
-754:            Case "("
-755:                'Start of another function => remember this position
-756:                vAlign(1) = "("
-757:                vAlign(2) = iChar + iLPad
-758:                coBrackets.Add vAlign
-759:                vAlign(1) = ","
-760:                vAlign(2) = iChar + iLPad + 1
-761:                coBrackets.Add vAlign
-762:            Case ")"
-763: 'Function finished => Remove back to the previous open bracket
-764:                vAlign = coBrackets(coBrackets.Count)
-765:                Do Until vAlign(1) = "(" Or coBrackets.Count = iFirstThisLine
-766:                    coBrackets.Remove coBrackets.Count
-767:                    vAlign = coBrackets(coBrackets.Count)
-768:                Loop
-769:                If coBrackets.Count > iFirstThisLine Then coBrackets.Remove coBrackets.Count
-770:            Case " "
-771:                If Mid$(sLine, iChar, 3) = " = " Then
-772:                    'Space before an = sign => remember it to align to later
-773:                    bFound = False
-774:                    For iAlign = 1 To coBrackets.Count
-775:                        vAlign = coBrackets(iAlign)
-776:                        If vAlign(1) = "=" Or vAlign(1) = " " Then
-777:                            bFound = True
-778:                            Exit For
-779:                        End If
-780:                    Next
-781:                    If Not bFound Then
-782:                        vAlign(1) = "="
-783:                        vAlign(2) = iChar + iLPad + 2
-784:                        coBrackets.Add vAlign
-785:                    End If
-786:                ElseIf coBrackets.Count = 0 And iChar < Len(sLine) - 2 Then
-787:                    'Space after a name before the end of the line => remember it for later
-788:                    vAlign(1) = " "
-789:                    vAlign(2) = iChar + iLPad
-790:                    coBrackets.Add vAlign
-791:                ElseIf iChar > 5 Then
-792:                    'Clear the collection if we find a Then in an If...Then and set the
-793:                    'indenting to align with the bit after the "If "
-794:                    If Mid$(sLine, iChar - 5, 6) = " Then " Then
-795:                        Do Until coBrackets.Count <= 1
-796:                            coBrackets.Remove coBrackets.Count
-797:                        Loop
-798:                    End If
-799:                End If
-800:            Case ","
-801:                'Start of a new parameter => remember it to align to
-802:                vAlign(1) = ","
-803:                vAlign(2) = iChar + iLPad + 2
-804:                coBrackets.Add vAlign
-805:            Case ":"
-806:                If Mid$(sLine, iChar, 2) = ":=" Then
-807:                    'A named paremeter => remember to align to after the name
-808:                    vAlign(1) = ","
-809:                    vAlign(2) = iChar + iLPad + 2
-810:                    coBrackets.Add vAlign
-811:                ElseIf Mid$(sLine, iChar, 2) = ": " Then
-812:                    'A new line section, so clear the brackets
-813:                    Set coBrackets = New Collection
-814:                    iChar = iChar + 1
-815:                End If
-816:        End Select
-817:    Next
-818:    'If we end with a comma or a named parameter, get rid of all other comma alignments
-819:    If Right$(Trim$(sLine), 3) = ", _" Or Right$(Trim$(sLine), 4) = ":= _" Then
-820:        For iAlign = coBrackets.Count To 1 Step -1
-821:            vAlign = coBrackets(iAlign)
-822:            If vAlign(1) = "," Then
-823:                coBrackets.Remove iAlign
-824:            Else
-825:                Exit For
-826:            End If
-827:        Next
-828:    End If
-829:    'If we end with a "( _", remove it and the space alignment after it
-830:    If Right$(Trim$(sLine), 3) = "( _" Then
-831:        coBrackets.Remove coBrackets.Count
-832:        coBrackets.Remove coBrackets.Count
-833:    End If
-834:    iParamStart = 0
-835:    'Get the position of the unmatched bracket and align to that
-836:    For iAlign = 1 To coBrackets.Count
-837:        vAlign = coBrackets(iAlign)
-838:        If vAlign(1) = "," Then
-839:            iParamStart = vAlign(2)
-840:        ElseIf vAlign(1) = "(" Then
-841:            iParamStart = vAlign(2) + 1
-842:        Else
-843:            iCheck = vAlign(2)
-844:        End If
-845:    Next
-846:    If iCheck = 1 Or iCheck >= Len(sLine) + iLPad - 1 Then
-847:        If coBrackets.Count = 0 And bFirstLine Then
-848:            iCheck = miIndentSpaces * 2 + iLPad
-849:        Else
-850:            iCheck = iLPad
-851:        End If
-852:    End If
-853:    If iParamStart = 0 Then iParamStart = iCheck + 1
-854: fnAlignFunction = iCheck + 1
-855: End Function
-
+742:                'A String => jump to the end of it
+743:                iChar = InStr(iChar + 1, sLine, """")
+744:            Case "("
+745:                'Start of another function => remember this position
+746:                vAlign(1) = "("
+747:                vAlign(2) = iChar + iLPad
+748:                coBrackets.Add vAlign
+749:                vAlign(1) = ","
+750:                vAlign(2) = iChar + iLPad + 1
+751:                coBrackets.Add vAlign
+752:            Case ")"
+                    'Function finished => Remove back to the previous open bracket
+754:                vAlign = coBrackets(coBrackets.Count)
+755:                Do Until vAlign(1) = "(" Or coBrackets.Count = iFirstThisLine
+756:                    coBrackets.Remove coBrackets.Count
+757:                    vAlign = coBrackets(coBrackets.Count)
+758:                Loop
+759:                If coBrackets.Count > iFirstThisLine Then coBrackets.Remove coBrackets.Count
+760:            Case " "
+761:                If Mid$(sLine, iChar, 3) = " = " Then
+762:                    'Space before an = sign => remember it to align to later
+763:                    bFound = False
+764:                    For iAlign = 1 To coBrackets.Count
+765:                        vAlign = coBrackets(iAlign)
+766:                        If vAlign(1) = "=" Or vAlign(1) = " " Then
+767:                            bFound = True
+768:                            Exit For
+769:                        End If
+770:                    Next
+771:                    If Not bFound Then
+772:                        vAlign(1) = "="
+773:                        vAlign(2) = iChar + iLPad + 2
+774:                        coBrackets.Add vAlign
+775:                    End If
+776:                ElseIf coBrackets.Count = 0 And iChar < Len(sLine) - 2 Then
+777:                    'Space after a name before the end of the line => remember it for later
+778:                    vAlign(1) = " "
+779:                    vAlign(2) = iChar + iLPad
+780:                    coBrackets.Add vAlign
+781:                ElseIf iChar > 5 Then
+782:                    'Clear the collection if we find a Then in an If...Then and set the
+783:                    'indenting to align with the bit after the "If "
+784:                    If Mid$(sLine, iChar - 5, 6) = " Then " Then
+785:                        Do Until coBrackets.Count <= 1
+786:                            coBrackets.Remove coBrackets.Count
+787:                        Loop
+788:                    End If
+789:                End If
+790:            Case ","
+791:                'Start of a new parameter => remember it to align to
+792:                vAlign(1) = ","
+793:                vAlign(2) = iChar + iLPad + 2
+794:                coBrackets.Add vAlign
+795:            Case ":"
+796:                If Mid$(sLine, iChar, 2) = ":=" Then
+797:                    'A named paremeter => remember to align to after the name
+798:                    vAlign(1) = ","
+799:                    vAlign(2) = iChar + iLPad + 2
+800:                    coBrackets.Add vAlign
+801:                ElseIf Mid$(sLine, iChar, 2) = ": " Then
+802:                    'A new line section, so clear the brackets
+803:                    Set coBrackets = New Collection
+804:                    iChar = iChar + 1
+805:                End If
+806:        End Select
+807:    Next
+808:    'If we end with a comma or a named parameter, get rid of all other comma alignments
+809:    If Right$(Trim$(sLine), 3) = ", _" Or Right$(Trim$(sLine), 4) = ":= _" Then
+810:        For iAlign = coBrackets.Count To 1 Step -1
+811:            vAlign = coBrackets(iAlign)
+812:            If vAlign(1) = "," Then
+813:                coBrackets.Remove iAlign
+814:            Else
+815:                Exit For
+816:            End If
+817:        Next
+818:    End If
+819:    'If we end with a "( _", remove it and the space alignment after it
+820:    If Right$(Trim$(sLine), 3) = "( _" Then
+821:        coBrackets.Remove coBrackets.Count
+822:        coBrackets.Remove coBrackets.Count
+823:    End If
+824:    iParamStart = 0
+825:    'Get the position of the unmatched bracket and align to that
+826:    For iAlign = 1 To coBrackets.Count
+827:        vAlign = coBrackets(iAlign)
+828:        If vAlign(1) = "," Then
+829:            iParamStart = vAlign(2)
+830:        ElseIf vAlign(1) = "(" Then
+831:            iParamStart = vAlign(2) + 1
+832:        Else
+833:            iCheck = vAlign(2)
+834:        End If
+835:    Next
+836:    If iCheck = 1 Or iCheck >= Len(sLine) + iLPad - 1 Then
+837:        If coBrackets.Count = 0 And bFirstLine Then
+838:            iCheck = miIndentSpaces * 2 + iLPad
+839:        Else
+840:            iCheck = iLPad
+841:        End If
+842:    End If
+843:    If iParamStart = 0 Then iParamStart = iCheck + 1
+        fnAlignFunction = iCheck + 1
+End Function

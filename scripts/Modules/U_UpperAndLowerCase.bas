@@ -50,7 +50,7 @@ ErrorHandler:
 49:    Select Case Err.Number
         Case 0
 51:        Case Else
-52:            Debug.Print "Error in U_UpperAndLowerCase.toUpperCase" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+52:            Debug.Print "ќшибка! в U_UpperAndLowerCase.toUpperCase" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 53:            Call WriteErrorLog("U_UpperAndLowerCase.toUpperCase")
 54:    End Select
 55: End Sub
@@ -99,7 +99,7 @@ ErrorHandler:
 98:    Select Case Err.Number
         Case 0
 100:        Case Else
-101:            Debug.Print "Error in U_Upper AndLowerCase.toLowerCase" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line " & Erl
+101:            Debug.Print "ќшибка! в U_UpperAndLowerCase.toLowerCase" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
 102:            Call WriteErrorLog("U_UpperAndLowerCase.toLowerCase")
 103:    End Select
 End Sub
