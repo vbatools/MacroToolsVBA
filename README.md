@@ -23,6 +23,7 @@ Add-in
  - analyzing VBA code deleting unused variables A
  - tool for hiding VBA project modules
  - changing the theme of the VBE code editor - dark and light
+ - hot keys module https://github.com/vbatools/MacroToolsVBAHotKeys
 
 ## Zen Macro Tools VBA:
 - do not use third-party dlls,
