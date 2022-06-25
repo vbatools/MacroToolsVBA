@@ -140,13 +140,13 @@ errMsg:
 125:    With snippets
 126:        row_i = CLng(txtRow.Text)
 127:        If MsgBox(lbOK.Caption & " SNIPPET: [ " & lbPreView.Caption & " ] ?", vbYesNo, lbOK.Caption & " SNIPPET:") = vbYes Then
-128:            If lbOK.Caption = "СОЗДАТЬ" Then
+128:            If lbOK.Caption = "to create" Then
 129:                .ListRows.Add Position:=row_i, AlwaysInsert:=True
 130:                row_i = row_i + 1
-131:            ElseIf lbOK.Caption = "ИЗМЕНИТЬ" Then
+131:            ElseIf lbOK.Caption = "to change" Then
 132:                'ничего не делаем
 133:            Else
-134:                Debug.Print "Ошибка в AddEditCode!" & vbLf & "Кнопка [lbOK] не содкржит подписи"
+134:                Debug.Print "Error in AddEditCode!" & vbLf & "The [lbOK] button does not contain signatures"
 135:                Exit Sub
 136:            End If
 137:        End If
@@ -199,3 +199,4 @@ Private Function GetUniqueValueFromRange(ByVal Arr As Variant) As String()
 184:    End If
 185:    GetUniqueValueFromRange = avArr
 End Function
+

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} VariableUnUsed 
-   Caption         =   "Не используемые переменные:"
+   Caption         =   "Unused variables:"
    ClientHeight    =   7725
    ClientLeft      =   45
    ClientTop       =   375
@@ -53,7 +53,7 @@ Private m_clsAnchors As CAnchors
 40:
 41:    If Workbooks.Count = 0 Then
 42:        Unload Me
-43:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+43:        Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 44:        Exit Sub
 45:    End If
 46:    With Me.cmbMain
@@ -89,9 +89,9 @@ Private m_clsAnchors As CAnchors
 76:    End With
 77:
 78:    If SaveTXTfile(strFileName, strVar) Then
-79:        Call MsgBox("Данные скопированы в txt файл!", vbInformation, "Копирование данных:")
+79:        Call MsgBox("The data is copied to a txt file!", vbInformation, "Copying data:")
 80:    Else
-81:        Call MsgBox("Не удалось скопировать данные в txt файл!", vbCritical, "Копирование данных:")
+81:        Call MsgBox("Failed to copy data to txt file!", vbCritical, "Copying data:")
 82:    End If
 83: End Sub
     Private Function SaveTXTfile(ByVal sfileName As String, ByVal Txt As String) As Boolean
@@ -114,7 +114,7 @@ Private m_clsAnchors As CAnchors
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Private Sub lbLoad_Click()
 103:    Debug.Print AddListImmediate()
-104:    Call MsgBox("Данные скопированы в окно Immediate!", vbInformation, "Копирование данных:")
+104:    Call MsgBox("The data is copied to the Immediate window!", vbInformation, "Copying data:")
 105: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : btnCopyCode_Click - сохранение в буффер обмена
@@ -129,7 +129,7 @@ Private m_clsAnchors As CAnchors
 116:    If strVar = vbNullString Then Exit Sub
 117:    Call C_PublicFunctions.SetTextIntoClipboard(strVar)
 118:
-119:    Call MsgBox("Данные скопированы в буфер обмена!", vbInformation, "Копирование данных:")
+119:    Call MsgBox("The data has been copied to the clipboard!", vbInformation, "Copying data:")
 120: End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : AddListImmediate - создание текста не используемых переменых
@@ -206,7 +206,7 @@ ErrorHandler:
 193:    Unload Me
 194:    Select Case Err.Number
         Case Else:
-196:            Call MsgBox("Ошибка! в VariableUnUsed.ListCode_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+196:            Call MsgBox("Mistake! in VariableUnUsed.ListCode_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 197:            Call WriteErrorLog("VariableUnUsed.ListCode_DblClick")
 198:    End Select
 199:    Err.Clear
@@ -238,7 +238,7 @@ ErrorHandler:
 225:        Set objVBP = Workbooks(WBName).VBProject
 226:        If objVBP.Protection <> vbext_pp_none Then
 227:            ListCode.Clear
-228:            Call MsgBox("VBA проект в книге - " & WBName & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
+228:            Call MsgBox("VBA project in the book -" & WBName & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Mistake:")
 229:            Exit Sub
 230:        End If
 231:
@@ -247,15 +247,15 @@ ErrorHandler:
 234:
 235:        'процедуры создания словарей
 236:        Call CreateGlobalVariableCollection(WBName)
-237:        Debug.Print "Все глобальные переменные: " & Format(Now() - dTime, "Long Time") & " выполнено!"
+237:        Debug.Print "All global variables:" & Format(Now() - dTime, "Long Time") & "completed!"
 238:        Call ProcessUnusedVariable(WBName)
-239:        Debug.Print "Переменные процедур: " & Format(Now() - dTime, "Long Time") & " выполнено!"
+239:        Debug.Print "Procedure variables:" & Format(Now() - dTime, "Long Time") & "completed!"
 240:        Call FillUnusedGlobalVariables(WBName)
-241:        Debug.Print "Глобальные переменные не используемые: " & Format(Now() - dTime, "Long Time") & " выполнено!"
+241:        Debug.Print "Global variables not used:" & Format(Now() - dTime, "Long Time") & "completed!"
 242:        Call AddListUnUsedEnumAndType
-243:        Debug.Print "Типы и перечисления: " & Format(Now() - dTime, "Long Time") & " выполнено!"
+243:        Debug.Print "Types and Enumerations:" & Format(Now() - dTime, "Long Time") & "completed!"
 244:        Call AddSubAndFuncListUnUsed(WBName)
-245:        Debug.Print "Процедуры и функции: " & Format(Now() - dTime, "Long Time") & " выполнено!"
+245:        Debug.Print "Procedures and functions:" & Format(Now() - dTime, "Long Time") & "completed!"
 246:    End If
 247:
 248:    'удаляю все словари
@@ -356,7 +356,7 @@ ErrorHandler:
 343:    Unload Me
 344:    Select Case Err.Number
         Case Else:
-346:            Call MsgBox("Ошибка! в VariableUnUsed.ProcessUnusedVariable" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+346:            Call MsgBox("Mistake! in VariableUnUsed.ProcessUnusedVariable" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 347:            Call WriteErrorLog("VariableUnUsed.ProcessUnusedVariable")
 348:    End Select
 349:    Err.Clear
@@ -444,7 +444,7 @@ ErrorHandler:
 431:    Unload Me
 432:    Select Case Err.Number
         Case Else:
-434:            Call MsgBox("Ошибка! в VariableUnUsed.FillUnusedLocalVariables" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+434:            Call MsgBox("Mistake! in VariableUnUsed.FillUnusedLocalVariables" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 435:            Call WriteErrorLog("VariableUnUsed.FillUnusedLocalVariables")
 436:    End Select
 437:    Err.Clear
@@ -602,7 +602,7 @@ ErrorHandler:
 589:    Unload Me
 590:    Select Case Err.Number
         Case Else:
-592:            Call MsgBox("Ошибка! в VariableUnUsed.FillUnusedGlobalVariables" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+592:            Call MsgBox("Mistake! in VariableUnUsed.FillUnusedGlobalVariables" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 593:            Call WriteErrorLog("VariableUnUsed.FillUnusedGlobalVariables")
 594:    End Select
 595:    Err.Clear
@@ -700,7 +700,7 @@ ErrorHandler:
 687:    Unload Me
 688:    Select Case Err.Number
         Case Else:
-690:            Call MsgBox("Ошибка! в VariableUnUsed.CreateGlobalVariableCollection" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+690:            Call MsgBox("Mistake! in VariableUnUsed.CreateGlobalVariableCollection" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 691:            Call WriteErrorLog("VariableUnUsed.CreateGlobalVariableCollection")
 692:    End Select
 693:    Err.Clear
@@ -1044,3 +1044,4 @@ Private Function WorkBookAndSheetsEvents(ByVal sTxt As String, ByVal TypeModule 
 1031:    End If
 1032:    WorkBookAndSheetsEvents = Flag
 End Function
+

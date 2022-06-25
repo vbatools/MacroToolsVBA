@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ObfuscationCode 
-   Caption         =   "Удаление форматирования:"
+   Caption         =   "Removing Formatting:"
    ClientHeight    =   7080
    ClientLeft      =   45
    ClientTop       =   375
@@ -46,7 +46,7 @@ Option Explicit
 30:    On Error GoTo ErrorHandler
 31:    If Workbooks.Count = 0 Then
 32:        Unload Me
-33:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+33:        Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 34:        Exit Sub
 35:    End If
 36:    With Me.cmbMain
@@ -70,7 +70,7 @@ ErrorHandler:
 54:    Unload Me
 55:    Select Case Err.Number
         Case Else:
-57:            Call MsgBox("Ошибка! в ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+57:            Call MsgBox("Mistake! in ObfuscationCode.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 58:            Call WriteErrorLog("ObfuscationCode.UserForm_Activate")
 59:    End Select
 60:    Err.Clear
@@ -153,7 +153,7 @@ ErrorHandler:
 137:        Dim vbProj  As Object
 138:        Set vbProj = wb.VBProject
 139:        If vbProj.Protection = 1 Then
-140:            Call MsgBox("Проект VBA защищен паролем, снимите пароль с проекта!", vbCritical, "Удаление форматирования:")
+140:            Call MsgBox("The VBA project is password protected, remove the password from the project!", vbCritical, "Removing Formatting:")
 141:            Exit Sub
 142:        End If
 143:        For iFile = 1 To vbProj.VBComponents.Count
@@ -229,12 +229,12 @@ Private Sub lbOK_Click()
 213:    End If
 214:
 215:    Me.Hide
-216:    If MsgBox("Вы полнить удаление форматирования кода ?", vbCritical + vbYesNo, "Удаление форматирования кода:") = vbYes Then
+216:    If MsgBox("Do you complete the removal of the formatting code ?", vbCritical + vbYesNo, "Removing code formatting:") = vbYes Then
 217:
 218:        If Not wb.Name Like "*_obf_*" Then
 219:            sPath = Left(wb.FullName, Len(wb.FullName) - Len(wb.Name))
 220:            If sPath = vbNullString Then
-221:                Call MsgBox("Файл не сохранен, для продолжения необходимо сохранить файл: [ " & wb.Name & " ]", vbInformation, "Ошибка:")
+221:                Call MsgBox("The file is not saved, you need to save the file to continue: [" & wb.Name & " ]", vbInformation, "Mistake:")
 222:                Exit Sub
 223:            End If
 224:            arrNameFile = Split(wb.Name, ".")
@@ -270,7 +270,7 @@ Private Sub lbOK_Click()
 254:        Next i
 255:
 256:        wb.Save
-257:        Call MsgBox("Удаление форматирования [" & oldWbName & "] завершено!", vbInformation, "Удаление форматирования:")
+257:        Call MsgBox("Removing formatting [" & oldWbName & "] completed!", vbInformation, "Removing Formatting:")
 258:        cmbMain.Value = wb.Name
 259:        Me.Show
 260:        Exit Sub

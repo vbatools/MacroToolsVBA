@@ -33,11 +33,11 @@ End Type
 32:    Application.Calculation = xlCalculationManual
 33:    Set Form = New AddStatistic
 34:    With Form
-35:        .Caption = "Сбор данных кодовой базы:"
-36:        .lbOK.Caption = "Парсить код"
+35:        .Caption = "Code base data collection:"
+36:        .lbOK.Caption = "Parse code"
 37:        .chQuestion.visible = True
 38:        .chQuestion.Value = True
-39:        .chQuestion.Caption = "Собирать строковые значения?"
+39:        .chQuestion.Caption = "Collect string values?"
 40:        .lbWord.Caption = 1
 41:        .Show
 42:        sNameWB = .cmbMain.Value
@@ -58,16 +58,16 @@ End Type
 ErrStartParser:
 58:    Application.Calculation = xlCalculationAutomatic
 59:    Application.ScreenUpdating = True
-60:    Call MsgBox("Ошибка в N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+60:    Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 61:    Call WriteErrorLog("AddShapeStatistic")
 62: End Sub
 
     Private Sub MainObfParser(ByRef objWB As Object, Optional bEncodeStr As Boolean = False)
 65:    If objWB.VBProject.Protection = vbext_pp_locked Then
-66:        Call MsgBox("Проект защищен, снимите пароль!", vbCritical, "Проект защищен:")
+66:        Call MsgBox("The project is protected, remove the password!", vbCritical, "The project is protected:")
 67:    Else
 68:        Call ParserProjectVBA(objWB, bEncodeStr)
-69:        Call MsgBox("Код книги [" & objWB.Name & "] собран!", vbInformation, "Парсинг кода:")
+69:        Call MsgBox("Book code [" & objWB.Name & "] assembled!", vbInformation, "Code parsing:")
 70:    End If
 71: End Sub
 
@@ -127,12 +127,12 @@ ErrStartParser:
 126:
 127:
 128:    For i = 1 To varModule.objName.Count
-129:        arrRange(i, 1) = "Модуль"
+129:        arrRange(i, 1) = "Module"
 130:        arrRange(i, 2) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(0)
 131:        arrRange(i, 3) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(1)
 132:        arrRange(i, 4) = "Public"
 133:        arrRange(i, 8) = arrRange(i, 3)
-134:        arrRange(i, 9) = "ДА"
+134:        arrRange(i, 9) = "yes"
 135:
 136:        If objDict.Exists(arrRange(i, 8)) = False Then
 137:            objDict.Add arrRange(i, 8), AddEncodeName()
@@ -140,16 +140,16 @@ ErrStartParser:
 139:        arrRange(i, 10) = objDict.Item(arrRange(i, 8))
 140:    Next i
 141:    k = i
-142:    Application.StatusBar = "Сбор данных: Названия модулей, выполнено: " & VBA.Format(1 / 7, "Percent")
+142:    Application.StatusBar = "Data collection: Module names, completed:" & VBA.Format(1 / 7, "Percent")
 143:    For i = 1 To varModule.objNameGlobVar.Count
-144:        arrRange(k, 1) = "Глобальная переменая"
+144:        arrRange(k, 1) = "Global variable"
 145:        arrRange(k, 2) = varModule.objNameGlobVar.Items(i - 1)
 146:        arrRange(k, 3) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(0)
 147:        arrRange(k, 4) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(1)
 148:        arrRange(k, 6) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(2)
 149:        arrRange(k, 7) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(3)
 150:        arrRange(k, 8) = arrRange(k, 7)
-151:        arrRange(k, 9) = "ДА"
+151:        arrRange(k, 9) = "yes"
 152:
 153:        If objDict.Exists(arrRange(k, 8)) = False Then
 154:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -158,7 +158,7 @@ ErrStartParser:
 157:        k = k + 1
 158:    Next i
 159:
-160:    Application.StatusBar = "Сбор данных: Глобальные переменые, выполнено: " & VBA.Format(2 / 7, "Percent")
+160:    Application.StatusBar = "Data collection: Global variables, completed:" & VBA.Format(2 / 7, "Percent")
 161:    For i = 1 To varModule.objSubFun.Count
 162:        arrRange(k, 1) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(1)
 163:        arrRange(k, 2) = varModule.objSubFun.Items(i - 1)
@@ -167,7 +167,7 @@ ErrStartParser:
 166:        arrRange(k, 5) = arrRange(k, 1)
 167:        arrRange(k, 6) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(3)
 168:        arrRange(k, 8) = arrRange(k, 6)
-169:        arrRange(k, 9) = "ДА"
+169:        arrRange(k, 9) = "yes"
 170:
 171:        If objDict.Exists(arrRange(k, 8)) = False Then
 172:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -176,15 +176,15 @@ ErrStartParser:
 175:        k = k + 1
 176:    Next i
 177:
-178:    Application.StatusBar = "Сбор данных: Названия процедур, выполнено: " & VBA.Format(3 / 7, "Percent")
+178:    Application.StatusBar = "Data collection: Procedure names, completed:" & VBA.Format(3 / 7, "Percent")
 179:    For i = 1 To varModule.objContr.Count
-180:        arrRange(k, 1) = "Контрол"
+180:        arrRange(k, 1) = "Control"
 181:        arrRange(k, 2) = varModule.objContr.Items(i - 1)
 182:        arrRange(k, 3) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(0)
 183:        arrRange(k, 4) = "Private"
 184:        arrRange(k, 6) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(1)
 185:        arrRange(k, 8) = arrRange(k, 6)
-186:        arrRange(k, 9) = "ДА"
+186:        arrRange(k, 9) = "yes"
 187:
 188:        If objDict.Exists(arrRange(k, 8)) = False Then
 189:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -193,9 +193,9 @@ ErrStartParser:
 192:        k = k + 1
 193:    Next i
 194:
-195:    Application.StatusBar = "Сбор данных: Названия контролов, выполнено: " & VBA.Format(4 / 7, "Percent")
+195:    Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(4 / 7, "Percent")
 196:    For i = 1 To varModule.objDimVar.Count
-197:        arrRange(k, 1) = "Переменная"
+197:        arrRange(k, 1) = "Variable"
 198:        arrRange(k, 2) = varModule.objDimVar.Items(i - 1)
 199:        arrRange(k, 3) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(0)
 200:        arrRange(k, 4) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(3)
@@ -203,7 +203,7 @@ ErrStartParser:
 202:        arrRange(k, 6) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(2)
 203:        arrRange(k, 7) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(4)
 204:        arrRange(k, 8) = arrRange(k, 7)
-205:        arrRange(k, 9) = "ДА"
+205:        arrRange(k, 9) = "yes"
 206:
 207:        If objDict.Exists(arrRange(k, 8)) = False Then
 208:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -211,12 +211,12 @@ ErrStartParser:
 210:        arrRange(k, 10) = objDict.Item(arrRange(k, 8))
 211:        k = k + 1
 212:        If i Mod 50 = 0 Then
-213:            Application.StatusBar = "Сбор данных: Названия контролов, выполнено: " & VBA.Format(i / varModule.objDimVar.Count, "Percent")
+213:            Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(i / varModule.objDimVar.Count, "Percent")
 214:            DoEvents
 215:        End If
 216:    Next i
 217:
-218:    Application.StatusBar = "Сбор данных: Названия переменных, выполнено: " & VBA.Format(5 / 7, "Percent")
+218:    Application.StatusBar = "Data collection: Variable names, completed:" & VBA.Format(5 / 7, "Percent")
 219:    For i = 1 To varModule.objTypeEnum.Count
 220:        arrRange(k, 1) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(2)
 221:        arrRange(k, 2) = varModule.objTypeEnum.Items(i - 1)
@@ -224,7 +224,7 @@ ErrStartParser:
 223:        arrRange(k, 4) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(1)
 224:        arrRange(k, 6) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(3)
 225:        arrRange(k, 8) = arrRange(k, 6)
-226:        arrRange(k, 9) = "ДА"
+226:        arrRange(k, 9) = "yes"
 227:
 228:        If objDict.Exists(arrRange(k, 8)) = False Then
 229:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -233,7 +233,7 @@ ErrStartParser:
 232:        k = k + 1
 233:    Next i
 234:
-235:    Application.StatusBar = "Сбор данных: Названия перечислений и типов, выполнено: " & VBA.Format(6 / 7, "Percent")
+235:    Application.StatusBar = "Data collection: Names of enumerations and types, completed:" & VBA.Format(6 / 7, "Percent")
 236:    For i = 1 To varModule.objAPI.Count
 237:        arrRange(k, 1) = "API"
 238:        arrRange(k, 2) = varModule.objAPI.Items(i - 1)
@@ -242,7 +242,7 @@ ErrStartParser:
 241:        arrRange(k, 5) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(2)
 242:        arrRange(k, 6) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(3)
 243:        arrRange(k, 8) = arrRange(k, 6)
-244:        arrRange(k, 9) = "ДА"
+244:        arrRange(k, 9) = "yes"
 245:
 246:        If objDict.Exists(arrRange(k, 8)) = False Then
 247:            objDict.Add arrRange(k, 8), AddEncodeName()
@@ -250,37 +250,37 @@ ErrStartParser:
 249:        arrRange(k, 10) = objDict.Item(arrRange(k, 8))
 250:        k = k + 1
 251:    Next i
-252:    Application.StatusBar = "Сбор данных: Названия API, выполнено: " & VBA.Format(7 / 7, "Percent")
+252:    Application.StatusBar = "Data collection: API names, completed:" & VBA.Format(7 / 7, "Percent")
 253:
 254:    With ActiveSheet
-255:        Application.StatusBar = "Применение форматов"
+255:        Application.StatusBar = "Application of formats"
 256:        .Cells.ClearContents
-257:        .Cells(1, 1).Value = "Тип"
-258:        .Cells(1, 2).Value = "Тип модуля"
-259:        .Cells(1, 3).Value = "Название модуля"
-260:        .Cells(1, 4).Value = "Модификаторы доступа"
-261:        .Cells(1, 5).Value = "Тип проц. и функ."
-262:        .Cells(1, 6).Value = "Название проц. и функ."
-263:        .Cells(1, 7).Value = "Название переменных"
-264:        .Cells(1, 8).Value = "Объект шифрования"
-265:        .Cells(1, 9).Value = "Шифровать да/нет"
-266:        .Cells(1, 10).Value = "Шифр"
-267:        .Cells(1, 11).Value = "Ошибки"
+257:        .Cells(1, 1).Value = "Type"
+258:        .Cells(1, 2).Value = "Module type"
+259:        .Cells(1, 3).Value = "Module name"
+260:        .Cells(1, 4).Value = "Access Modifiers"
+261:        .Cells(1, 5).Value = "Percentage type. and funk."
+262:        .Cells(1, 6).Value = "The name of the percentage. and funk."
+263:        .Cells(1, 7).Value = "Name of variables"
+264:        .Cells(1, 8).Value = "Encryption Object"
+265:        .Cells(1, 9).Value = "Encrypt yes/No"
+266:        .Cells(1, 10).Value = "Code"
+267:        .Cells(1, 11).Value = "Mistakes"
 268:
 269:        .Cells(2, 1).Resize(UBound(arrRange), 10) = arrRange
 270:
 271:        .Range(.Cells(2, 11), .Cells(k, 11)).FormulaR1C1 = "=IFERROR(VLOOKUP(RC[-3]," & SHSNIPPETS.ListObjects(C_Const.TB_SERVICEWORDS).DataBodyRange.Address(ReferenceStyle:=xlR1C1, External:=True) & ",1,0),"""")"
-272:        .Range(.Cells(2, 9), .Cells(k, 9)).FormulaR1C1 = "=IF(RC[2]="""",""ДА"",""НЕТ"")"
+272:        .Range(.Cells(2, 9), .Cells(k, 9)).FormulaR1C1 = "=IF(RC[2]="""",""yes"",""no"")"
 273:        .Columns("A:K").AutoFilter
 274:        .Columns("A:K").EntireColumn.AutoFit
-275:        .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="ДА,НЕТ"
-276:        Application.StatusBar = "Применение форматов, окончено"
+275:        .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
+276:        Application.StatusBar = "Application of formats, finished"
 277:    End With
 278:
 279:    'выгрузка строковых переменых
 280:    If bEncodeStr Then
 281:        Call AddShhetInWBook(NAME_SH_STR, ActiveWorkbook)
-282:        Application.StatusBar = "Сбор Строковых переменых"
+282:        Application.StatusBar = "Collecting String variables"
 283:        If varModule.objStringCode.Count <> 0 Then
 284:            ReDim arrRange(1 To varModule.objStringCode.Count, 1 To 8) As String
 285:            For i = 1 To varModule.objStringCode.Count
@@ -290,31 +290,31 @@ ErrStartParser:
 289:                arrRange(i, 4) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(2)
 290:                arrRange(i, 5) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(3)
 291:                arrRange(i, 6) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(4)
-292:                arrRange(i, 7) = "ДА"
+292:                arrRange(i, 7) = "yes"
 293:                arrRange(i, 8) = AddEncodeName()
 294:                If i Mod 50 = 0 Then
-295:                    Application.StatusBar = "Сбор Строковых переменых, выполнено: " & VBA.Format(i / varModule.objStringCode.Count, "Percent")
+295:                    Application.StatusBar = "Collecting String variables, completed:" & VBA.Format(i / varModule.objStringCode.Count, "Percent")
 296:                    DoEvents
 297:                End If
 298:            Next i
-299:            Application.StatusBar = "Сбор Строковых переменых, выполнено"
+299:            Application.StatusBar = "Collecting String variables, completed"
 300:            With ActiveSheet
-301:                .Cells(1, 1).Value = "Тип модуля"
-302:                .Cells(1, 2).Value = "Название модуля"
-303:                .Cells(1, 3).Value = "Тип Sub или Fun"
-304:                .Cells(1, 4).Value = "Название Sub или Fun"
-305:                .Cells(1, 5).Value = "Строка"
-306:                .Cells(1, 6).Value = "Строки Array"
-307:                .Cells(1, 7).Value = "Шифровать да/нет"
-308:                .Cells(1, 8).Value = "Шифр"
-309:                .Cells(1, 9).Value = "Шифр модуля"
+301:                .Cells(1, 1).Value = "Module type"
+302:                .Cells(1, 2).Value = "Module name"
+303:                .Cells(1, 3).Value = "Type Sub or Fun"
+304:                .Cells(1, 4).Value = "Name Sub or Fun"
+305:                .Cells(1, 5).Value = "Line"
+306:                .Cells(1, 6).Value = "Array Strings"
+307:                .Cells(1, 7).Value = "Encrypt yes/No"
+308:                .Cells(1, 8).Value = "Code"
+309:                .Cells(1, 9).Value = "Module cipher"
 310:
-311:                .Cells(1, 11).Value = "Шифр модуля Const"
+311:                .Cells(1, 11).Value = "The cipher of the Const module"
 312:                .Cells(2, 11).Value = AddEncodeName()
 313:
 314:                .Cells(2, 1).Resize(UBound(arrRange), 8) = arrRange
 315:
-316:                .Range(Cells(2, 7), Cells(UBound(arrRange) + 1, 7)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="ДА,НЕТ"
+316:                .Range(Cells(2, 7), Cells(UBound(arrRange) + 1, 7)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
 317:                .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).FormulaR1C1 = "=IF(RC1*1=100,RC2,VLOOKUP(RC2,DATA_OBF_VBATools!R2C3:R" & k & "C10,8,0))"
 318:                .Columns("A:I").AutoFilter
 319:                .Columns("A:D").EntireColumn.AutoFit
@@ -453,7 +453,7 @@ ErrStartParser:
 452:    Dim sReplace    As String
 453:    Dim i           As Integer
 454:    Dim sArray      As String
-455:    Const CHAR_REPLACE As String = "ЪЪЪЪ"
+455:    Const CHAR_REPLACE As String = "B"
 456:
 457:    sSTR = VBA.Trim$(sSTR)
 458:
@@ -473,7 +473,7 @@ ErrStartParser:
 472:        End If
 473:        For i = 1 To UBound(arrStr) Step 2
 474:            If arrStr(i) <> vbNullString Then
-475:                If sNameSub = vbNullString Then sNameSub = "Декларирование" & CHR_TO
+475:                If sNameSub = vbNullString Then sNameSub = "Declaration" & CHR_TO
 476:
 477:                sReplace = VBA.Replace(arrStr(i), CHAR_REPLACE, VBA.Chr$(34) & VBA.Chr$(34))
 478:                sTxt = objVBC.Name & CHR_TO & sNameSub & CHR_TO & VBA.Chr$(34) & sReplace & VBA.Chr$(34) & CHR_TO & sArray    '& CHR_TO & sYesNo
@@ -984,3 +984,4 @@ Private Function UserFormsEvents(ByVal sTxt As String, ByVal TypeModule As VBIDE
 983:    End If
 984:    UserFormsEvents = Flag
 End Function
+

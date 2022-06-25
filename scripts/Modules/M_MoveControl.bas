@@ -145,11 +145,11 @@ ErrorHandler:
     End If
     Select Case Err.Number
         Case -2147024809:
-            Debug.Print "Ошибка! Выберите один объект"
+            Debug.Print "Mistake! Select one object"
         Case 9:
-            Debug.Print "Для работы инструмента, откройте окно View -> Properties Window"
+            Debug.Print "To use the tool, open the View -> Properties Window"
         Case Else:
-            Debug.Print "Ошибка! в TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Mistake! in TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("TakeSelectControl")
     End Select
     Err.Clear
@@ -175,7 +175,7 @@ Private Sub RenameControl()
     If cnt Is Nothing Then Exit Sub
 tryagin:
     sOldName = cnt.Name
-    sNewName = InputBox("Ведите новое название Control", "Переименование Control:", sOldName)
+    sNewName = InputBox("Enter a new name Control", "Renaming Control:", sOldName)
     If sNewName = vbNullString Or sNewName = sOldName Then Exit Sub
 
     cnt.Name = sNewName
@@ -191,13 +191,13 @@ tryagin:
 ErrorHandler:
     Select Case Err.Number
         Case 40044:
-            Call MsgBox("Ошибка! Ведено не допустимое имя Control [ " & sNewName & " ], задайте дргое имя!", vbCritical, "Ведено не допустимое имя Control:")
+            Call MsgBox("Mistake! The invalid name Control is entered [" & sNewName & "], enter another name!", vbCritical, "The invalid name Control is entered:")
             Exit Sub
         Case -2147319764:
-            Call MsgBox("Данное Имя Control уже используется [" & sNewName & " ], задайте дргое имя!", vbCritical, "Имя задано неоднозначно:")
+            Call MsgBox("This Control name is already in use [" & sNewName & "], enter another name!", vbCritical, "The name is ambiguous:")
             Exit Sub
         Case Else:
-            Debug.Print "Ошибка! в RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Mistake! in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("RenameControl")
     End Select
     Err.Clear
@@ -287,7 +287,7 @@ Public Sub AddIcon()
 ErrorHandler:
     Select Case Err.Number
         Case Else:
-            Debug.Print "Ошибка! в RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Mistake! in RenameControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("AddIcon")
     End Select
     Err.Clear

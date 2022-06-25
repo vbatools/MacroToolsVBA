@@ -17,8 +17,8 @@ Option Private Module
 16:    'On Error GoTo ErrStartParser
 17:    Set Form = New AddStatistic
 18:    With Form
-19:        .Caption = "Обфусцирование кода:"
-20:        .lbOK.Caption = "ОБФУЦИРОВАТЬ"
+19:        .Caption = "Code obfuscation:"
+20:        .lbOK.Caption = "OBFUSCATE"
 21:        .chQuestion.visible = True
 22:        .chQuestion.Value = True
 23:        .lbWord.Caption = 1
@@ -41,14 +41,14 @@ Option Private Module
 ErrStartParser:
 41:    Application.Calculation = xlCalculationAutomatic
 42:    Application.ScreenUpdating = True
-43:    Call MsgBox("Ошибка в N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+43:    Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 44:    Call WriteErrorLog("AddShapeStatistic")
 45: End Sub
 
     Private Sub MainObfuscation(ByRef objWB As Object, Optional bEncodeStr As Boolean = False)
 48:    'On Error GoTo ErrStartParser
 49:    If objWB.VBProject.Protection = vbext_pp_locked Then
-50:        Call MsgBox("Проект защищен, снимите пароль!", vbCritical, "Проект:")
+50:        Call MsgBox("The project is protected, remove the password!", vbCritical, "Project:")
 51:    Else
 52:        If ActiveSheet.Name = NAME_SH Then
 53:            Application.ScreenUpdating = False
@@ -64,9 +64,9 @@ ErrStartParser:
 63:            Application.EnableEvents = True
 64:            Application.Calculation = xlCalculationAutomatic
 65:            Application.ScreenUpdating = True
-66:            Call MsgBox("Код книги [" & objWB.Name & "] зашифрован!", vbInformation, "Шифрование кода:")
+66:            Call MsgBox("Book code [" & objWB.Name & "] encrypted!", vbInformation, "Code encryption:")
 67:        Else
-68:            Call MsgBox("Создайте или перейдите на лист: [" & NAME_SH & "]", vbCritical, "Активация листа:")
+68:            Call MsgBox("Create or navigate to the sheet: [" & NAME_SH & "]", vbCritical, "Activating the sheet:")
 69:        End If
 70:    End If
 71:    Exit Sub
@@ -74,7 +74,7 @@ ErrStartParser:
 73:    Application.EnableEvents = True
 74:    Application.Calculation = xlCalculationAutomatic
 75:    Application.ScreenUpdating = True
-76:    Call MsgBox("Ошибка в MainObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+76:    Call MsgBox("Error in MainObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 77: End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -126,7 +126,7 @@ ErrStartParser:
 125:    Dim dTime       As Date
 126:
 127:    dTime = Now()
-128:    Debug.Print "Старт: " & VBA.Format$(Now() - dTime, "Long Time")
+128:    Debug.Print "Start:" & VBA.Format$(Now() - dTime, "Long Time")
 129:
 130:    Set objDictName = New Scripting.Dictionary
 131:    Set objDictModule = New Scripting.Dictionary
@@ -135,7 +135,7 @@ ErrStartParser:
 134:    'сохранение и загрузка
 135:    objWB.SaveAs Filename:=objWB.Path & Application.PathSeparator & C_PublicFunctions.sGetBaseName(objWB.FullName) & "_obf_" & Replace(Now(), ":", ".") & "." & C_PublicFunctions.sGetExtensionName(objWB.FullName)    ', FileFormat:=objWB.FileFormat
 136:
-137:    Debug.Print "Сохранение файла - выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+137:    Debug.Print "File saving - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 138:    'фильтрация
 139:    Call FelterAdd
 140:
@@ -149,7 +149,7 @@ ErrStartParser:
 148:
 149:    'сбор имен с шифрами
 150:    For i = LBound(arrData) To UBound(arrData)
-151:        If arrData(i, 9) = "ДА" Then
+151:        If arrData(i, 9) = "yes" Then
 152:            'сбор имен с шифрами
 153:            If objDictName.Exists(arrData(i, 8)) = False Then objDictName.Add arrData(i, 8), arrData(i, 10)
 154:        End If
@@ -160,7 +160,7 @@ ErrStartParser:
 159:        If objDictModule.Exists(objVBCitem.Name) = False Then
 160:            sCode = GetCodeFromModule(objVBCitem)
 161:            'убираю перенос строк
-162:            sCode = VBA.Replace(sCode, " _" & vbNewLine, "ЪЪЪЪЪ")
+162:            sCode = VBA.Replace(sCode, " _" & vbNewLine, "B")
 163:            objDictModule.Add objVBCitem.Name, sCode
 164:            objDictModuleOld.Add objVBCitem.Name, sCode
 165:            sCode = vbNullString
@@ -168,7 +168,7 @@ ErrStartParser:
 167:    Next objVBCitem
 168:    'конец сбора
 169:
-170:    Debug.Print "Сбор данных - выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+170:    Debug.Print "Data collection - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 171:
 172:    'шифрование
 173:    sCode = vbNullString
@@ -196,7 +196,7 @@ ErrStartParser:
 195:                sCode = vbNullString
 196:            Next j
 197:            DoEvents
-198:            Application.StatusBar = "Шифрование данных - выполнено: " & Format(i / (.Count - 1), "Percent") & ", " & i & " из " & .Count - 1
+198:            Application.StatusBar = "Data encryption - completed:" & Format(i / (.Count - 1), "Percent") & ", " & i & "from" & .Count - 1
 199:        Next i
 200:    End With
 201:    Application.StatusBar = False
@@ -224,37 +224,37 @@ ErrStartParser:
 223:        objDictModule.Item(sKey) = sCode
 224:        sCode = vbNullString
 225:    Next j
-226:    Debug.Print "Чередование строк - выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+226:    Debug.Print "String alternation - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 227:
 228:
-229:    Debug.Print "Шифрование данных - выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+229:    Debug.Print "Data encryption - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 230:    'загрузка кода
 231:    For j = 0 To objDictModule.Count - 1
 232:        Set objVBCitem = objWB.VBProject.VBComponents(objDictModule.Keys(j))
 233:        sCode = objDictModule.Items(j)
 234:        'возврат перенос строк
-235:        sCode = VBA.Replace(sCode, "ЪЪЪЪЪ", " _" & vbNewLine)
+235:        sCode = VBA.Replace(sCode, "B", " _" & vbNewLine)
 236:        Call SetCodeInModule(objVBCitem, sCode)
 237:    Next j
 238:
-239:    Debug.Print "Загрузка кода- выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+239:    Debug.Print "Code loading- completed:" & VBA.Format$(Now() - dTime, "Long Time")
 240:
 241:    'переименование контролов
 242:    For i = LBound(arrData) To UBound(arrData)
-243:        If arrData(i, 9) = "ДА" And objDictName.Exists(arrData(i, 8)) Then
-244:            If arrData(i, 1) = "Контрол" Then
+243:        If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
+244:            If arrData(i, 1) = "Control" Then
 245:                Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
 246:                objVBCitem.Designer.Controls(arrData(i, 8)).Name = arrData(i, 10)
 247:            End If
 248:        End If
 249:    Next i
 250:
-251:    Debug.Print "Переименование контролов - выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+251:    Debug.Print "Renaming of controls - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 252:
 253:    'переименование модулей
 254:    For i = LBound(arrData) To UBound(arrData)
-255:        If arrData(i, 9) = "ДА" And objDictName.Exists(arrData(i, 8)) Then
-256:            If arrData(i, 1) = "Модуль" And VBA.CByte(arrData(i, 2)) <> 100 Then
+255:        If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
+256:            If arrData(i, 1) = "Module" And VBA.CByte(arrData(i, 2)) <> 100 Then
 257:                Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
 258:                objVBCitem.Name = arrData(i, 10)
 259:            End If
@@ -264,7 +264,7 @@ ErrStartParser:
 263:    'шифрование строк
 264:    If bEncodeStr Then Call EncodedStringCode(objWB)
 265:
-266:    Debug.Print "Переименование модулей- выполнено: " & VBA.Format$(Now() - dTime, "Long Time")
+266:    Debug.Print "Renaming modules- completed:" & VBA.Format$(Now() - dTime, "Long Time")
 267:    objWB.Save
 268:
 269: End Sub
@@ -295,13 +295,13 @@ ErrStartParser:
 294:    'сбор строк
 295:    sCodeString = "Option Explicit" & VBA.Chr$(13)
 296:    For i = LBound(arrData) To UBound(arrData)
-297:        If arrData(i, 7) = "ДА" Then
+297:        If arrData(i, 7) = "yes" Then
 298:            sCodeString = sCodeString & "Public Const " & arrData(i, 8) & " as string=" & arrData(i, 5) & VBA.Chr$(13)
 299:        End If
 300:    Next i
 301:    Dim NameOldMOdule As String
 302:    For i = LBound(arrData) To UBound(arrData)
-303:        If arrData(i, 7) = "ДА" Then
+303:        If arrData(i, 7) = "yes" Then
 304:            If NameOldMOdule <> arrData(i, 9) Then
 305:                sCode = vbNullString
 306:                Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 9))
@@ -327,7 +327,7 @@ ErrStartParser:
 326:
 327:        End If
 328:        DoEvents
-329:        If i Mod 100 = 0 Then Application.StatusBar = "Шифрование строк - выполнено: " & Format(i / UBound(arrData), "Percent") & ", " & i & " из " & UBound(arrData)
+329:        If i Mod 100 = 0 Then Application.StatusBar = "String encryption - completed:" & Format(i / UBound(arrData), "Percent") & ", " & i & "from" & UBound(arrData)
 330:    Next i
 331:    Application.StatusBar = False
 332:    Dim sName       As String
@@ -418,6 +418,6 @@ errMsg:
 417:        Err.Clear
 418:        GoTo Repeatnext
 419:    Else
-420:        Call MsgBox(Err.Description, vbCritical, "Ошибка:")
+420:        Call MsgBox(Err.Description, vbCritical, "Mistake:")
 421:    End If
 End Sub

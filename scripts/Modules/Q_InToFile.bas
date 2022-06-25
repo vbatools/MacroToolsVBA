@@ -18,12 +18,12 @@ Option Private Module
 9:    If strPath = vbNullString Then Exit Sub
 10:   Q_InToFile.FilenamesCollectionToPath (strPath)
 11:
-12:    If MsgBox("Удалить папку распакованного файла Excel" & vbNewLine & "Файл Excel не удаляется!", vbYesNo + vbCritical, "Удаление папки:") = vbYes Then
+12:    If MsgBox("Delete the folder of the unpacked Excel file" & vbNewLine & "The Excel file is not deleted!", vbYesNo + vbCritical, "Deleting a folder:") = vbYes Then
 13:        Call Q_InToFile.RemoveFolderWithContent(strPath)
 14:    End If
 15:    Exit Sub
 errMsg:
-17:    Debug.Print "Ошибка в InToFile!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+17:    Debug.Print "Error in InToFile!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 18:    Call WriteErrorLog("InToFile")
 19: End Sub
     Private Sub FilenamesCollectionToPath(ByVal StrPathToFile As String)
@@ -40,7 +40,7 @@ errMsg:
 31:    Dim SH     As Worksheet: Set SH = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
 32:    ' формируем заголовки таблицы
 33:    With SH.Range("a1").Resize(, 5)
-34:        .Value = Array("№", "Имя файла", "Полный путь", "Размер файла", "Расширение файла")
+34:        .Value = Array("№", "File name", "Full path", "File Size", "File Extension")
 35:        .Font.Bold = True: .Interior.ColorIndex = 17
 36:    End With
 37:
@@ -55,7 +55,7 @@ errMsg:
 46:    Application.ScreenUpdating = True    ' отключаем обновление экрана
 47:    Exit Sub
 errMsg:
-49:    Debug.Print "Ошибка в FilenamesCollectionToPath!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+49:    Debug.Print "Error in FilenamesCollectionToPath!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 50:    Call WriteErrorLog("FilenamesCollectionToPath")
 51: End Sub
 
@@ -75,7 +75,7 @@ errMsg:
 66:    Set FSO = Nothing: Application.StatusBar = False    ' очистка строки состояния Excel
 67:    Exit Function
 errMsg:
-69:    Debug.Print "Ошибка в FilenamesCollection!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+69:    Debug.Print "Error in FilenamesCollection!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 70:    Call WriteErrorLog("FilenamesCollection")
 71: End Function
 
@@ -109,3 +109,4 @@ errMsg:
 102: '    'путь к папке можно задать статично, если он заранее известен и не изменяется
 104:   Shell "cmd /c rd /S/Q """ & sFolder & """"
 105: End Sub
+

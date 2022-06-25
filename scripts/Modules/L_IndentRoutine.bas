@@ -97,7 +97,7 @@ ErrorHandler:
         Case 91:
 89:            Exit Sub
 90:        Case Else:
-91:            Debug.Print "ќшибка! в ReBild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+91:            Debug.Print "Mistake! in ReBild" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 92:            Call WriteErrorLog("ReBild")
 93:    End Select
 94:    Err.Clear
@@ -854,3 +854,4 @@ Private Function fnAlignFunction(ByVal sLine As String, ByRef bFirstLine As Bool
 843:    If iParamStart = 0 Then iParamStart = iCheck + 1
         fnAlignFunction = iCheck + 1
 End Function
+

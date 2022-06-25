@@ -33,15 +33,15 @@ Option Explicit
 32:    On Error GoTo ErrorHandler
 33:    If VBAIsTrusted Then
 34:        Workbooks(C_Const.NAME_ADDIN & ".xlam").Sheets(C_Const.SH_SNIPPETS).Copy After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count)
-35:        Call MsgBox("Выгрузка базы кода произведена", vbInformation, "Выгрузка базы кода:")
+35:        Call MsgBox("The code base has been unloaded", vbInformation, "Unloading the code base:")
 36:    End If
 37:    Exit Sub
 ErrorHandler:
 39:    Select Case Err.Number
         Case 91:
-41:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+41:            Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 42:        Case Else:
-43:            Call MsgBox("Ошибка! в ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+43:            Call MsgBox("Mistake! in ImportCodeBaseBtn" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 44:            Call WriteErrorLog("ImportCodeBaseBtn")
 45:    End Select
 46:    Err.Clear
@@ -65,7 +65,7 @@ ErrorHandler:
 64:    Exit Sub
 ErrorHandler:
 66:    Err.Clear
-67:    Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+67:    Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 68: End Sub
     Private Sub VBABtn(ByRef control As IRibbonControl)
 70:    Call VBAVBEOpen
@@ -106,9 +106,9 @@ ErrorHandler:
 ErrorHandler:
 106:    Select Case Err.Number
         Case 91:
-108:            Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+108:            Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 109:        Case Else:
-110:            Call MsgBox("Ошибка! в onUnUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+110:            Call MsgBox("Mistake! in onUnUnProtectSheets" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 111:            Call WriteErrorLog("onUnUnProtectSheets")
 112:    End Select
 113:    Err.Clear

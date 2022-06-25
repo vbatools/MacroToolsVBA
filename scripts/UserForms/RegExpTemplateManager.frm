@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} RegExpTemplateManager 
-   Caption         =   "Менеджер шаблонов:"
+   Caption         =   "Template Manager:"
    ClientHeight    =   7875
    ClientLeft      =   45
    ClientTop       =   375
@@ -21,9 +21,9 @@ Attribute VB_Exposed = False
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Option Explicit
-Private Const sADD  As String = "Создать"
-Private Const sDEL  As String = "Удалить"
-Private Const sEDI  As String = "Изменить"
+Private Const sADD  As String = "To create"
+Private Const sDEL  As String = "Remove"
+Private Const sEDI  As String = "To change"
 Private Const sSHNAME As String = "SHSNIPPETS"
 Private Const sTBGRUPPA As String = "tbGrupa"
 Private Const sTBPATTERN As String = "tbPattern"
@@ -62,11 +62,11 @@ Private Const sSHNAMETEST As String = "TestRegExpVBATools"
 41:            End If
 42:        End With
 43:    Else
-44:        Call MsgBox("Ничего не выбрано!", vbCritical, "Вставка паттерна:")
+44:        Call MsgBox("Nothing is selected!", vbCritical, "Inserting a pattern:")
 45:    End If
 46: End Sub
 
-    Private Function GetAddressCell(Optional sMsg As String = "Выберите ячейку для вставки паттерна:") As Range
+    Private Function GetAddressCell(Optional sMsg As String = "Select the cell to insert the pattern in:") As Range
 49:    On Error GoTo Canceled
 50:    Dim sDefault    As String
 51:
@@ -157,19 +157,19 @@ Canceled:
 136:                        With objListGrup.ListRows.Add
 137:                            .Range.Value2 = txtItemGrupa.Value
 138:                            Call UpdateTBGruppa
-139:                            Call MsgBox("Группа [" & txtItemGrupa.Value & "]" & vbNewLine & "Создана", vbInformation + vbOKOnly, "Создание группы:")
+139:                            Call MsgBox("Group [" & txtItemGrupa.Value & "]" & vbNewLine & "Created", vbInformation + vbOKOnly, "Creating a group:")
 140:                        End With
 141:                    Else
-142:                        Call MsgBox("Группа [" & txtItemGrupa.Value & "]" & vbNewLine & "Уже создана", vbCritical + vbOKOnly, "Создание группы:")
+142:                        Call MsgBox("Group [" & txtItemGrupa.Value & "]" & vbNewLine & "Already created", vbCritical + vbOKOnly, "Creating a group:")
 143:                        Exit Sub
 144:                    End If
 145:                Case sDEL:
 146:                    If Not objFinde Is Nothing Then
 147:                        If objFinde.Row > 0 Then
-148:                            If MsgBox("Вы уверены что хотите удалить группу [" & txtItemGrupa.Value & "] ?", vbQuestion + vbYesNo, "Удаление группы:") = vbYes Then
+148:                            If MsgBox("Are you sure you want to delete the group [" & txtItemGrupa.Value & "] ?", vbQuestion + vbYesNo, "Deleting a group:") = vbYes Then
 149:                                objListGrup.ListRows(objFinde.Row - 1).Delete
 150:                                Call UpdateTBGruppa
-151:                                Call MsgBox("Группа [" & txtItemGrupa.Value & "]" & vbNewLine & "Удалена", vbInformation + vbOKOnly, "Удаление группы:")
+151:                                Call MsgBox("Group [" & txtItemGrupa.Value & "]" & vbNewLine & "Deleted", vbInformation + vbOKOnly, "Deleting a group:")
 152:                            End If
 153:                        End If
 154:                    End If
@@ -178,19 +178,19 @@ Canceled:
 157:                    If Not objFinde Is Nothing Then
 158:                        If objFinde.Row > 0 Then
 159:                            If SelectedItemList(ListGrup) = txtItemGrupa.Value Then
-160:                                Call MsgBox("Группу [" & txtItemGrupa.Value & "]" & vbNewLine & "Вы не переименовали!", vbCritical + vbOKOnly, "Изменение группы:")
+160:                                Call MsgBox("Group [" & txtItemGrupa.Value & "]" & vbNewLine & "You haven't renamed it!", vbCritical + vbOKOnly, "Changing the group:")
 161:                            Else
-162:                                If MsgBox("Вы уверены что хотите именить группу [" & SelectedItemList(ListGrup) & "] на [" & txtItemGrupa.Value & "] ?", vbQuestion + vbYesNo, "Изменение группы:") = vbYes Then
+162:                                If MsgBox("Are you sure you want to name the group [" & SelectedItemList(ListGrup) & "] on [" & txtItemGrupa.Value & "] ?", vbQuestion + vbYesNo, "Changing the group:") = vbYes Then
 163:                                    objListGrup.ListRows(objFinde.Row - 1).Range.Value = txtItemGrupa.Value
 164:                                    Call UpdateTBGruppa
-165:                                    Call MsgBox("Группа [" & SelectedItemList(ListGrup) & "] изменена на [" & txtItemGrupa.Value & "]", vbInformation + vbOKOnly, "Изменение группы:")
+165:                                    Call MsgBox("Group [" & SelectedItemList(ListGrup) & "] changed to [" & txtItemGrupa.Value & "]", vbInformation + vbOKOnly, "Changing the group:")
 166:                                End If
 167:                            End If
 168:                        End If
 169:                    End If
 170:            End Select
 171:        Else
-172:            Call MsgBox("Не заполнено поле ввода!", vbCritical + vbOKOnly, "Не заполнено поле ввода:")
+172:            Call MsgBox("The input field is not filled in!", vbCritical + vbOKOnly, "The input field is not filled in:")
 173:            Exit Sub
 174:        End If
 175:    Else
@@ -205,19 +205,19 @@ Canceled:
 184:                            .Range(1, 2).Value2 = txtItemPattern.Value
 185:                            .Range(1, 3).Value2 = txtItemDiscript.Value
 186:                            Call UpdateTBPattern
-187:                            Call MsgBox("Шаблон [" & txtItemPattern.Value & "] в группе [" & cmbItemGrupa.Value & "]" & vbNewLine & "Создан", vbInformation + vbOKOnly, "Создание шаблона:")
+187:                            Call MsgBox("Template [" & txtItemPattern.Value & "] in the group [" & cmbItemGrupa.Value & "]" & vbNewLine & "Generated", vbInformation + vbOKOnly, "Creating a template:")
 188:                        End With
 189:                    Else
-190:                        Call MsgBox("Шаблон [" & txtItemPattern.Value & "] в группе [" & cmbItemGrupa.Value & "]" & vbNewLine & "Уже создан", vbCritical + vbOKOnly, "Создание шаблона:")
+190:                        Call MsgBox("Template [" & txtItemPattern.Value & "] in the group [" & cmbItemGrupa.Value & "]" & vbNewLine & "Already created", vbCritical + vbOKOnly, "Creating a template:")
 191:                        Exit Sub
 192:                    End If
 193:                Case sDEL:
 194:                    If Not objFinde Is Nothing Then
 195:                        If objFinde.Row > 0 Then
-196:                            If MsgBox("Вы уверены что хотите удалить шаблон [" & txtItemPattern.Value & "] ?", vbQuestion + vbYesNo, "Удаление шаблона:") = vbYes Then
+196:                            If MsgBox("Are you sure you want to delete the template [" & txtItemPattern.Value & "] ?", vbQuestion + vbYesNo, "Deleting a template:") = vbYes Then
 197:                                objListPatt.ListRows(objFinde.Row - 1).Delete
 198:                                Call UpdateTBPattern
-199:                                Call MsgBox("Шаблон [" & txtItemPattern.Value & "]" & vbNewLine & "Удален", vbInformation + vbOKOnly, "Удаление шаблона:")
+199:                                Call MsgBox("Template [" & txtItemPattern.Value & "]" & vbNewLine & "Deleted", vbInformation + vbOKOnly, "Deleting a template:")
 200:                            End If
 201:                        End If
 202:                    End If
@@ -226,20 +226,20 @@ Canceled:
 205:                    If Not objFinde Is Nothing Then
 206:                        If objFinde.Row > 0 Then
 207:                            If SelectedItemList(ListTemplete) = txtItemPattern.Value And SelectedItemList(ListTemplete, 1) = txtItemDiscript.Value Then
-208:                                Call MsgBox("Шаблон [" & txtItemPattern.Value & "]" & vbNewLine & "Вы не переименовали!", vbCritical + vbOKOnly, "Изменение шаблона:")
+208:                                Call MsgBox("Template [" & txtItemPattern.Value & "]" & vbNewLine & "You haven't renamed it!", vbCritical + vbOKOnly, "Changing the template:")
 209:                            Else
-210:                                If MsgBox("Вы уверены что хотите именить группу [" & SelectedItemList(ListTemplete) & "] на [" & txtItemPattern.Value & "] ?", vbQuestion + vbYesNo, "Изменение шаблона:") = vbYes Then
+210:                                If MsgBox("Are you sure you want to name the group [" & SelectedItemList(ListTemplete) & "] on [" & txtItemPattern.Value & "] ?", vbQuestion + vbYesNo, "Changing the template:") = vbYes Then
 211:                                    objListPatt.ListRows(objFinde.Row - 1).Range(1, 2).Value2 = txtItemPattern.Value
 212:                                    objListPatt.ListRows(objFinde.Row - 1).Range(1, 3).Value2 = txtItemDiscript.Value
 213:                                    Call UpdateTBPattern
-214:                                    Call MsgBox("Шаблон [" & SelectedItemList(ListTemplete) & "] изменена на [" & txtItemPattern.Value & "]", vbInformation + vbOKOnly, "Изменение шаблона:")
+214:                                    Call MsgBox("Template [" & SelectedItemList(ListTemplete) & "] changed to [" & txtItemPattern.Value & "]", vbInformation + vbOKOnly, "Changing the template:")
 215:                                End If
 216:                            End If
 217:                        End If
 218:                    End If
 219:            End Select
 220:        Else
-221:            Call MsgBox("Не заполнены поля ввода!", vbCritical + vbOKOnly, "Не заполнены поля ввода:")
+221:            Call MsgBox("The input fields are not filled in!", vbCritical + vbOKOnly, "Input fields are not filled in:")
 222:            Exit Sub
 223:        End If
 224:    End If

@@ -9,43 +9,41 @@ Attribute VB_Name = "ZC_HotKey"
 Option Explicit
 Option Private Module
 
-Const FILE_NAME     As String = "MacroToolsHotKeys.exe"
-
-Public Sub hotKeysStart()
-
-    If Not ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then Exit Sub
-    
-    On Error GoTo errMsg
-    Dim sPatpApp    As String
-    sPatpApp = ThisWorkbook.Path & Application.PathSeparator & FILE_NAME
-    If FileHave(sPatpApp) Then
-        Call Shell(sPatpApp)
-    Else
-        Call MsgBox("Не найден файл - " & FILE_NAME, vbInformation, "HotKeys:")
-    End If
-    Exit Sub
+    Public Sub hotKeysStart()
+12:
+13:    If Not ThisWorkbook.Name = C_Const.NAME_ADDIN & ".xlam" Then Exit Sub
+14:
+15:    On Error GoTo errMsg
+16:    Dim sPatpApp    As String
+17:    sPatpApp = ThisWorkbook.Path & Application.PathSeparator & FILE_NAME_HOT_KEYS
+18:    If FileHave(sPatpApp) Then
+19:        Call Shell(sPatpApp)
+20:    Else
+21:        Call MsgBox("File not found -" & FILE_NAME_HOT_KEYS, vbInformation, "HotKeys:")
+22:    End If
+23:    Exit Sub
 errMsg:
-    Call WriteErrorLog("hotKeysStart")
-End Sub
+25:    Call WriteErrorLog("hotKeysStart")
+26: End Sub
 
 Public Sub hotKeysStop()
-    On Error GoTo errMsg
-
-    Dim sPatpApp    As String
-    sPatpApp = ThisWorkbook.Path & Application.PathSeparator & FILE_NAME
-    If FileHave(sPatpApp) Then
-        Dim WshShell As Object
-        Set WshShell = CreateObject("WScript.Shell")
-        If Not WshShell Is Nothing Then
-            Dim WshExec As Object
-            Set WshExec = WshShell.Exec(sPatpApp)
-            If Not WshShell Is Nothing Then WshExec.Terminate
-            Set WshExec = Nothing
-        End If
-        Set WshShell = Nothing
-    End If
-
-    Exit Sub
+29:    On Error GoTo errMsg
+30:
+31:    Dim sPatpApp    As String
+32:    sPatpApp = ThisWorkbook.Path & Application.PathSeparator & FILE_NAME_HOT_KEYS
+33:    If FileHave(sPatpApp) Then
+34:        Dim WshShell As Object
+35:        Set WshShell = CreateObject("WScript.Shell")
+36:        If Not WshShell Is Nothing Then
+37:            Dim WshExec As Object
+38:            Set WshExec = WshShell.Exec(sPatpApp)
+39:            If Not WshShell Is Nothing Then WshExec.Terminate
+40:            Set WshExec = Nothing
+41:        End If
+42:        Set WshShell = Nothing
+43:    End If
+44:
+45:    Exit Sub
 errMsg:
-    Call WriteErrorLog("hotKeysStop")
+47:    Call WriteErrorLog("hotKeysStop")
 End Sub

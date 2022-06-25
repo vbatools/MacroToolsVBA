@@ -34,12 +34,12 @@ Option Private Module
 33:        bMultiLine = VBA.CBool(.Cells(9, 3).Value)
 34:    End With
 35:
-36:    If sPattern = vbNullString Then sMsgErr = "Не указано регулярное выражение!" & vbNewLine
-37:    If sSTR = vbNullString Then sMsgErr = sMsgErr & "Не указан исходный текст!"
+36:    If sPattern = vbNullString Then sMsgErr = "No regular expression specified!" & vbNewLine
+37:    If sSTR = vbNullString Then sMsgErr = sMsgErr & "The source text is not specified!"
 38:
 39:    Call RegExpClearCells
 40:    If sMsgErr <> vbNullString Then
-41:        Call MsgBox(sMsgErr, vbCritical, "Поиск совпадений:")
+41:        Call MsgBox(sMsgErr, vbCritical, "Search for matches:")
 42:        Exit Sub
 43:    End If
 44:    'сброс форматирования
@@ -72,10 +72,10 @@ Option Private Module
 71:    With ActiveSheet
 72:        Set objMatches = RegExpExecuteCollection(sSTR, sPattern, bGloba1, bIgnoreCase, bMultiLine)
 73:        If objMatches Is Nothing Then
-74:            Call MsgBox("Совпадений не найдено!", vbInformation + vbOKOnly, "Поиск совпадений:")
+74:            Call MsgBox("No matches found!", vbInformation + vbOKOnly, "Search for matches:")
 75:            .Range("M:P").EntireColumn.AutoFit
 76:        ElseIf objMatches.Count = 0 Then
-77:            Call MsgBox("Совпадений не найдено!", vbInformation + vbOKOnly, "Поиск совпадений:")
+77:            Call MsgBox("No matches found!", vbInformation + vbOKOnly, "Search for matches:")
 78:            .Range("M:P").EntireColumn.AutoFit
 79:        Else
 80:            For Each itemMatch In objMatches
@@ -261,8 +261,6 @@ Option Private Module
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ(ByVal Текст As String, ByVal Паттерн As String, Optional НомерИскомого As Integer = 0, Optional Разделитель As String = " ", Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As Variant
-Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_Description = "Получает значение соответствующее рег. выражению по его порядковому номеру в тексте"
-Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_ProcData.VB_Invoke_Func = " \n7"
 263:    Dim ObjColl     As MatchCollection
 264:    Dim sTxt        As String
 265:    Dim i           As Integer
@@ -298,8 +296,6 @@ Attribute РЕГВЫР_ПОЛУЧЗНАЧПОНОМЕРУ.VB_ProcData.VB_Invoke_Func = " \n7"
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Public Function РЕГВЫР_СЧЁТ(ByVal Текст As String, ByVal Паттерн As String, Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As LongPtr
-Attribute РЕГВЫР_СЧЁТ.VB_Description = "Подсчитывает количества значений удовлетворяющих паттерну"
-Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
 298:    Dim ObjColl     As MatchCollection
 299:    Dim lCount      As Long
 300:    Dim i           As Integer
@@ -362,7 +358,5 @@ Attribute РЕГВЫР_СЧЁТ.VB_ProcData.VB_Invoke_Func = " \n7"
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Public Function РЕГВЫР_ЗАМЕНИТЬ(ByVal Текст As String, ByVal Паттерн As String, ByVal Заменить_на As String, Optional ИскатьВсе As Boolean = True, Optional Регист As Boolean = False, Optional МногоСтроч As Boolean = False) As String
-Attribute РЕГВЫР_ЗАМЕНИТЬ.VB_Description = "Заменяет значения удовлетворяющие рег. выражению в тексте на текст замены"
-Attribute РЕГВЫР_ЗАМЕНИТЬ.VB_ProcData.VB_Invoke_Func = " \n7"
 360:    РЕГВЫР_ЗАМЕНИТЬ = RegExpFindReplace(Текст, Паттерн, Заменить_на, ИскатьВсе, Регист, МногоСтроч)
 End Function

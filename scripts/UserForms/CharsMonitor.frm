@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} CharsMonitor 
-   Caption         =   "Монитор символов:"
+   Caption         =   "Character Monitor:"
    ClientHeight    =   7590
    ClientLeft      =   45
    ClientTop       =   375
@@ -79,7 +79,7 @@ Private m_clsAnchors As CAnchors
 64:            lRows = UBound(VBA.Split(Me.txtStr.Text, vbNewLine)) + 1
 65:            lWords = UBound(VBA.Split(C_PublicFunctions.TrimSpace(VBA.Replace(Me.txtStr.Text, vbNewLine, VBA.Chr(32))), VBA.Chr(32))) + 1
 66:            If lRows < 0 Then lRows = 0
-67:            Me.lbMsg.Caption = "Длина строки: " & VBA.Len(Me.txtStr.Text) & " сим. Строк: " & lRows & " Слов: " & lWords
+67:            Me.lbMsg.Caption = "String length:" & VBA.Len(Me.txtStr.Text) & "this. Lines:" & lRows & "Words:" & lWords
 68:        End If
 69:    End With
 70: End Sub
@@ -135,7 +135,7 @@ Private m_clsAnchors As CAnchors
      Private Sub lbExportStr_Click()
 121:    Dim objRng      As Range
 122:    Me.Hide
-123:    Set objRng = GetAddressCell("Выберите ячейку для вставки:")
+123:    Set objRng = GetAddressCell("Select the cell to insert:")
 124:    If objRng Is Nothing Then Exit Sub
 125:    With Me.ListChars
 126:        If .ListCount > 0 Then
@@ -151,7 +151,7 @@ Private m_clsAnchors As CAnchors
 136:    Dim i           As Integer
 137:    ReDim Arr(1 To 256, 1 To 5)
 138:    Me.Hide
-139:    Set objRng = GetAddressCell("Выберите ячейку для вставки:")
+139:    Set objRng = GetAddressCell("Select the cell to insert:")
 140:    If objRng Is Nothing Then Exit Sub
 141:    For i = 1 To 256
 142:        Arr(i, 1) = i - 1
@@ -161,7 +161,7 @@ Private m_clsAnchors As CAnchors
 146:        Arr(i, 5) = GetDiscriptionSpeshelChar(i - 1)
 147:    Next i
 148:    With objRng
-149:        .Resize(1, 5).Value = Array("Dec/Asc", "Hex", "Char", "AscW", "Описание")
+149:        .Resize(1, 5).Value = Array("Dec/Asc", "Hex", "Char", "AscW", "Description")
 150:        .Offset(1, 0).Resize(256, 5).Value = Arr
 151:    End With
 152: End Sub
@@ -177,7 +177,7 @@ Private m_clsAnchors As CAnchors
 162:        Case 6: GetDiscriptionSpeshelChar = "ACK"
 163:        Case 7: GetDiscriptionSpeshelChar = "BEL"
 164:        Case 8: GetDiscriptionSpeshelChar = "BS"
-165:        Case 9: GetDiscriptionSpeshelChar = "Табуляция"
+165:        Case 9: GetDiscriptionSpeshelChar = "Tabulation"
 166:        Case 10: GetDiscriptionSpeshelChar = "LF(Возвр. каретки)"
 167:        Case 11: GetDiscriptionSpeshelChar = "VT"
 168:        Case 12: GetDiscriptionSpeshelChar = "FF"
@@ -203,7 +203,7 @@ Private m_clsAnchors As CAnchors
 188:        Case 32: GetDiscriptionSpeshelChar = "SP (Пробел)"
 189:    End Select
 190: End Function
-Private Function GetAddressCell(Optional sMsg As String = "Выберите диапазон данных:") As Range
+Private Function GetAddressCell(Optional sMsg As String = "Select a data range:") As Range
 192:    Dim sDefault    As String
 193:    On Error GoTo Canceled
 194:    If TypeName(Selection) = "Range" Then

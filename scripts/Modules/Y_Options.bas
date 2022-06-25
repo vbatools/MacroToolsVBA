@@ -61,7 +61,7 @@ ErrorHandler:
         Case 91:
             Exit Sub
         Case Else:
-            Debug.Print "ќшибка! в addOptions" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+            Debug.Print "Mistake! in addOptions" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
             Call WriteErrorLog("addOptions")
     End Select
     Err.Clear

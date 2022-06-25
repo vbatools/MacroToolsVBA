@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} InfoFile2 
-   Caption         =   "Свойства файла:"
+   Caption         =   "File Properties:"
    ClientHeight    =   2265
    ClientLeft      =   45
    ClientTop       =   375
@@ -39,10 +39,10 @@ Option Explicit
 26:            wb.Close savechanges:=True
 27:            Call WriteXML(sPath, Me.txtLastAuthor.Text, CDate(Me.txtLastSaveTime.Text))
 28:            Workbooks.Open Filename:=sPath
-29:            Call MsgBox("Изменения внесены в файл!", vbInformation, "Изменения:")
+29:            Call MsgBox("Changes have been made to the file!", vbInformation, "Changes:")
 30:            Unload Me
 31:        Else
-32:            Call MsgBox("В поле [ Last save time ] указана не дата!", vbCritical, "Ошибка:")
+32:            Call MsgBox("The [ Last save time ] field does not specify a date!", vbCritical, "Mistake:")
 33:        End If
 34:    End If
 35: End Sub
@@ -79,7 +79,7 @@ Option Explicit
 66:    Dim vbProj      As VBIDE.VBProject
 67:    If Workbooks.Count = 0 Then
 68:        Unload Me
-69:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+69:        Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 70:        Exit Sub
 71:    End If
 72:    With Me.cmbMain

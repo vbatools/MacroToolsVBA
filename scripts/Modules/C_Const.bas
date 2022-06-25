@@ -10,7 +10,7 @@ Attribute VB_Name = "C_Const"
 Option Private Module
 Option Explicit
 
-Public Const NAME_VERSION As String = "Обновление 2020.11"
+Public Const NAME_VERSION As String = "Update 2020.11"
 
 Public FlagVisible As Boolean
 
@@ -40,11 +40,11 @@ Public Const URL_DOWNLOAD As String = URL_MAIN & "skachat/"
 Public Const URL_VK As String = "https://vk.com/vbatools"
 Public Const URL_FB As String = "https://www.facebook.com/groups/VBAToolsExcel/"
 
-Public Const sMSGVBA1 As String = "Отключено: [Доверять доступ к объектной модели VBE]" & vbLf & "Для включения перейдите: Файл->Параметры->Центр управления безопасностью->Параметры макросов" & vbLf & "И перезапустите Excel"
-Public Const sMSGVBA2 As String = "Нет доступа к объектной модели VBE"
+Public Const sMSGVBA1 As String = "Disabled: [Trust access to the VBE object model]" & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" & vbLf & "And restart Excel"
+Public Const sMSGVBA2 As String = "No access to the VBE object model"
 
 Public Const SH_SNIPPETS As String = "SHSNIPPETS"
-Public Const SH_STATISTICA As String = "Статистика"
+Public Const SH_STATISTICA As String = "Statistics"
 
 Public Const TB_SNIPPETS As String = "SNIPPETS"
 'Public Const TB_SNIPPETS_PRE As String = "SNIPPETS_PRE"
@@ -90,6 +90,7 @@ Public Const TAG25 As String = NAME_ADDIN & "_VBE_TAG25"
 Public Const TAG26 As String = NAME_ADDIN & "_VBE_TAG26"
 Public Const TAG27 As String = NAME_ADDIN & "_VBE_TAG27"
 Public Const TAG28 As String = NAME_ADDIN & "_VBE_TAG28"
+Public Const TAG29 As String = NAME_ADDIN & "_VBE_TAG29"
 
 Public Const TAGCOM As String = NAME_ADDIN & "_VBE_TAGCOM"
 
@@ -125,6 +126,8 @@ Public Const MOVECONTBOTTOMRIGHT As String = "Bottom Right"
 
 Public Const NAME_SH          As String = "DATA_OBF_VBATools"
 Public Const NAME_SH_STR      As String = "STRING_OBF_VBATools"
+
+Public Const FILE_NAME_HOT_KEYS     As String = "MacroToolsHotKeys.exe"
 
 Public Enum enumAnchorStyles
     enumAnchorStyleNone = 0

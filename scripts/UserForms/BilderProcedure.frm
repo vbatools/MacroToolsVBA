@@ -46,7 +46,7 @@ Option Explicit
 32:        .AddItem "Date"
 33:        .AddItem "Object"
 34:    End With
-35:    txtErroName.Text = "<- Поле ввода " & Chr(34) & Replace(lbName.Caption, "*:", vbNullString) & Chr(34) & " должно быть заполнено!"
+35:    txtErroName.Text = "<- Input field" & Chr(34) & Replace(lbName.Caption, "*:", vbNullString) & Chr(34) & "must be filled in!"
 36: End Sub
     Private Sub UserForm_Activate()
 38:    chbAddMainProceure.Value = False
@@ -174,21 +174,21 @@ Option Explicit
 160:    End If
 161:    If (Not optTypeProcedure) Then
 162:        If cmbFunc.Value = vbNullString Then
-163:            MsgStop = "Поле выбора типа данных функции должно быть заполнено!"
+163:            MsgStop = "The function data type selection field must be filled in!"
 164:        End If
 165:    End If
 166:
 167:    If MsgStop <> vbNullString Then
-168:        Call MsgBox(MsgStop, vbOKOnly + vbCritical, "Ошибка:")
+168:        Call MsgBox(MsgStop, vbOKOnly + vbCritical, "Mistake:")
 169:        Exit Function
 170:    End If
 171:
 172:    strEndLine = vbNewLine & vbTab
 173:    'отключение описание
 174:    If chbOffDiscription Then
-175:        strDiscprition = strEndLine & Chr(39) & "Описание: " & txtDiscprition.Text
-176:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Дата создания: " & Format(Now(), "dddddd в  h:nn:ss")
-177:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Автор: " & Environ("UserName")
+175:        strDiscprition = strEndLine & Chr(39) & "Description:" & txtDiscprition.Text
+176:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Date of creation:" & Format(Now(), "dddddd в  h:nn:ss")
+177:        strDiscprition = strDiscprition & strEndLine & Chr(39) & "Author:" & Environ("UserName")
 178:    End If
 179:    strSpes = Space(1)
 180:    ScreenUpdatingCalculationTrue = "Call ScreenUpdatingCalculation(Screen:=True, Calculat:=True, Alerts:=True, Events:=True)"
@@ -220,7 +220,7 @@ Option Explicit
 206:    If chbMsg Then
 207:        Dim txtNewLine As String
 208:        If txtMsg.Text <> vbNullString Then txtNewLine = " & vbNewLine & "
-209:        If chbUseDefaultMsg Then strMsg1 = Chr(34) & "Выполнение " & txtName.Text & " окнчено!" & Chr(34) & txtNewLine
+209:        If chbUseDefaultMsg Then strMsg1 = Chr(34) & "Accomplishment" & txtName.Text & "finished!" & Chr(34) & txtNewLine
 210:        CustMsg = txtMsg.Text
 211:        If CustMsg = vbNullString Then
 212:            If chbUseDefaultMsg Then
@@ -258,10 +258,10 @@ Option Explicit
 244:        ErrorMsgFerst = strEndLine & "On Error GoTo ErrorHandler"
 245:        ErrorMsgEnd = strEndLine & "Exit " & TypeProc & vbNewLine & "ErrorHandler:" & strEndLine & ScreenUpdatingCalculationTrue
 246:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "Select Case Err"
-        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "обработка ошибок для использования раскомментировать"
+        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "error handling to use uncomment"
 248:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & Chr(39) & "Case"
 249:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & "Case Else:"
-250:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & vbTab & "Debug.Print " & Chr(34) & "Произошла ошибка в " & txtName & Chr(34) & " & vbNewLine & Err.Number & vbNewLine & Err.Description"
+250:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & vbTab & vbTab & "Debug.Print " & Chr(34) & "An error occurred in" & txtName & Chr(34) & " & vbNewLine & Err.Number & vbNewLine & Err.Description"
 251:        ErrorMsgEnd = ErrorMsgEnd & strEndLine & "End Select"
 252:    End If
 253:
@@ -271,7 +271,7 @@ Option Explicit
 257:    strCode = strCode & ResultDimFunc
 258:    strCode = strCode & ErrorMsgFerst
 259:    strCode = strCode & strEndLine & ScreenUpdatingCalculationFalse
-260:    strCode = strCode & strEndLine & strEndLine & Chr(39) & "место для кода" & strEndLine
+260:    strCode = strCode & strEndLine & strEndLine & Chr(39) & "place for the code" & strEndLine
 261:    strCode = strCode & ResultEndFunc
 262:    strCode = strCode & strEndLine & ScreenUpdatingCalculationTrue
 263:    strCode = strCode & strMsg
@@ -301,8 +301,8 @@ Option Explicit
 287:
 288:    If opbCliboard Then
 289:        Call C_PublicFunctions.SetTextIntoClipboard(txtCode)
-290:        sMsgBoxString = "Код скопирован в буфер обмена!" & vbNewLine & "Для вставки кода используйте " & Chr(34) & "Ctrl+V" & Chr(34)
-291:        Call MsgBox(sMsgBoxString, vbInformation, "Копирование кода:")
+290:        sMsgBoxString = "The code has been copied to the clipboard!" & vbNewLine & "To insert the code, use" & Chr(34) & "Ctrl+V" & Chr(34)
+291:        Call MsgBox(sMsgBoxString, vbInformation, "Copying the code:")
 292:    Else
 293:        Debug.Print txtCode
 294:    End If

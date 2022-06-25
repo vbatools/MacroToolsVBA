@@ -2,9 +2,9 @@ Attribute VB_Name = "ZB_DeleteLinksFile"
 Option Explicit
 Option Private Module
 
-Private Const sFULL_PATH As String = "Полный путь к файлу:"
-Private Const sFILE_LINKS As String = "Файл с ссылкой"
-Private Const sDELETE As String = "УДАЛИТЬ"
+Private Const sFULL_PATH As String = "Full path to the file:"
+Private Const sFILE_LINKS As String = "File with a link"
+Private Const sDELETE As String = "DELETE"
 
     Public Sub deleteAllLinksInFile()
 9:    Dim sFileNameFull As Variant
@@ -13,7 +13,7 @@ Private Const sDELETE As String = "УДАЛИТЬ"
 12:    sFileNameFull = SelectedFile(vbNullString, False, "*.xls;*.xlsm;*.xlsx")
 13:    If TypeName(sFileNameFull) = "Empty" Then Exit Sub
 14:
-15:    If MsgBox("Создавать BackUp файлов ?", vbYesNo + vbQuestion, "Снятие паролей:") = vbYes Then
+15:    If MsgBox("Create backup files ?", vbYesNo + vbQuestion, "Removing passwords:") = vbYes Then
 16:        bFlag = True
 17:    End If
 18:
@@ -42,16 +42,16 @@ Private Const sDELETE As String = "УДАЛИТЬ"
 41:    End With
 42:    Set cEditOpenXML = Nothing
 43:    If bMsg Then
-44:        Call MsgBox("Произведено полное удаление связей в файле: [" & sGetBaseName(sFullNameFile) & "]", vbInformation, "Удаление связей:")
+44:        Call MsgBox("The links in the file were completely deleted: [" & sGetBaseName(sFullNameFile) & "]", vbInformation, "Deleting links:")
 45:    Else
-46:        Call MsgBox("В файле: [" & sGetBaseName(sFullNameFile) & "] нет связей с другими файлами!", vbInformation, "Удаление связей:")
+46:        Call MsgBox("In the file: [" & sGetBaseName(sFullNameFile) & "] no links to other files!", vbInformation, "Deleting links:")
 47:    End If
 48:
 49:    Exit Sub
 errMsg:
 51:    Select Case Err.Number
         Case Else
-53:            Call MsgBox("Ошибка в deleteAllLinksInFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
+53:            Call MsgBox("Error in deleteAllLinksInFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Mistake:")
 54:            Call WriteErrorLog("deleteAllLinksInFile")
 55:    End Select
 56:    Set cEditOpenXML = Nothing
@@ -117,21 +117,21 @@ errMsg:
 116:            .Value = sFULL_PATH
 117:            .Offset(0, 1).Value = sFullNameFile
 118:            .Offset(1, 0).Value = sFILE_LINKS
-119:            .Offset(1, 1).Value = "Фаил на который идет ссылка"
-120:            .Offset(1, 2).Value = "Действие (проставить)"
+119:            .Offset(1, 1).Value = "The file to which the link goes"
+120:            .Offset(1, 2).Value = "Action (put down)"
 121:            .Offset(2, 0).Resize(UBound(arrFile, 2), UBound(arrFile, 1)).Value2 = WorksheetFunction.Transpose(arrFile)
 122:            .Offset(2, 2).Resize(UBound(arrFile, 2), 1).Value2 = sDELETE
 123:        End With
-124:        Call MsgBox("Создание списка связей из файла:[" & sGetBaseName(sFullNameFile) & "]", vbInformation, "Создание списка:")
+124:        Call MsgBox("Creating a list of links from a file:[" & sGetBaseName(sFullNameFile) & "]", vbInformation, "Creating a list:")
 125:    Else
-126:        Call MsgBox("В файле: [" & sGetBaseName(sFullNameFile) & "] нет связей с другими файлами!", vbInformation, "Создание списка:")
+126:        Call MsgBox("In the file: [" & sGetBaseName(sFullNameFile) & "] no links to other files!", vbInformation, "Creating a list:")
 127:    End If
 128:
 129:    Exit Sub
 errMsg:
 131:    Select Case Err.Number
         Case Else
-133:            Call MsgBox("Ошибка в getListAllLinksInFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
+133:            Call MsgBox("Error in getListAllLinksInFile" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Mistake:")
 134:            Call WriteErrorLog("getListAllLinksInFile")
 135:    End Select
 136:    Set cEditOpenXML = Nothing
@@ -150,33 +150,33 @@ Public Sub deleteLinksOnList()
 149:        Dim lLastRow As Long
 150:        lLastRow = .Cells(.Rows.Count, 1).End(xlUp).Row
 151:        If lLastRow < 3 Then
-152:            Call MsgBox("Нет таблицы данных!", vbCritical, "Ошибка:")
+152:            Call MsgBox("There is no data table!", vbCritical, "Mistake:")
 153:            Exit Sub
 154:        End If
 155:        If .Cells(1, 1).Value <> sFULL_PATH Then
-156:            errMsg = "Не найдено поле [" & sFULL_PATH & "]" & vbNewLine
+156:            errMsg = "Field not found [" & sFULL_PATH & "]" & vbNewLine
 157:        End If
 158:        If .Cells(2, 1).Value <> sFILE_LINKS Then
-159:            errMsg = errMsg & "Не найдено поле [" & sFILE_LINKS & "]" & vbNewLine
+159:            errMsg = errMsg & "Field not found [" & sFILE_LINKS & "]" & vbNewLine
 160:        End If
 161:
 162:        sFullNameFile = .Cells(1, 2).Value
 163:
 164:        If sFullNameFile = vbNullString Then
-165:            errMsg = errMsg & "Не задан путь к файлу:" & vbNewLine
+165:            errMsg = errMsg & "The file path is not set:" & vbNewLine
 166:        ElseIf Not FileHave(sFullNameFile) Then
-167:            errMsg = errMsg & "Путь к файлу не существует" & vbNewLine
+167:            errMsg = errMsg & "The path to the file does not exist" & vbNewLine
 168:        End If
 169:
 170:        If errMsg <> vbNullString Then
-171:            Call MsgBox("Таблица данных не распознана:" & vbNewLine & errMsg, vbCritical, "Ошибка:")
+171:            Call MsgBox("The data table is not recognized:" & vbNewLine & errMsg, vbCritical, "Mistake:")
 172:            Exit Sub
 173:        End If
 174:
 175:        arrVal = .Range(.Cells(3, 1), .Cells(lLastRow, 3)).Value2
 176:    End With
 177:
-178:    If MsgBox("Создавать BackUp файлов ?", vbYesNo + vbQuestion, "Снятие паролей:") = vbYes Then
+178:    If MsgBox("Create backup files ?", vbYesNo + vbQuestion, "Removing passwords:") = vbYes Then
 179:        bFlag = True
 180:    End If
 181:
@@ -210,16 +210,16 @@ Public Sub deleteLinksOnList()
 209:    Set cEditOpenXML = Nothing
 210:
 211:    If bMsg Then
-212:        Call MsgBox("Произведено удаление связей в файле: [" & sGetBaseName(sFullNameFile) & "]" & vbNewLine & "Удалено: [" & iCount & "] связей!", vbInformation, "Удаление связей:")
+212:        Call MsgBox("The links in the file were deleted: [" & sGetBaseName(sFullNameFile) & "]" & vbNewLine & "Deleted: [" & iCount & "] connections!", vbInformation, "Deleting links:")
 213:    Else
-214:        Call MsgBox("В файле: [" & sGetBaseName(sFullNameFile) & "] нет связей с другими файлами!", vbInformation, "Удаление связей:")
+214:        Call MsgBox("In the file: [" & sGetBaseName(sFullNameFile) & "] no links to other files!", vbInformation, "Deleting links:")
 215:    End If
 216:
 217:    Exit Sub
 errMsg:
 219:    Select Case Err.Number
         Case Else
-221:            Call MsgBox("Ошибка в deleteLinksOnList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbCritical, "Ошибка:")
+221:            Call MsgBox("Error in deleteLinksOnList" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbCritical, "Mistake:")
 222:            Call WriteErrorLog("deleteLinksOnList")
 223:    End Select
 224:    Set cEditOpenXML = Nothing

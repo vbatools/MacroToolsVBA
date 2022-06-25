@@ -22,7 +22,7 @@ Option Explicit
 21:    str_arr = Split(CreateLineProcedure, "|")
 22:    str_search = str_arr(1)
 23:    If str_search = vbNullString Then
-24:        Debug.Print "Ничего не выбрано!"
+24:        Debug.Print "Nothing is selected!"
 25:        Exit Sub
 26:    End If
 27:    code_arr = Split(str_search, " ")
@@ -49,9 +49,9 @@ Option Explicit
 48:    Exit Sub
 errMsg:
 50:    If Err.Number = 91 Then
-51:        Debug.Print "Снипет не найден, выбрано: " & str_search
+51:        Debug.Print "Snippet not found, selected:" & str_search
 52:    Else
-53:        Debug.Print "Ошибка в InsertCode!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+53:        Debug.Print "Error in InsertCode!" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 54:        Call WriteErrorLog("InsertCode")
 55:    End If
 56:    Err.Clear

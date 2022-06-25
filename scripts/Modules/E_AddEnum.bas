@@ -82,17 +82,17 @@ Option Explicit
 42:        .InsertLines LineNum, code
 43:    End With
 44:    Application.DisplayAlerts = True
-45:    Debug.Print "Модуль: [" & VBName & "] добавлен в книгу [" & AddFileName & "]"
+45:    Debug.Print "Module: [" & VBName & "] added to the book [" & AddFileName & "]"
 46:    Exit Sub
 errMsg:
 48:    Select Case Err.Number
         Case 32813:
-50:            Debug.Print "Модуль: [" & VBName & "] уже был добавлен в книгу [" & AddFileName & "]"
+50:            Debug.Print "Module: [" & VBName & "] has already been added to the book [" & AddFileName & "]"
 51:            vbProj.VBComponents.Remove vbComp
 52:        Case 76:
-53:            Debug.Print "Модуль: [" & VBName & "] добавлен в книгу: " & ActiveWorkbook.Name & vbLf & "Файл не сохранен!"
+53:            Debug.Print "Module: [" & VBName & "] added to the book:" & ActiveWorkbook.Name & vbLf & "The file is not saved!"
 54:        Case Else:
-55:            Debug.Print "Ошибка в AddModuleToProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+55:            Debug.Print "Error in AddModuleToProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 56:            Call WriteErrorLog("AddModuleToProject")
 57:    End Select
 58: End Sub
@@ -162,16 +162,16 @@ errMsg:
 122:    Set vbProj = Application.VBE.ActiveVBProject
 123:    Set vbComp = vbProj.VBComponents(VBName)
 124:    vbProj.VBComponents.Remove vbComp
-125:    Debug.Print "Модуль: [" & VBName & "] был удален, из книги [" & AddFileName & "]"
+125:    Debug.Print "Module: [" & VBName & "] was deleted, from the book [" & AddFileName & "]"
 126:    Exit Sub
 ErrorHandler:
 128:    Select Case Err.Number
         Case 9:
-130:            Debug.Print "Модуля: [" & VBName & "] нет, в книге [" & AddFileName & "]"
+130:            Debug.Print "Module: [" & VBName & "] no, in the book [" & AddFileName & "]"
 131:        Case 76:
-132:            Debug.Print "Модуль: [" & VBName & "] был удален, из книги: " & ActiveWorkbook.Name & vbLf & "Файл не сохранен!"
+132:            Debug.Print "Module: [" & VBName & "] has been deleted, from the book:" & ActiveWorkbook.Name & vbLf & "The file is not saved!"
 133:        Case Else:
-134:            Debug.Print "Ошибка в DeleteModuleToProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+134:            Debug.Print "Error in DeleteModuleToProject" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 135:            Call WriteErrorLog("DeleteModuleToProject")
 136:    End Select
 137:    Err.Clear
@@ -189,7 +189,7 @@ ErrorHandler:
         Case 76:
 150:            AddFileName = ActiveWorkbook.Name
 151:        Case Else:
-152:            Debug.Print "Ошибка в AddFileName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+152:            Debug.Print "Error in AddFileName" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 153:            Call WriteErrorLog("AddFileName")
 154:    End Select
 155:    Err.Clear
@@ -247,9 +247,9 @@ ErrorHandler:
 ErrorHandler:
 208:    Select Case Err.Number
         Case 76:
-210:            Call MsgBox("Файл не сохранен, сохраните файл!", vbCritical, "Ошибка:")
+210:            Call MsgBox("The file is not saved, save the file!", vbCritical, "Mistake:")
 211:        Case Else:
-212:            Debug.Print "Ошибка в CopyModuleForm" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl
+212:            Debug.Print "Error in CopyModuleForm" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
 213:            Call WriteErrorLog("CopyModuleForm")
 214:    End Select
 215:    Err.Clear

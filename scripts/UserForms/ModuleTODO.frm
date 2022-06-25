@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ModuleTODO 
-   Caption         =   "Менеджер проектов VBA:"
+   Caption         =   "VBA Project Manager:"
    ClientHeight    =   7695
    ClientLeft      =   45
    ClientTop       =   375
@@ -39,7 +39,7 @@ Private m_clsAnchors As CAnchors
 24:    Dim vbProj      As VBIDE.VBProject
 25:    If Workbooks.Count = 0 Then
 26:        Unload Me
-27:        Call MsgBox("Нет открытых " & Chr(34) & "Файлов Excel" & Chr(34) & "!", vbOKOnly + vbExclamation, "Ошибка:")
+27:        Call MsgBox("No open" & Chr(34) & "Excel Files" & Chr(34) & "!", vbOKOnly + vbExclamation, "Mistake:")
 28:        Exit Sub
 29:    End If
 30:    With Me.cmbMain
@@ -92,7 +92,7 @@ ErrorHandler:
 77:    Unload Me
 78:    Select Case Err.Number
         Case Else:
-80:            Call MsgBox("Ошибка! в ModuleTODO.ListCode_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+80:            Call MsgBox("Mistake! in ModuleTODO.ListCode_DblClick" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 81:            Call WriteErrorLog("ModuleTODO.ListCode_DblClick")
 82:    End Select
 83:    Err.Clear
@@ -110,16 +110,16 @@ ErrorHandler:
 95:        Next iFile
 96:    Else
 97:        ListCode.Clear
-98:        Call MsgBox("VBA проект в книге - " & wb.Name & " защищен, паролем!" & vbCrLf & "Снимите пароль!", vbCritical, "Ошибка:")
+98:        Call MsgBox("VBA project in the book -" & wb.Name & "password protected!" & vbCrLf & "Remove the password!", vbCritical, "Mistake:")
 99:    End If
 100:    Exit Sub
 ErrorHandler:
 102:    Select Case Err.Number
         Case 4160:
 104:            ListCode.Clear
-105:            Call MsgBox("Ошибка! Отсутствует доступ к проекту VBA!", vbOKOnly + vbExclamation, "Ошибка:")
+105:            Call MsgBox("Mistake! There is no access to the VBA project!", vbOKOnly + vbExclamation, "Mistake:")
 106:        Case Else:
-107:            Call MsgBox("Ошибка! в AddTODOList.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+107:            Call MsgBox("Mistake! in AddTODOList.UserForm_Activate" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 108:            Call WriteErrorLog("AddTODOList.UserForm_Activate")
 109:    End Select
 110:    Err.Clear
@@ -152,7 +152,7 @@ ErrorHandler:
 137:    Unload Me
 138:    Select Case Err.Number
         Case Else:
-140:            Call MsgBox("Ошибка! в ModuleTODO.listLinesinModuleWhereFound" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbOKOnly + vbExclamation, "Ошибка:")
+140:            Call MsgBox("Mistake! in ModuleTODO.listLinesinModuleWhereFound" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbOKOnly + vbExclamation, "Mistake:")
 141:            Call WriteErrorLog("ModuleTODO.listLinesinModuleWhereFound")
 142:    End Select
 143:    Err.Clear

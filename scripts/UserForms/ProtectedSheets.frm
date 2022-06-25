@@ -58,24 +58,24 @@ Public sPassword As String
 44:    With ListBox1
 45:        .Clear
 46:        .AddItem 0
-47:        .List(n, 2) = " нига"
+47:        .List(n, 2) = "Book"
 48:        .List(n, 1) = ActiveWorkbook.Name
-49:        .List(n, 3) = "защиты нет"
+49:        .List(n, 3) = "there is no protection"
 50:        If ActiveWorkbook.ProtectStructure Or ActiveWorkbook.ProtectWindows Then
-51:            .List(n, 3) = "защита есть"
+51:            .List(n, 3) = "there is protection"
 52:        End If
 53:        n = n + 1
 54:        For Each SH In ActiveWorkbook.Worksheets
 55:            .AddItem SH.Index
-56:            .List(n, 2) = "Ћист"
+56:            .List(n, 2) = "Sheet"
 57:            .List(n, 1) = SH.Name
 58:            Select Case SH.ProtectContents
                 Case True
 60:                    .Selected(n) = True
-61:                    .List(n, 3) = "защита есть"
+61:                    .List(n, 3) = "there is protection"
 62:                    .List(n, 4) = "***********"
 63:                Case False
-64:                    .List(n, 3) = "защиты нет"
+64:                    .List(n, 3) = "there is no protection"
 65:            End Select
 66:            n = n + 1
 67:        Next
@@ -85,7 +85,7 @@ Public sPassword As String
 71:    Dim i      As Integer
 72:    With ListBox1
 73:        For i = 0 To .ListCount - 1
-74:            If CheckBox2 And .List(i, 3) = "защита есть" Then
+74:            If CheckBox2 And .List(i, 3) = "there is protection" Then
 75:                .Selected(i) = True
 76:            Else
 77:                .Selected(i) = False
@@ -112,7 +112,7 @@ Public sPassword As String
 98:            If .Selected(X) = True Then
 99:                i = i + 1
 100:                Application.ScreenUpdating = True
-101:                Application.StatusBar = "ќбработан: " & .List(X, 1) & " выполнено: " & Format(i / iSelected, "0.00%")
+101:                Application.StatusBar = "Processed:" & .List(X, 1) & "done:" & Format(i / iSelected, "0.00%")
 102:                Application.ScreenUpdating = False
 103:
 104:                Call UnlockSheetsWorkbooks(X)
@@ -145,11 +145,11 @@ TryNewPasword:
 131:                                                For i5 = 65 To 66: For i6 = 65 To 66: For n = 32 To 126
 132:                                                            kennwort = Chr(i) & Chr(j) & Chr(k) & Chr(l) & Chr(m) & Chr(i1) & Chr(i2) & Chr(i3) & Chr(i4) & Chr(i5) & Chr(i6) & Chr(n)
 133:                                                            With ListBox1
-134:                                                                If .List(X, 2) = " нига" Then
+134:                                                                If .List(X, 2) = "Book" Then
 135:                                                                    ActiveWorkbook.Unprotect kennwort
 136:                                                                    If ActiveWorkbook.ProtectStructure = False And ActiveWorkbook.ProtectWindows = False Then
 137:                                                                        sPassword = kennwort
-138:                                                                        .List(X, 3) = "защиты нет"
+138:                                                                        .List(X, 3) = "there is no protection"
 139:                                                                        .List(X, 4) = kennwort
 140:                                                                        Exit Sub
 141:                                                                    End If
@@ -157,7 +157,7 @@ TryNewPasword:
 143:                                                                    ActiveWorkbook.Sheets(.List(X, 1)).Unprotect kennwort
 144:                                                                    If ActiveWorkbook.Sheets(.List(X, 1)).ProtectContents = False Then
 145:                                                                        sPassword = kennwort
-146:                                                                        .List(X, 3) = "защиты нет"
+146:                                                                        .List(X, 3) = "there is no protection"
 147:                                                                        .List(X, 4) = kennwort
 148:                                                                        Exit Sub
 149:                                                                    End If
@@ -166,12 +166,12 @@ TryNewPasword:
 152:                                                        Next: Next: Next: Next: Next: Next
 153:                                Next: Next: Next: Next: Next: Next
 154:        Else
-155:            If .List(X, 2) = " нига" Then
+155:            If .List(X, 2) = "Book" Then
 156:                Exit Sub
 157:            Else
 158:                ActiveWorkbook.Sheets(.List(X, 1)).Unprotect sPassword
 159:                If ActiveWorkbook.Sheets(.List(X, 1)).ProtectContents = False Then
-160:                    .List(X, 3) = "защиты нет"
+160:                    .List(X, 3) = "there is no protection"
 161:                    .List(X, 4) = sPassword
 162:                    Exit Sub
 163:                End If

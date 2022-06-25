@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} BilderFormat 
-   Caption         =   "Конструктор форматов:"
+   Caption         =   "Format Constructor:"
    ClientHeight    =   4950
    ClientLeft      =   45
    ClientTop       =   375
@@ -37,10 +37,10 @@ Private arrFormatDateCustomDiscription As Variant
 16:    End If
 17:
 18:    sErr = vbNullString
-19:    If lbView.Caption = vbNullString Then sErr = "В поле ввода значения пусто!" & vbNewLine
-20:    If lbView.Caption Like "Ошибка: *" Then sErr = sErr & "Ошибка, в исходном формате"
+19:    If lbView.Caption = vbNullString Then sErr = "The value input field is empty!" & vbNewLine
+20:    If lbView.Caption Like "Mistake: *" Then sErr = sErr & "Error, in the original format"
 21:    If sErr <> vbNullString Then
-22:        Call MsgBox(sErr, vbCritical, "Ошибка:")
+22:        Call MsgBox(sErr, vbCritical, "Mistake:")
 23:        AddCode = vbNullString
 24:        Exit Function
 25:    End If
@@ -78,8 +78,8 @@ Private arrFormatDateCustomDiscription As Variant
 57:    If sSTR = vbNullString Then Exit Sub
 58:    Call C_PublicFunctions.SetTextIntoClipboard(sSTR)
 59:
-60:    sMsgBoxString = "Код скопирован в буфер обмена!" & vbNewLine & "Для вставки кода используйте " & Chr(34) & "Ctrl+V" & Chr(34)
-61:    Call MsgBox(sMsgBoxString, vbInformation, "Копирование кода:")
+60:    sMsgBoxString = "The code has been copied to the clipboard!" & vbNewLine & "To insert the code, use" & Chr(34) & "Ctrl+V" & Chr(34)
+61:    Call MsgBox(sMsgBoxString, vbInformation, "Copying the code:")
 62:
 63:    Me.Hide
 64: End Sub
@@ -171,11 +171,11 @@ Private arrFormatDateCustomDiscription As Variant
 err_msg:
 151:    Select Case Err.Number
         Case 6
-153:            lbView.Caption = "Ошибка: ведите меньшее число!"
+153:            lbView.Caption = "Mistake: keep a smaller number!"
 154:        Case 13
 155:            lbView.Caption = vbNullString
 156:        Case Else
-157:            lbView.Caption = "Ошибка: " & Err.Description & " " & Err.Number
+157:            lbView.Caption = "Mistake:" & Err.Description & " " & Err.Number
 158:    End Select
 159:    lbView.ForeColor = &H8080FF
 160:    Err.Clear
@@ -195,45 +195,46 @@ err_msg:
 
      Private Sub UserForm_Initialize()
 176:    arrFormatDate = Array("General Date", "Long Date", "Medium Date", "Short Date", "Long Time", "Medium Time", "Short Time")
-177:    arrFormatDateDiscription = Array("Отображение даты и/или времени, например 4/3/93 05:34 PM. Если дробная часть отсутствует, отображается только дата, например 4/3/93. Если отсутствует целая часть, отображается только время, например 05:34 PM. Отображение даты определяется параметрами системы.", _
-                "Отображение даты в соответствии с длинным форматом даты, используемым в системе.", _
-                "Отображение даты с использованием среднего формата даты, соответствующего языковой версии ведущего приложения.", _
-                "Отображение даты в соответствии с кратким форматом даты, используемым в системе.", _
-                "Отображение времени в соответствии с длинным форматом даты, используемым в системе; включает часы, минуты и секунды.", _
-                "Отображение времени в 12-часовом формате с использованием часов, минут и указателя AM/PM.", _
-                "Отображение времени в 24-часовом формате, например 17:45.")
+177:    arrFormatDateDiscription = Array("Date and/or time display, for example 4/3/93 05:34 PM. If there is no fractional part, only the date is displayed, for example 4/3/93. If the whole part is missing, only the time is displayed, for example 05:34 PM. The date display is determined by the system parameters.", _
+                "Date display according to the long date format used in the system.", _
+                "Date display using the average date format corresponding to the language version of the host application.", _
+                "Date display according to the short date format used in the system.", _
+                "Time display according to the long date format used in the system; includes hours, minutes and seconds.", _
+                "Time display in 12-hour format using hours, minutes and the AM/PM pointer.", _
+                "Time display in 24-hour format, for example 17:45.")
 184:    arrFormatValue = Array("General Number", "Currency", "Fixed", "Standard", "Percent", "Scientific", "Yes/No", "True/False", "On/Off")
-185:    arrFormatValueDiscription = Array("Отображение числа без знака разделителя групп разрядов.", _
-                "Отображение числа с использованием разделителя групп разрядов, если это необходимо; отображаются две цифры справа от разделителя целой и дробной части. Вывод основывается на языковых настройках системы.", _
-                "Отображение по крайней мере одной цифры слева и двух цифр справа от разделителя целой и дробной части.", _
-                "Отображение числа с использованием разделителя групп разрядов; отображаются по крайней мере одна цифра слева и две цифры справа от разделителя целой и дробной части.", _
-                "Отображение числа, умноженного на 100 со знаком процента (%), добавляемого справа; всегда отображаются две цифры справа от разделителя целой и дробной части.", _
-                "Используется стандартное экспоненциальное представление.", _
-                "Отображается Нет, если число равняется 0; в противном случае отображается Да.", _
-                "Отображается False, если число равняется 0; в противном случае отображается True.", _
-                "Отображается Вкл, если число равняется 0; в противном случае отображается Выкл.")
+185:    arrFormatValueDiscription = Array("Displaying an unsigned digit group separator number.", _
+                "Displaying a number using a digit group separator, if necessary; two digits are displayed to the right of the integer and fractional separator. The output is based on the language settings of the system.", _
+                "Displaying at least one digit to the left and two digits to the right of the integer and fractional separator.", _
+                "Displaying a number using a digit group separator; at least one digit to the left and two digits to the right of the integer and fractional separator are displayed.", _
+                "Displays a number multiplied by 100 with a percentage sign (%) added to the right; two digits are always displayed to the right of the integer and fractional separator.", _
+                "The standard exponential representation is used.", _
+                "No is displayed if the number is 0; otherwise, Yes is displayed.", _
+                "False is displayed if the number is 0; otherwise, True is displayed.", _
+                "On is displayed if the number is 0; otherwise, Off is displayed.")
 194:    arrFormatDateCustom = Array("c", "d", "dd", "ddd", "dddd", "ddddd", "dddddd", "w", "ww", "m", "mm", "mmm", "mmmm", "q", "y", "yy", "yyyy", "h", "hh", "n", "nn", "s", "ss", "ttttt")
-195:    arrFormatDateCustomDiscription = Array("Разделитель компонентов даты. В некоторых языковых стандартах могут использоваться другие знаки для представления разделителя компонентов даты. Этот разделитель отделяет день, месяц и год, когда значения даты форматируются. Символ, используемый в качестве разделителя компонентов даты в отформатированных выходных данных, определяется параметрами системы.", _
-                "Отобp. дня в виде числа без нуля в начале (1–31).", _
-                "Отобр. дня в виде числа с нулем в начале (01–31).", _
-                "Отобр. дня с использованием сокращений (Вс–Сб). Локализовано.", _
-                "Отобр. дня с использованием полного имени (Воскресенье–Суббота). Локализовано.", _
-                "Отобр. даты с использованием полного формата (включая день, месяц и год), соответствующего краткому формату даты в настройках системы. Кратким форматом даты по умолчанию является m/d/yy.", _
-                "Отобр. числа, представляющего дату, с использованием полного формата (включая день, месяц и год), соответствующего длинному формату даты в настройках системы. Длинным форматом даты по умолчанию является mmmm dd, yyyy.", _
-                "Отобр. дня недели в виде числа (от 1 для воскресенья и до 7 для субботы).", _
-                "Отобр. недели года в виде числа (1–54).", _
-                "Отобр. месяца в виде числа без нуля в начале (1–12). Если m следует сразу же после h или hh, отображаться будет не месяц, а минута.", _
-                "Отобр. месяца в виде числа с нулем в начале (01–12). Если m следует сразу же после h или hh, отображаться будет не месяц, а минута.", _
-                "Отобр. сокращенного названия месяца (янв–дек). Локализовано.", _
-                "Отобр. полного названия месяца (январь–декабрь). Локализовано.", _
-                "Отобр. квартала года в виде числа (1–4).", "Отображение дня года в виде числа (1–366).", "Отобр. года в виде 2-значного числа (00–99).", _
-                "Отобр. года в виде 4-значного числа (100–9999).", "Отобр. часа в виде числа без нуля в начале (0–23).", _
-                "Отобр. часа в виде числа с нулем в начале (00–23).", "Отобр. минуты в виде числа без нуля в начале (0–59).", _
-                "Отобр. минуты в виде числа с нулем в начале (00–59).", _
-                "Отобр. секунды в виде числа без нуля в начале (0–59).", _
-                "Отобр. секунды в виде числа с нулем в начале (00–59).", _
-                "Отобр. времени в полном формате (включая час, минуту и секунду) с использованием разделителя компонентов времени, определенного в формате времени, указанного в настройках системы. Нуль в начале отображается, если выбран параметр Нуль в начале и время относится к интервалу ранее 10:00 A.M. или P.M. Форматом времени по умолчанию является h:mm:ss.")
+195:    arrFormatDateCustomDiscription = Array("Date component separator. Some language standards may use other characters to represent the date component separator. This separator separates the day, month, and year when the date values are formatted. The symbol used as the separator of the date components in the formatted output data is determined by the system parameters.", _
+                "Selected. days in the form of a number without zero at the beginning (1-31).", _
+                "Selected. days in the form of a number with zero at the beginning (01-31).", _
+                "Selected. days using abbreviations (Sun–Sat). Localized.", _
+                "Selected. of the day using the full name (Sunday–Saturday). Localized.", _
+                "Selected. dates using the full format (including day, month and year) corresponding to the short date format in the system settings. The default short date format is m/d/yy.", _
+                "Select the number representing the date using the full format (including day, month and year) corresponding to the long date format in the system settings. The default long date format is mmmm dd, yyyy.", _
+                "Selected. the day of the week as a number (from 1 for Sunday and up to 7 for Saturday).", _
+                "Selected. weeks of the year as a number (1-54).", _
+                "Selected. month as a number without zero at the beginning (1-12). If m follows immediately after h or hh, the minute will be displayed instead of the month.", _
+                "Selected. month as a number with zero at the beginning (01-12). If m follows immediately after h or hh, the minute will be displayed instead of the month.", _
+                "Selected. the abbreviated name of the month (Jan–Dec). Localized.", _
+                "Selecting the full name of the month (January–December). Localized.", _
+                "The selection of the quarter of the year in the form of a number (1-4).", "Displaying the day of the year as a number (1-366).", "Selected. the year as a 2-digit number (00-99).", _
+                "Selected. years in the form of a 4-digit number (100-9999).", "Selected. hours as a number without zero at the beginning (0-23).", _
+                "Selected. hours as a number with zero at the beginning (00-23).", "Selected. minutes as a number without zero at the beginning (0-59).", _
+                "Selected. minutes as a number with zero at the beginning (00-59).", _
+                "Selected. seconds as a number without zero at the beginning (0-59).", _
+                "Selected. seconds as a number with zero at the beginning (00-59).", _
+                "The time is selected in full format (including hour, minute and second) using a time component separator defined in the time format specified in the system settings. Zero at the beginning is displayed if the Zero at the beginning option is selected and the time refers to an interval earlier than 10:00 A.M. or P.M. The default time format is h:mm:ss.")
 215:    cmbFormat.List = arrFormatDate
 216:    Call ChengeFlag(obtnFormat)
 217:    Me.lbHelp.Picture = Application.CommandBars.GetImageMso("Help", 18, 18)
 218: End Sub
+

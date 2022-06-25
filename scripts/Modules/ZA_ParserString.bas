@@ -17,8 +17,8 @@ Public Sub ParserStringWB()
     'On Error GoTo ErrStartParser
     Set Form = New AddStatistic
     With Form
-        .Caption = "Сбор строковых данных:"
-        .lbOK.Caption = "СОБРАТЬ"
+        .Caption = "Collecting string data:"
+        .lbOK.Caption = "to collect"
         .chQuestion.visible = False
         .chQuestion.Value = False
         .Show
@@ -27,10 +27,10 @@ Public Sub ParserStringWB()
     If sNameWB = vbNullString Then Exit Sub
     Set objWB = Workbooks(sNameWB)
     If Not objWB.FullName Like "*" & Application.PathSeparator & "*" Then
-        Call MsgBox("Выбранный файл [" & sNameWB & "] не сохранен, для продолжения сохраните файл!", vbCritical, "Ошибка:")
+        Call MsgBox("Selected file [" & sNameWB & "] not saved, save the file to continue!", vbCritical, "Mistake:")
         Exit Sub
     ElseIf objWB.VBProject.Protection = vbext_pp_locked Then
-        Call MsgBox("Проект, файла [" & sNameWB & "] защищен, снимите пароль!", vbCritical, "Проект:")
+        Call MsgBox("Project, file [" & sNameWB & "] protected, remove the password!", vbCritical, "Project:")
         Exit Sub
     End If
 
@@ -40,7 +40,7 @@ Public Sub ParserStringWB()
 ErrStartParser:
     Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
-    Call MsgBox("Ошибка в ZA_ParserString.ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+    Call MsgBox("Error in ZA_ParserString.ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
     Call WriteErrorLog("ParserStringFromWB")
 End Sub
 
@@ -67,7 +67,7 @@ Private Sub ParserStr(ByRef WBString As Workbook, ByRef WBNew As Workbook)
     Application.EnableEvents = True
     Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
-    Call MsgBox("Строковые данные книги [" & sNameFile & "] собраны!", vbInformation, "Сбор данных:")
+    Call MsgBox("String data of the book [" & sNameFile & "] collected!", vbInformation, "Data collection:")
 
 
     Exit Sub
@@ -75,7 +75,7 @@ ErrStartParser:
     Application.EnableEvents = True
     Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
-    Call MsgBox("Ошибка в ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+    Call MsgBox("Error in ParserStringFromWB" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 End Sub
 
 '* * * * * ParserStrForm START * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -98,19 +98,19 @@ Private Sub ParserStrForms(ByRef wb As Workbook, ByRef WBNew As Workbook)
     Dim i           As Long
     Dim arrStr()    As String
 
-    Debug.Print "Начало - сбора строк UserForms контролов"
+    Debug.Print "Start - collecting rows of UserForms controls"
 
     Call N_ObfParserVBA.AddShhetInWBook(SH_NAME_FORM, WBNew)
 
     With WBNew.Worksheets(SH_NAME_FORM)
-        .Cells(1, 1).Value = "НАЗВАНИЕ МОДУЛЯ"
-        .Cells(1, 2).Value = "ТИП ФОРМА/КОНТРОЛ"
-        .Cells(1, 3).Value = "ИМЯ КОНТРОЛА"
-        .Cells(1, 4).Value = "ЗНАЧЕНИЕ"
-        .Cells(1, 5).Value = "ПОДПИСЬ"
+        .Cells(1, 1).Value = "MODULE NAME"
+        .Cells(1, 2).Value = "TYPE FORM/CONTROL"
+        .Cells(1, 3).Value = "CONTROL NAME"
+        .Cells(1, 4).Value = "meaning"
+        .Cells(1, 5).Value = "signature"
         .Cells(1, 6).Value = "CONTROLTIPTEXT"
-        .Cells(1, 7).Value = "ЗНАЧЕНИЕ"
-        .Cells(1, 8).Value = "ПОДПИСЬ"
+        .Cells(1, 7).Value = "meaning"
+        .Cells(1, 8).Value = "signature"
         .Cells(1, 9).Value = "CONTROLTIPTEXT"
         .Columns("A:I").EntireColumn.AutoFit
         .Cells.NumberFormat = "@"
@@ -160,9 +160,9 @@ Private Sub ParserStrForms(ByRef wb As Workbook, ByRef WBNew As Workbook)
             .Cells(2, 1).Resize(UBound(arrStr, 2), UBound(arrStr, 1)).Value2 = WorksheetFunction.Transpose(arrStr)
             .Columns("A:C").EntireColumn.AutoFit
         End With
-        Debug.Print "Завершен - сбор строк UserForms контролов"
+        Debug.Print "Completed - collection of UserForms control strings"
     Else
-        Debug.Print "Завершен - сбор строк UserForms, UserForms нет в файле"
+        Debug.Print "Completed - collection of UserForms strings, UserForms is not in the file"
     End If
 End Sub
 Private Function GetPropertisForm(ByRef objVBComp As VBIDE.VBComponent) As String
@@ -211,8 +211,8 @@ End Function
 Private Sub ParserStrUI(ByRef wb As Workbook, ByRef WBNew As Workbook, Optional bRenameUI As Boolean = False)
 
     If VBA.UCase$(wb.Name) Like "*.XLS" Then
-        Debug.Print "Сбор строк UI не возможен в файлах с расширением [*.xls]"
-        Debug.Print "Пресохраните файл в новый формат"
+        Debug.Print "Collecting UI strings is not possible in files with the extension [*.xls]"
+        Debug.Print "Save the file to a new format"
         Exit Sub
     End If
 
@@ -230,29 +230,29 @@ Private Sub ParserStrUI(ByRef wb As Workbook, ByRef WBNew As Workbook, Optional 
 
         If FileHave(sFullNameXML & "customUI.xml") Then
             If Not bRenameUI Then
-                Debug.Print "Начало - сбора строк UI рибон панели UI"
+                Debug.Print "Start - collecting UI rows of the UI ribbon panel"
                 Call ParserStrUIMain(WBNew, SH_STRING & "UI", sFullNameXML & "customUI.xml")
-                Debug.Print "Завершен - сбор строк рибон панели UI"
+                Debug.Print "Completed - collecting rows of the UI ribbon panel"
             Else
-                Debug.Print "Начало - переименования строк рибон панели UI"
+                Debug.Print "Start - renaming rows of the UI ribbon panel"
                 Call ReNameStrUI(WBNew, SH_STRING & "UI", sFullNameXML & "customUI.xml")
-                Debug.Print "Завершено - переименование строк рибон панели UI"
+                Debug.Print "Completed - renaming the rows of the UI ribbon panel"
             End If
         Else
-            Debug.Print "Рибон панели customUI - нет"
+            Debug.Print "customUI Panel Ribon - No"
         End If
         If FileHave(sFullNameXML & "customUI14.xml") Then
             If Not bRenameUI Then
-                Debug.Print "Начало - сбора строк UI рибон панели UI14"
+                Debug.Print "Start - collecting UI rows of the UI14 ribbon panel"
                 Call ParserStrUIMain(WBNew, SH_STRING & "UI14", sFullNameXML & "customUI14.xml")
-                Debug.Print "Завершен - сбор строк рибон панели UI14"
+                Debug.Print "Completed - collecting rows of the UI14 ribbon panel"
             Else
-                Debug.Print "Начало - переименования строк рибон панели UI14"
+                Debug.Print "Start - renaming rows of the UI14 ribbon panel"
                 Call ReNameStrUI(WBNew, SH_STRING & "UI14", sFullNameXML & "customUI14.xml")
-                Debug.Print "Завершено - переименование строк рибон панели UI14"
+                Debug.Print "Completed - renaming the rows of the UI14 ribbon panel"
             End If
         Else
-            Debug.Print "Рибон панели customUI14 - нет"
+            Debug.Print "customUI14 Ribon panels - No"
         End If
         .ZipAllFilesInFolder
     End With
@@ -387,7 +387,7 @@ Private Function GetFullNodeName(ByRef oXMLElem As MSXML2.IXMLDOMElement, sTxt A
 End Function
 
 Public Sub ReNameStr()
-    If MsgBox("Продолжить выполнение [Переименование строковых значений] ?" & vbNewLine & "Данную операцию нельзя отменить!", vbYesNo + vbQuestion, "Переименование строк:") = vbNo Then
+    If MsgBox("Continue executing [Renaming String Values] ?" & vbNewLine & "This operation cannot be canceled!", vbYesNo + vbQuestion, "Renaming lines:") = vbNo Then
         Exit Sub
     End If
     Dim WBNew       As Workbook
@@ -408,7 +408,7 @@ Public Sub ReNameStr()
                 End If
 
                 If WBString.VBProject.Protection = vbext_pp_locked Then
-                    Call MsgBox("Проект защищен, снимите пароль!", vbCritical, "Проект:")
+                    Call MsgBox("The project is protected, remove the password!", vbCritical, "Project:")
                 Else
                     If HaveSheetInFile(WBNew, SH_NAME_FORM) Then
                         Call ReNameFormControls(WBString, WBNew)
@@ -419,10 +419,10 @@ Public Sub ReNameStr()
                     Call ParserStrUI(WBString, WBNew, True)
                 End If
             Else
-                Call MsgBox("Файл не найден на листе: [" & SH_NAME_SET & "]", vbCritical, "Ошибка:")
+                Call MsgBox("The file was not found on the sheet: [" & SH_NAME_SET & "]", vbCritical, "Mistake:")
             End If
         Else
-            Call MsgBox("Создайте или перейдите на лист: [" & SH_NAME_SET & "]", vbCritical, "Поиск настроек:")
+            Call MsgBox("Create or navigate to the sheet: [" & SH_NAME_SET & "]", vbCritical, "Search for settings:")
         End If
     End With
 End Sub
@@ -434,7 +434,7 @@ Private Function HaveSheetInFile(ByRef wb As Workbook, ByVal SHName As String) A
         HaveSheetInFile = True
     Else
         HaveSheetInFile = False
-        Debug.Print "Не найден лист - [" & SHName & "]"
+        Debug.Print "Sheet not found - [" & SHName & "]"
     End If
     Err.Clear
 End Function
@@ -467,7 +467,7 @@ Private Sub ReNameFormControls(ByRef wb As Workbook, ByRef WBNew As Workbook)
     Dim objControl  As MSForms.control
     Dim i           As Long
 
-    Debug.Print "Начало - переименование UserForms контролов"
+    Debug.Print "Start - renaming UserForms controls"
     Set objVB = wb.VBProject
 
     For i = 1 To UBound(arrData)
@@ -488,19 +488,19 @@ Private Sub ReNameFormControls(ByRef wb As Workbook, ByRef WBNew As Workbook)
                         .ControlTipText = arrData(i, 9)
                     End With
                 Else
-                    arrData(i, 10) = "Не найден контрол"
+                    arrData(i, 10) = "Control not found"
                 End If
             End If
         Else
-            arrData(i, 10) = "Не найден модуль"
+            arrData(i, 10) = "Module not found"
         End If
     Next i
 
     With WBNew.Worksheets(SH_NAME_FORM)
-        .Cells(1, 10).Value = "ОШИБКИ"
+        .Cells(1, 10).Value = "mistakes"
         .Cells(2, 1).Resize(UBound(arrData, 1), UBound(arrData, 2)).Value2 = arrData
     End With
-    Debug.Print "Завершено - переименование UserForms контролов"
+    Debug.Print "Completed - renaming of UserForms controls"
 
 End Sub
 Private Sub SetPropertisForm(ByRef objVBComp As VBIDE.VBComponent, ByVal sVal As String)
@@ -610,7 +610,7 @@ Private Sub ParserStringsInCodeAdd(ByRef wb As Workbook, ByRef WBNew As Workbook
     Dim arrParser() As String
     Dim arrPartStr  As Variant
 
-    Debug.Print "Начало - сбора строк в модулях"
+    Debug.Print "Start - collecting lines in modules"
 
     Set oVBP = wb.VBProject
     For Each oVBCom In oVBP.VBComponents
@@ -654,10 +654,10 @@ Private Sub ParserStringsInCodeAdd(ByRef wb As Workbook, ByRef WBNew As Workbook
             .Cells.NumberFormat = "@"
             .Cells(2, 1).Resize(UBound(arrParser, 2), UBound(arrParser, 1)).Value2 = WorksheetFunction.Transpose(arrParser)
             .Columns("A:D").EntireColumn.AutoFit
-            Debug.Print "Завершен - сбор строк в модулях"
+            Debug.Print "Completed - collecting rows in modules"
         End With
     Else
-        Debug.Print "Завершен - сбор строк в модулях, строк нет"
+        Debug.Print "Completed - collection of rows in modules, no rows"
     End If
 End Sub
 

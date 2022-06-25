@@ -16,13 +16,13 @@ Public Sub AddShapeStatistic()
 7:    Dim shp    As Shape
 8:    Dim SH     As Worksheet
 9:    Dim i      As Integer
-10:    Const SH_SHAPE As String = "Статистика_shape"
+10:    Const SH_SHAPE As String = "Statistic_share"
 11:
 12:    On Error GoTo errMsg
 13:
 14:    Set fForm = New AddStatistic
 15:    With fForm
-16:        .lbOK.Caption = "СОЗДАТЬ"
+16:        .lbOK.Caption = "to create"
 17:        .Show
 18:        wb_name = .cmbMain.Value
 19:        If wb_name = vbNullString Then Exit Sub
@@ -31,10 +31,10 @@ Public Sub AddShapeStatistic()
 22:    ActiveWorkbook.Sheets.Add After:=Sheets(Sheets.Count)
 23:    With ActiveSheet
 24:        .Name = SH_SHAPE
-25:        .Cells(1, 1).Value = "Название листа"
-26:        .Cells(1, 2).Value = "Название фигуры"
-27:        .Cells(1, 3).Value = "Текст фигуры"
-28:        .Cells(1, 4).Value = "Имя макроса"
+25:        .Cells(1, 1).Value = "Name of the sheet"
+26:        .Cells(1, 2).Value = "Name of the figure"
+27:        .Cells(1, 3).Value = "Shape Text"
+28:        .Cells(1, 4).Value = "Macro name"
 29:        i = 1
 30:        For Each SH In Workbooks(wb_name).Worksheets
 31:            For Each shp In SH.Shapes
@@ -48,12 +48,12 @@ Public Sub AddShapeStatistic()
 39:                    Case msoFormControl, msoOLEControlObject
 40:                        .Cells(i, 3).Value = shp.AlternativeText
 41:                    Case Else
-42:                        .Cells(i, 3).Value = "нет"
+42:                        .Cells(i, 3).Value = "no"
 43:                End Select
 44:
 45:                macro_name = shp.OnAction
 46:                If macro_name = vbNullString Then
-47:                    .Cells(i, 4).Value = "нет макроса"
+47:                    .Cells(i, 4).Value = "there is no macro"
 48:                Else
 49:                    .Cells(i, 4).Value = Split(shp.OnAction, "!")(1)
 50:                End If
@@ -73,7 +73,7 @@ errMsg:
 64:        Resume Next
 65:    Else
 66:        Application.ScreenUpdating = True
-67:        Call MsgBox("Ошибка в AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "в строке " & Erl, vbCritical, "Ошибка:")
+67:        Call MsgBox("Error in AddShapeStatistic" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 68:        Call WriteErrorLog("AddShapeStatistic")
 69:    End If
 End Sub
