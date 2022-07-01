@@ -9,7 +9,7 @@ Attribute VB_Name = "M_MoveControl"
 
 Option Explicit
 Option Private Module
-Public sTagNameConrol  As String
+Public sTagNameConrol As String
 Public tpStyle      As ProperControlStyle
 Type ProperControlStyle
     sError          As String
@@ -35,6 +35,10 @@ Type ProperControlStyle
     sFontName       As String
     cuFontSize      As Currency
 End Type
+
+Public Sub HelpMoveControl()
+    Call URLLinks(C_Const.URL_MOVE_CNTR)
+End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : MoveControl - Микроподстройка элементов формы
 '* Created    : 08-10-2020 14:10
@@ -43,11 +47,12 @@ End Type
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub MoveControl()
+    If Application.VBE.ActiveWindow.Type <> vbext_wt_Designer Then Exit Sub
     Dim myCommandBar As CommandBar
-    Dim cntrl  As CommandBarControl
-    Dim combox As CommandBarComboBox
+    Dim cntrl       As CommandBarControl
+    Dim combox      As CommandBarComboBox
     Dim sComBoxText As String
-    Dim cnt    As control
+    Dim cnt         As control
 
     Set myCommandBar = Application.VBE.CommandBars(C_Const.MENUMOVECONTRL)
     For Each cntrl In myCommandBar.Controls
@@ -58,18 +63,22 @@ Private Sub MoveControl()
         End If
     Next cntrl
 
-    Set cnt = TakeSelectControl
-    If cnt Is Nothing Then Exit Sub
-    Select Case sTagNameConrol
-        Case C_Const.MTAG1:
-            Call MoveCnt(cnt, 1, sComBoxText)
-        Case C_Const.MTAG2:
-            Call MoveCnt(cnt, 2, sComBoxText)
-        Case C_Const.MTAG3:
-            Call MoveCnt(cnt, 3, sComBoxText)
-        Case C_Const.MTAG4:
-            Call MoveCnt(cnt, 4, sComBoxText)
-    End Select
+    Dim objActiveModule As VBComponent
+    Set objActiveModule = getActiveModule()
+    For Each cnt In objActiveModule.Designer.Selected
+        If Not cnt Is Nothing Then
+            Select Case sTagNameConrol
+                Case C_Const.MTAG1:
+                    Call MoveCnt(cnt, 1, sComBoxText)
+                Case C_Const.MTAG2:
+                    Call MoveCnt(cnt, 2, sComBoxText)
+                Case C_Const.MTAG3:
+                    Call MoveCnt(cnt, 3, sComBoxText)
+                Case C_Const.MTAG4:
+                    Call MoveCnt(cnt, 4, sComBoxText)
+            End Select
+        End If
+    Next cnt
 End Sub
 Private Sub MoveCnt(ByRef cnt As control, ByVal iVal As Integer, ByVal sComBoxText As String)
     Const Shag = 0.4
@@ -116,44 +125,6 @@ Private Sub MoveCnt(ByRef cnt As control, ByVal iVal As Integer, ByVal sComBoxTe
     End With
 End Sub
 
-Private Function TakeSelectControl(Optional bUserForm As Boolean = False) As Object
-    Dim W           As VBIDE.Window
-    Dim strVar()    As String
-    Dim cntName     As String
-
-    On Error GoTo ErrorHandler
-
-    If Application.VBE.ActiveWindow.Type = vbext_wt_Designer Then
-        For Each W In Application.VBE.Windows
-            If W.Type = vbext_wt_PropertyWindow Then
-                strVar = Split(W.Caption, "-")
-                cntName = Trim(strVar(1))
-                Exit For
-            End If
-        Next
-
-        Dim Form    As UserForm
-        Set Form = Application.VBE.SelectedVBComponent.Designer
-        Set TakeSelectControl = Form.Controls(cntName)
-    End If
-    Exit Function
-ErrorHandler:
-    If bUserForm And Not Form Is Nothing Then
-        Err.Clear
-        Set TakeSelectControl = Form
-        Exit Function
-    End If
-    Select Case Err.Number
-        Case -2147024809:
-            Debug.Print "Mistake! Select one object"
-        Case 9:
-            Debug.Print "To use the tool, open the View -> Properties Window"
-        Case Else:
-            Debug.Print "Mistake! in TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
-            Call WriteErrorLog("TakeSelectControl")
-    End Select
-    Err.Clear
-End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : RenameControl - переименование конторол на форме вместе скодом
 '* Created    : 08-10-2020 14:11
@@ -162,18 +133,18 @@ End Function
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub RenameControl()
-    Dim cnt    As control
-    Dim sNewName As String
-    Dim sOldName As String
+    Dim cnt         As control
+    Dim sNewName    As String
+    Dim sOldName    As String
     Dim NameModeCode As String
-    Dim strVar As String
-    Dim CodeMod As CodeModule
+    Dim strVar      As String
+    Dim CodeMod     As CodeModule
 
     On Error GoTo ErrorHandler
 
     Set cnt = TakeSelectControl
     If cnt Is Nothing Then Exit Sub
-tryagin:
+
     sOldName = cnt.Name
     sNewName = InputBox("Enter a new name Control", "Renaming Control:", sOldName)
     If sNewName = vbNullString Or sNewName = sOldName Then Exit Sub
@@ -182,7 +153,6 @@ tryagin:
     Set CodeMod = Application.VBE.SelectedVBComponent.CodeModule
     With CodeMod
         strVar = .Lines(1, .CountOfLines)
-        'strVar = Replace(strVar, sOldName, sNewName)
         strVar = ReplceCode(strVar, sOldName, sNewName)
         .DeleteLines StartLine:=1, Count:=.CountOfLines
         .InsertLines Line:=1, String:=strVar
@@ -238,39 +208,44 @@ Public Sub CopyStyleControl()
     End With
 End Sub
 Public Sub PasteStyleControl()
-    Dim cnt         As Object
-    Set cnt = TakeSelectControl(True)
-    If cnt Is Nothing Then Exit Sub
-    On Error Resume Next
-    With cnt
-        .Enabled = tpStyle.bEnabled
-        .Font.Bold = tpStyle.bFontBold
-        .Font.Italic = tpStyle.bFontItalic
-        .Font.Strikethrough = tpStyle.bFontStrikethru
-        .Font.Underline = tpStyle.bFontUnderline
-        .Locked = tpStyle.bLocked
-        .visible = tpStyle.bVisible
-        .Font.Size = tpStyle.cuFontSize
-        .BackColor = tpStyle.lBackColor
-        .ForeColor = tpStyle.lForeColor
-        .Font.Name = tpStyle.sFontName
-        If tpStyle.snHeight > 0 Then .Height = tpStyle.snHeight
-        If tpStyle.snWidth > 0 Then .Width = tpStyle.snWidth
-
-        .BackStyle = tpStyle.lBackStyle
-        .BorderColor = tpStyle.lBorderColor
-        .BorderStyle = tpStyle.lBorderStyle
-    End With
+    If Application.VBE.ActiveWindow.Type <> vbext_wt_Designer Then Exit Sub
+    Dim objActiveModule As VBComponent
+    Dim cnt         As control
+    Set objActiveModule = getActiveModule()
+    For Each cnt In objActiveModule.Designer.Selected
+        On Error Resume Next
+        With cnt
+            .Enabled = tpStyle.bEnabled
+            .Font.Bold = tpStyle.bFontBold
+            .Font.Italic = tpStyle.bFontItalic
+            .Font.Strikethrough = tpStyle.bFontStrikethru
+            .Font.Underline = tpStyle.bFontUnderline
+            .Locked = tpStyle.bLocked
+            .visible = tpStyle.bVisible
+            .Font.Size = tpStyle.cuFontSize
+            .BackColor = tpStyle.lBackColor
+            .ForeColor = tpStyle.lForeColor
+            .Font.Name = tpStyle.sFontName
+            If tpStyle.snHeight > 0 Then .Height = tpStyle.snHeight
+            If tpStyle.snWidth > 0 Then .Width = tpStyle.snWidth
+    
+            .BackStyle = tpStyle.lBackStyle
+            .BorderColor = tpStyle.lBorderColor
+            .BorderStyle = tpStyle.lBorderStyle
+        End With
+        On Error GoTo 0
+    Next cnt
+    
 End Sub
 Public Sub AddIcon()
-    Dim cnt    As control
-    Dim objForm As InsertIconUserForm
+    Dim cnt         As control
+    Dim objForm     As InsertIconUserForm
 
     On Error GoTo ErrorHandler
 
     Set cnt = TakeSelectControl
     If cnt Is Nothing Then Exit Sub
-    
+
     Set objForm = New InsertIconUserForm
     With objForm
         .Show
@@ -292,59 +267,107 @@ ErrorHandler:
     End Select
     Err.Clear
 End Sub
-Public Sub HelpMoveControl()
-    Call URLLinks(C_Const.URL_MOVE_CNTR)
-End Sub
-
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Sub        : UperTextInControl - изменение регистров у контроллов на форме
-'* Created    : 13-04-2021 09:46
+'* Sub        : UperTextInControl
+'* Created    : 01-07-2022 11:12
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Public Sub UperTextInControl()
-    Dim oCont As Object
-    Set oCont = TakeSelectControl
-    If oCont Is Nothing Then Exit Sub
-    
-    If PropertyIsCapiton(oCont, True) Then
-        oCont.Caption = VBA.UCase$(oCont.Caption)
-    End If
-    If PropertyIsCapiton(oCont, False) Then
-        oCont.Text = VBA.UCase$(oCont.Text)
-    End If
-    
+    Call LowerAndUperTextInControl(True)
 End Sub
 Public Sub LowerTextInControl()
-    Dim oCont As Object
-    Set oCont = TakeSelectControl
-    If oCont Is Nothing Then Exit Sub
-    
-    If PropertyIsCapiton(oCont, True) Then
-        oCont.Caption = VBA.LCase$(oCont.Caption)
-    End If
-    If PropertyIsCapiton(oCont, False) Then
-        oCont.Text = VBA.LCase$(oCont.Text)
-    End If
-    
+    Call LowerAndUperTextInControl(False)
 End Sub
-
-Public Sub UperTextInForm()
-    Dim oVBComp As VBIDE.VBComponent
-    Set oVBComp = Application.VBE.SelectedVBComponent
-    With oVBComp
-        If .Type = vbext_ct_MSForm Then
-            .Properties("Caption") = VBA.UCase$(.Properties("Caption"))
+Private Sub LowerAndUperTextInControl(ByVal bUCase As Boolean)
+    If Application.VBE.ActiveWindow.Type = vbext_wt_Designer Then
+        Dim objActiveModule As VBComponent
+        Set objActiveModule = getActiveModule()
+        If Not objActiveModule Is Nothing Then
+            If getSelectedControlsCollection.Count > 0 Then
+                Dim ctl As control
+                On Error Resume Next
+                For Each ctl In objActiveModule.Designer.Selected
+                    If bUCase Then
+                        Call CallByName(ctl, "Caption", VbLet, VBA.UCase$(CallByName(ctl, "Caption", VbGet)))
+                    Else
+                        Call CallByName(ctl, "Caption", VbLet, VBA.LCase$(CallByName(ctl, "Caption", VbGet)))
+                    End If
+                Next ctl
+                On Error GoTo 0
+            End If
         End If
-    End With
+    End If
+End Sub
+Public Sub UperTextInForm()
+    Call LowerAndUperTextInForm(True)
 End Sub
 Public Sub LowerTextInForm()
-    Dim oVBComp As VBIDE.VBComponent
+    Call LowerAndUperTextInForm(False)
+End Sub
+Private Sub LowerAndUperTextInForm(ByVal bUCase As Boolean)
+    Dim oVBComp     As VBIDE.VBComponent
     Set oVBComp = Application.VBE.SelectedVBComponent
     With oVBComp
         If .Type = vbext_ct_MSForm Then
-            .Properties("Caption") = VBA.LCase$(.Properties("Caption"))
+            If bUCase Then
+                .Properties("Caption") = VBA.UCase$(.Properties("Caption"))
+            Else
+                .Properties("Caption") = VBA.LCase$(.Properties("Caption"))
+            End If
         End If
     End With
 End Sub
+'* общие функции**********************************************************
+Private Function TakeSelectControl(Optional bUserForm As Boolean = False) As Object
+    On Error GoTo ErrorHandler
+    If Application.VBE.ActiveWindow.Type = vbext_wt_Designer Then
+        Dim objActiveModule As VBComponent
+        Set objActiveModule = getActiveModule()
+        If Not objActiveModule Is Nothing Then
+            If getSelectedControlsCollection.Count = 1 Then
+                Dim ctl As control
+                For Each ctl In objActiveModule.Designer.Selected
+                    Set TakeSelectControl = ctl
+                    Exit Function
+                Next ctl
+            End If
+        End If
+    End If
+    
+    Dim Form        As UserForm
+    Set Form = Application.VBE.SelectedVBComponent.Designer
+    If bUserForm And Not Form Is Nothing Then
+        Set TakeSelectControl = Form
+        Exit Function
+    End If
+
+    Exit Function
+ErrorHandler:
+    Select Case Err.Number
+        Case 9:
+            Debug.Print "To use the tool, open the View -> Properties Window"
+        Case Else:
+            Debug.Print "Mistake! in TakeSelectControl" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl
+            Call WriteErrorLog("TakeSelectControl")
+    End Select
+    Err.Clear
+End Function
+Public Function getSelectedControlsCollection() As Collection
+    Dim ctl         As control
+    Dim out         As New Collection
+    Dim Module      As VBComponent
+    Set Module = getActiveModule
+    For Each ctl In Module.Designer.Selected
+        out.Add ctl
+    Next ctl
+    Set getSelectedControlsCollection = out
+    Set out = Nothing
+End Function
+Public Function getActiveModule() As VBComponent
+    Set getActiveModule = Application.VBE.SelectedVBComponent
+End Function
+
+
+
