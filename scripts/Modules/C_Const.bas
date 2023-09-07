@@ -1,18 +1,23 @@
-Attribute VB_Name = "C_Const"
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Module     : C_Const - глобальные константы надстройки
+'* Module     : C_Const - Global constants and variables
 '* Created    : 15-09-2019 15:48
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Modified   : Date and Time       Author              Description
+'* Updated    : 05-03-2023 08:34    CalDymos            Added const for release path of OBF-file
+'* Updated    : 07-09-2023 07:35    CalDymos            Added vars for string encryption
 
 Option Private Module
 Option Explicit
 
-Public Const NAME_VERSION As String = "Update 2020.11"
+'Types
+'....
 
-Public FlagVisible As Boolean
+'Const
+
+Public Const NAME_VERSION As String = "Update 2020.11"
 
 Public Const URL_MAIN As String = "https://vbatools.ru/"
 Public Const URL_ADDIN As String = URL_MAIN & "macro-tools-vba-addin-excel/"
@@ -34,11 +39,7 @@ Public Const URL_MOVE_CNTR As String = URL_ADDIN & "controls-rename-move/"
 
 Public Const URL_CONTACT As String = URL_ADDIN & "contacts/"
 
-Public Const URL_UPDATE As String = URL_MAIN & "vbatools/updateversion.txt"
 Public Const URL_DOWNLOAD As String = URL_MAIN & "skachat/"
-
-Public Const URL_VK As String = "https://vk.com/vbatools"
-Public Const URL_FB As String = "https://www.facebook.com/groups/VBAToolsExcel/"
 
 Public Const sMSGVBA1 As String = "Disabled: [Trust access to the VBE object model]" & vbLf & "To enable it, go to: File->Settings->Security Management Center->Macro Settings" & vbLf & "And restart Excel"
 Public Const sMSGVBA2 As String = "No access to the VBE object model"
@@ -107,6 +108,8 @@ Public Const RTAG3 As String = NAME_ADDIN & "_VBE_RENAME_TAG3"
 Public Const RTAG4 As String = NAME_ADDIN & "_VBE_RENAME_TAG4"
 Public Const RTAG5 As String = NAME_ADDIN & "_VBE_RENAME_TAG5"
 Public Const RTAG6 As String = NAME_ADDIN & "_VBE_RENAME_TAG6"
+Public Const RTAG7 As String = NAME_ADDIN & "_VBE_RENAME_TAG7"
+Public Const RTAG8 As String = NAME_ADDIN & "_VBE_RENAME_TAG8"
 
 Public Const POPMENU As String = "Code Window"
 Public Const TOOLSMENU As String = NAME_ADDIN & " ToolBar"
@@ -127,8 +130,11 @@ Public Const MOVECONTBOTTOMRIGHT As String = "Bottom Right"
 Public Const NAME_SH          As String = "DATA_OBF_VBATools"
 Public Const NAME_SH_STR      As String = "STRING_OBF_VBATools"
 
-Public Const FILE_NAME_HOT_KEYS     As String = "MacroToolsHotKeys.exe"
+Public Const FILE_NAME_HOT_KEYS     As String = ""
 
+Public Const OBF_RELEASE_PATH As String = "Release"
+
+'Enums
 Public Enum enumAnchorStyles
     enumAnchorStyleNone = 0
     enumAnchorStyleTop = 1
@@ -136,3 +142,9 @@ Public Enum enumAnchorStyles
     enumAnchorStyleLeft = 4
     enumAnchorStyleRight = 8
 End Enum
+
+'Vars
+Public FlagVisible As Boolean
+
+Public varStrCryptFunc As Variant
+Public asCryptKey(1) As String
