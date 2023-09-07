@@ -136,6 +136,7 @@ Private Sub ParserProjectVBA(ByRef objWB As Object, Optional bEncodeStr As Boole
           'This should be individual, i.e. customized by the user.
 44        varStrCryptFunc = Array("Public Function MACROTools_DeCryptStr(ByVal Inp As String, sKey As String) As String", _
               "Dim strEnc as String", _
+              "strEnc = Inp", _
               "'code line", _
               "......", _
               "'.....", _
