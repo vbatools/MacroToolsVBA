@@ -9,7 +9,7 @@ Attribute VB_Name = "N_ObfMainNew"
 '* Modified   : Date and Time       Author              Description
 '* Updated    : 07-09-2023 11:26    CalDymos
 '* Updated    : 12-09-2023 13:29    CalDymos
-'* Updated    : 13-09-2023 13:29    CalDymos            
+'* Updated    : 13-09-2023 13:29    CalDymos
 
 Option Explicit
 Option Private Module
@@ -77,6 +77,8 @@ End Sub
 '* Created    : 07-09-2023 07:02
 '* Author     : CalDymos
 '* Copyright  : Byte Ranger Software
+'* Modified   : Date and Time       Author              Description
+'* Updated    : 13-09-2023 14:48    CalDymos
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Public Sub StartCompleteObfuscation()
           Dim Form        As AddStatistic
@@ -186,26 +188,28 @@ Public Sub StartCompleteObfuscation()
 96        Application.DisplayAlerts = False
 97        Set objWkSh = objWB.Worksheets(NAME_SH)
 98        objWkSh.Delete
-99        If Form.chQuestion.Value = True Then
-100           Set objWkSh = objWB.Worksheets(NAME_SH_STR)
-101           objWkSh.Delete
-102       End If
-103       Application.DisplayAlerts = True
+99        Set objWkSh = objWB.Worksheets(NAME_SH_CTL)
+100       objWkSh.Delete
+101       If Form.chQuestion.Value = True Then
+102           Set objWkSh = objWB.Worksheets(NAME_SH_STR)
+103           objWkSh.Delete
+104       End If
+105       Application.DisplayAlerts = True
           
-104       objWB.Save
+106       objWB.Save
           
 
-105       Call MsgBox(objWB.Name & " encrypted!", vbInformation, "Code encryption:")
+107       Call MsgBox(objWB.Name & " encrypted!", vbInformation, "Code encryption:")
        
-106       Set Form = Nothing
-107       Application.Calculation = xlCalculationAutomatic
-108       Application.ScreenUpdating = True
-109       Exit Sub
+108       Set Form = Nothing
+109       Application.Calculation = xlCalculationAutomatic
+110       Application.ScreenUpdating = True
+111       Exit Sub
 ErrCompleteObfuscation:
-110       Application.Calculation = xlCalculationAutomatic
-111       Application.ScreenUpdating = True
-112       Call MsgBox("Error in N_ObfMainNew.StartCompleteObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
-113       Call WriteErrorLog("StartCompleteObfuscation")
+112       Application.Calculation = xlCalculationAutomatic
+113       Application.ScreenUpdating = True
+114       Call MsgBox("Error in N_ObfMainNew.StartCompleteObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
+115       Call WriteErrorLog("StartCompleteObfuscation")
 End Sub
 
 Public Sub StartObfuscation()
@@ -214,34 +218,34 @@ Public Sub StartObfuscation()
           Dim objWB       As Object
 
           'On Error GoTo ErrStartParser
-114       Set Form = New AddStatistic
-115       With Form
-116           .Caption = "Code obfuscation:"
-117           .lbOK.Caption = "OBFUSCATE"
-118           .chQuestion.visible = True
-119           .chQuestion.Value = True
-120           .lbWord.Caption = 1
-121           .Show
-122           sNameWB = .cmbMain.Value
-123       End With
-124       If sNameWB = vbNullString Then Exit Sub
+116       Set Form = New AddStatistic
+117       With Form
+118           .Caption = "Code obfuscation:"
+119           .lbOK.Caption = "OBFUSCATE"
+120           .chQuestion.visible = True
+121           .chQuestion.Value = True
+122           .lbWord.Caption = 1
+123           .Show
+124           sNameWB = .cmbMain.Value
+125       End With
+126       If sNameWB = vbNullString Then Exit Sub
 
-125       If sNameWB Like "*.docm" Or sNameWB Like "*.DOCM" Then
+127       If sNameWB Like "*.docm" Or sNameWB Like "*.DOCM" Then
               Dim objWrdApp As Object
-126           Set objWrdApp = GetObject(, "Word.Application")
-127           Set objWB = objWrdApp.Documents(sNameWB)
-128       Else
-129           Set objWB = Workbooks(sNameWB)
-130       End If
+128           Set objWrdApp = GetObject(, "Word.Application")
+129           Set objWB = objWrdApp.Documents(sNameWB)
+130       Else
+131           Set objWB = Workbooks(sNameWB)
+132       End If
 
-131       Call MainObfuscation(objWB, Form.chQuestion.Value)
-132       Set Form = Nothing
-133       Exit Sub
+133       Call MainObfuscation(objWB, Form.chQuestion.Value)
+134       Set Form = Nothing
+135       Exit Sub
 ErrStartParser:
-134       Application.Calculation = xlCalculationAutomatic
-135       Application.ScreenUpdating = True
-136       Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
-137       Call WriteErrorLog("AddShapeStatistic")
+136       Application.Calculation = xlCalculationAutomatic
+137       Application.ScreenUpdating = True
+138       Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
+139       Call WriteErrorLog("AddShapeStatistic")
 End Sub
 
 '* Modified   : Date and Time       Author              Description
@@ -249,43 +253,43 @@ End Sub
 '* Updated    : 07-09-2023 11:30    CalDymos
 '* Updated    : 12-09-2023 13:31    CalDymos
 Private Sub MainObfuscation(ByRef objWB As Workbook, Optional bEncodeStr As Boolean = False, Optional bNoFinishMessage As Boolean = False)
-138       On Error GoTo ErrStartParser
-139       If objWB.VBProject.Protection = vbext_pp_locked Then
-140           Call MsgBox("The project is protected, remove the password!", vbCritical, "Project:")
-141       Else
-142           If objWB.ActiveSheet.Name = NAME_SH Then
-143               Application.ScreenUpdating = False
-144               Application.Calculation = xlCalculationManual
-145               Application.EnableEvents = False
+140       On Error GoTo ErrStartParser
+141       If objWB.VBProject.Protection = vbext_pp_locked Then
+142           Call MsgBox("The project is protected, remove the password!", vbCritical, "Project:")
+143       Else
+144           If objWB.ActiveSheet.Name = NAME_SH Then
+145               Application.ScreenUpdating = False
+146               Application.Calculation = xlCalculationManual
+147               Application.EnableEvents = False
 
-146               If Obfuscation(objWB, bEncodeStr) Then
+148               If Obfuscation(objWB, bEncodeStr) Then
                       
                       
-147                   With objWB.Worksheets(NAME_SH)
-148                       Call SortTabel(objWB.Worksheets(NAME_SH), .Range(.Cells(1, 1), .Cells(1, 13)).Address, "M1", 1)
-149                   End With
+149                   With objWB.Worksheets(NAME_SH)
+150                       Call SortTabel(objWB.Worksheets(NAME_SH), .Range(.Cells(1, 1), .Cells(1, 13)).Address, "M1", 1)
+151                   End With
 
-150                   Application.EnableEvents = True
-151                   Application.Calculation = xlCalculationAutomatic
-152                   Application.ScreenUpdating = True
-153                   If Not bNoFinishMessage Then
-154                       Call MsgBox("Book code [" & objWB.Name & "] encrypted!", vbInformation, "Code encryption:")
-155                   End If
-156               Else
-157                   Application.EnableEvents = True
-158                   Application.Calculation = xlCalculationAutomatic
-159                   Application.ScreenUpdating = True
-160               End If
-161           Else
-162               Call MsgBox("Create or navigate to the sheet: [" & NAME_SH & "]", vbCritical, "Activating the sheet:")
-163           End If
-164       End If
-165       Exit Sub
+152                   Application.EnableEvents = True
+153                   Application.Calculation = xlCalculationAutomatic
+154                   Application.ScreenUpdating = True
+155                   If Not bNoFinishMessage Then
+156                       Call MsgBox("Book code [" & objWB.Name & "] encrypted!", vbInformation, "Code encryption:")
+157                   End If
+158               Else
+159                   Application.EnableEvents = True
+160                   Application.Calculation = xlCalculationAutomatic
+161                   Application.ScreenUpdating = True
+162               End If
+163           Else
+164               Call MsgBox("Create or navigate to the sheet: [" & NAME_SH & "]", vbCritical, "Activating the sheet:")
+165           End If
+166       End If
+167       Exit Sub
 ErrStartParser:
-166       Application.EnableEvents = True
-167       Application.Calculation = xlCalculationAutomatic
-168       Application.ScreenUpdating = True
-169       Call MsgBox("Error in MainObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
+168       Application.EnableEvents = True
+169       Application.Calculation = xlCalculationAutomatic
+170       Application.ScreenUpdating = True
+171       Call MsgBox("Error in MainObfuscation" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -297,15 +301,15 @@ End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub FelterAdd()
           Dim LastRow     As Long
-170       With ActiveWorkbook.Worksheets(NAME_SH)
-171           LastRow = .Cells(.Rows.Count, 1).End(xlUp).Row
-172           If LastRow > 1 Then
-173               .Range(.Cells(2, 12), .Cells(LastRow, 12)).FormulaR1C1 = "=LEN(RC[-4])"
-174               .Range(.Cells(2, 13), .Cells(LastRow, 13)).FormulaR1C1 = "=R[-1]C+1"
-175               .Range(.Cells(2, 13), .Cells(LastRow, 13)).Value = .Range(.Cells(2, 13), .Cells(LastRow, 13)).Value
-176               Call SortTabel(ActiveWorkbook.Worksheets(NAME_SH), .Range(.Cells(1, 1), .Cells(1, 13)).Address, "L1", 2)
-177           End If
-178       End With
+172       With ActiveWorkbook.Worksheets(NAME_SH)
+173           LastRow = .Cells(.Rows.Count, 1).End(xlUp).Row
+174           If LastRow > 1 Then
+175               .Range(.Cells(2, 12), .Cells(LastRow, 12)).FormulaR1C1 = "=LEN(RC[-4])"
+176               .Range(.Cells(2, 13), .Cells(LastRow, 13)).FormulaR1C1 = "=R[-1]C+1"
+177               .Range(.Cells(2, 13), .Cells(LastRow, 13)).Value = .Range(.Cells(2, 13), .Cells(LastRow, 13)).Value
+178               Call SortTabel(ActiveWorkbook.Worksheets(NAME_SH), .Range(.Cells(1, 1), .Cells(1, 13)).Address, "L1", 2)
+179           End If
+180       End With
 End Sub
 
 
@@ -329,32 +333,32 @@ Private Function StringCrypt(ByVal Inp As String, Key As String, ByVal Mode As B
           Dim cptZahl As Long, orgZahl As Long
           Dim keyZahl As Long, cptString As String
           
-179       For i = 1 To Len(Inp)
-180           Position = Position + 1
-181           If Position > Len(Key) Then Position = 1
-182           keyZahl = Asc(Mid(Key, Position, 1))
+181       For i = 1 To Len(Inp)
+182           Position = Position + 1
+183           If Position > Len(Key) Then Position = 1
+184           keyZahl = Asc(Mid(Key, Position, 1))
                   
-183           If Mode Then
+185           If Mode Then
                   
                   'Verschlьsseln
-184               orgZahl = Asc(Mid(Inp, i, 1))
-185               cptZahl = orgZahl Xor keyZahl
-186               cptString = Hex(cptZahl)
-187               If Len(cptString) < 2 Then cptString = "0" & cptString
-188               z = z & cptString
+186               orgZahl = Asc(Mid(Inp, i, 1))
+187               cptZahl = orgZahl Xor keyZahl
+188               cptString = Hex(cptZahl)
+189               If Len(cptString) < 2 Then cptString = "0" & cptString
+190               z = z & cptString
                   
-189           Else
+191           Else
                   
                   'Entschlьsseln
-190               If i > Len(Inp) \ 2 Then Exit For
-191               cptZahl = CByte("&H" & Mid$(Inp, i * 2 - 1, 2))
-192               orgZahl = cptZahl Xor keyZahl
-193               z = z & Chr$(orgZahl)
+192               If i > Len(Inp) \ 2 Then Exit For
+193               cptZahl = CByte("&H" & Mid$(Inp, i * 2 - 1, 2))
+194               orgZahl = cptZahl Xor keyZahl
+195               z = z & Chr$(orgZahl)
                   
-194           End If
-195       Next i
+196           End If
+197       Next i
            
-196       StringCrypt = z
+198       StringCrypt = z
 End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -377,36 +381,36 @@ Private Sub AddProcsToVBProject(ByRef objWB As Workbook, AddProcs() As CAddProc)
           Dim startLine As Long
           Dim numOfLines As Long
 
-197       If Not IsArrayEmpty(AddProcs()) Then
-198           For i = 0 To UBound(AddProcs())
-199               Set objProc = AddProcs(i)
-200               If Not CodeModuleExist(objWB, objProc.ModuleName) Then
-201                   Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
-202                   objVBCitem.Name = objProc.ModuleName
-203               End If
+199       If Not IsArrayEmpty(AddProcs()) Then
+200           For i = 0 To UBound(AddProcs())
+201               Set objProc = AddProcs(i)
+202               If Not CodeModuleExist(objWB, objProc.ModuleName) Then
+203                   Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
+204                   objVBCitem.Name = objProc.ModuleName
+205               End If
                   
-204               With objWB.VBProject.VBComponents(objProc.ModuleName).CodeModule
-205                   If Not ProcInCodeModuleExist(objWB.VBProject.VBComponents(objProc.ModuleName).CodeModule, objProc.Name) Then
-206                       sCodeLines = Join(objProc.CodeLines, vbCrLf)
-207                       .AddFromString sCodeLines
-208                   ElseIf objProc.BehavProcExists = enumBehavProcExistInsCodeAtBegin Then
-209                       startLine = .ProcBodyLine(objProc.Name, vbext_pk_Proc) + 1
+206               With objWB.VBProject.VBComponents(objProc.ModuleName).CodeModule
+207                   If Not ProcInCodeModuleExist(objWB.VBProject.VBComponents(objProc.ModuleName).CodeModule, objProc.Name) Then
+208                       sCodeLines = Join(objProc.CodeLines, vbCrLf)
+209                       .AddFromString sCodeLines
+210                   ElseIf objProc.BehavProcExists = enumBehavProcExistInsCodeAtBegin Then
+211                       startLine = .ProcBodyLine(objProc.Name, vbext_pk_Proc) + 1
           
-210                       For k = 1 To UBound(objProc.CodeLines) - 1
-211                           .InsertLines startLine, objProc.GetCodeLine(k)
-212                           startLine = startLine + 1
-213                       Next
-214                   ElseIf objProc.BehavProcExists = enumBehavProcExistInsCodeAtEnd Then
-215                       startLine = .ProcStartLine(objProc.Name, vbext_pk_Proc) + .ProcCountLines(objProc.Name, vbext_pk_Proc) - 1
+212                       For k = 1 To UBound(objProc.CodeLines) - 1
+213                           .InsertLines startLine, objProc.GetCodeLine(k)
+214                           startLine = startLine + 1
+215                       Next
+216                   ElseIf objProc.BehavProcExists = enumBehavProcExistInsCodeAtEnd Then
+217                       startLine = .ProcStartLine(objProc.Name, vbext_pk_Proc) + .ProcCountLines(objProc.Name, vbext_pk_Proc) - 1
           
-216                       For k = 1 To UBound(objProc.CodeLines) - 1
-217                           .InsertLines startLine, objProc.GetCodeLine(k)
-218                           startLine = startLine + 1
-219                       Next
-220                   End If
-221               End With
-222           Next
-223       End If
+218                       For k = 1 To UBound(objProc.CodeLines) - 1
+219                           .InsertLines startLine, objProc.GetCodeLine(k)
+220                           startLine = startLine + 1
+221                       Next
+222                   End If
+223               End With
+224           Next
+225       End If
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -419,6 +423,8 @@ End Sub
 '* ByRef objWB As Workbook :
 '* AddGlobalVars(          :
 '*
+'* Modified   : Date and Time       Author              Description
+'* Updated    : 13-09-2023 14:48    CalDymos
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub AddGlobalVarsToVBProject(ByRef objWB As Workbook, AddGlobalVars() As CAddGlobalVar)
 
@@ -427,59 +433,74 @@ Private Sub AddGlobalVarsToVBProject(ByRef objWB As Workbook, AddGlobalVars() As
           Dim objVBCitem  As VBIDE.VBComponent
           Dim objVar As CAddGlobalVar
           Dim sCodeLines As String
+          Dim lSize As Long
               
-224       If Not IsArrayEmpty(AddGlobalVars()) Then
-225           For i = 0 To UBound(AddGlobalVars())
-226               Set objVar = AddGlobalVars(i)
-227               If Not CodeModuleExist(objWB, objVar.ModuleName) Then
-228                   Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
-229                   objVBCitem.Name = objVar.ModuleName
-230               End If
+226       If Not IsArrayEmpty(AddGlobalVars()) Then
+227           For i = 0 To UBound(AddGlobalVars())
+228               Set objVar = AddGlobalVars(i)
+229               If Not CodeModuleExist(objWB, objVar.ModuleName) Then
+230                   Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
+231                   objVBCitem.Name = objVar.ModuleName
+232               End If
                   
                   
-231               With objWB.VBProject.VBComponents(objVar.ModuleName).CodeModule
-232                   sCodeLines = vbNullString
-233                   Select Case objVar.Visibility
+233               With objWB.VBProject.VBComponents(objVar.ModuleName).CodeModule
+234                   sCodeLines = vbNullString
+235                   Select Case objVar.Visibility
                           Case enumVisibility.enumVisibilityPublic
-234                           sCodeLines = sCodeLines & "Public "
-235                       Case enumVisibility.enumVisibilityPrivate
-236                           sCodeLines = sCodeLines & "Private "
-237                   End Select
-238                   If objVar.IsConstant Then sCodeLines = sCodeLines & "Const "
-239                   sCodeLines = sCodeLines & objVar.Name & " As "
-240                   Select Case objVar.DateType
+236                           sCodeLines = sCodeLines & "Public "
+237                       Case enumVisibility.enumVisibilityPrivate
+238                           sCodeLines = sCodeLines & "Private "
+239                   End Select
+240                   If objVar.IsConstant Then sCodeLines = sCodeLines & "Const "
+241                   sCodeLines = sCodeLines & objVar.Name & " As "
+242                   Select Case objVar.DateType
                           Case enumDataType.enumDataTypeString
-241                           sCodeLines = sCodeLines & "String "
-242                       Case enumDataType.enumDataTypeInt
-243                           sCodeLines = sCodeLines & "Integer "
-244                       Case enumDataType.enumDataTypeLong
-245                           sCodeLines = sCodeLines & "Long "
-246                       Case enumDataType.enumDataTypeBool
-247                           sCodeLines = sCodeLines & "Boolean "
-248                       Case enumDataType.enumDataTypeByte
-249                           sCodeLines = sCodeLines & "Byte "
-250                   End Select
-251                   If objVar.IsConstant Then
-252                       sCodeLines = sCodeLines & "= "
-253                       Select Case objVar.DateType
+243                           sCodeLines = sCodeLines & "String "
+244                       Case enumDataType.enumDataTypeInt
+245                           sCodeLines = sCodeLines & "Integer "
+246                       Case enumDataType.enumDataTypeLong
+247                           sCodeLines = sCodeLines & "Long "
+248                       Case enumDataType.enumDataTypeBool
+249                           sCodeLines = sCodeLines & "Boolean "
+250                       Case enumDataType.enumDataTypeByte
+251                           sCodeLines = sCodeLines & "Byte "
+252                   End Select
+253                   If objVar.IsConstant Then
+254                       sCodeLines = sCodeLines & "= "
+255                       Select Case objVar.DateType
                               Case enumDataType.enumDataTypeString
-254                               sCodeLines = sCodeLines & Chr$(34) & objVar.Value & Chr$(34)
-255                           Case enumDataType.enumDataTypeInt
-256                               sCodeLines = sCodeLines & CStr(CInt(objVar.Value))
-257                           Case enumDataType.enumDataTypeLong
-258                               sCodeLines = sCodeLines & CStr(CLng(objVar.Value))
-259                           Case enumDataType.enumDataTypeBool
-260                               sCodeLines = sCodeLines & CStr(CBool(objVar.Value))
-261                           Case enumDataType.enumDataTypeByte
-262                               sCodeLines = sCodeLines & CStr(CByte(objVar.Value))
-263                       End Select
-264                   End If
+256                               sCodeLines = sCodeLines & Chr$(34) & objVar.Value & Chr$(34)
+257                           Case enumDataType.enumDataTypeInt
+258                               sCodeLines = sCodeLines & CStr(CInt(objVar.Value))
+259                           Case enumDataType.enumDataTypeLong
+260                               sCodeLines = sCodeLines & CStr(CLng(objVar.Value))
+261                           Case enumDataType.enumDataTypeBool
+262                               sCodeLines = sCodeLines & CStr(CBool(objVar.Value))
+263                           Case enumDataType.enumDataTypeByte
+264                               sCodeLines = sCodeLines & CStr(CByte(objVar.Value))
+265                       End Select
+266                   End If
                                     
-265                   .AddFromString sCodeLines
-266                   sCodeLines = vbNullString
-267               End With
-268           Next
-269       End If
+267                   If .Find("#IF", 1, 1, .CountOfLines - 1, 500) Then 'Check for compiler #If, because with compiler #If,  .AddFromString does not work correctly
+268                       lSize = .CountOfLines
+269                       For k = 1 To lSize
+270                           If Trim$(.Lines(k, 1)) = "Option Explicit" Then
+271                           ElseIf Trim$(.Lines(k, 1)) = "Option Base 1" Then
+272                           ElseIf Trim$(.Lines(k, 1)) = "Option Private Module" Then
+273                           ElseIf Trim$(.Lines(k, 1)) = "Option Compare Text" Then
+274                           Else
+275                               .InsertLines k, sCodeLines
+                                  Exit For
+276                           End If
+277                       Next
+278                   Else
+279                       .AddFromString sCodeLines
+280                   End If
+281                   sCodeLines = vbNullString
+282               End With
+283           Next
+284       End If
           
 End Sub
 
@@ -507,79 +528,79 @@ Private Sub ObfuscateCtlProperties(ByRef objWB As Workbook)
           Dim objTglBtn As MSForms.ToggleButton
           
           'Einlesen der Daten
-270       With objWB.Worksheets(NAME_SH_CTL)
-271           .Activate
-272           i = .Cells(Rows.Count, 1).End(xlUp).Row
-273           arrData = .Range(Cells(2, 1), Cells(i, 5)).Value2
-274       End With
+285       With objWB.Worksheets(NAME_SH_CTL)
+286           .Activate
+287           i = .Cells(Rows.Count, 1).End(xlUp).Row
+288           arrData = .Range(Cells(2, 1), Cells(i, 5)).Value2
+289       End With
           
-275       For i = LBound(arrData) To UBound(arrData)
+290       For i = LBound(arrData) To UBound(arrData)
           
 
-276           If arrData(i, 1) = "UserForm" Then
-277               For Each vbc In objWB.VBProject.VBComponents
-278                   If Not vbc.Designer Is Nothing And vbc.Type = vbext_ct_MSForm Then
-279                       If vbc.Name = arrData(i, 2) Then
-280                           vbc.Properties(arrData(i, 4)) = ""
-281                           Exit For
-282                       End If
-283                   End If
-284               Next
-285           Else
-286               For Each vbc In objWB.VBProject.VBComponents
-287                   If Not vbc.Designer Is Nothing And vbc.Type = vbext_ct_MSForm Then
-288                       If vbc.Name = arrData(i, 2) Then
-289                           For Each objCtl In vbc.Designer.Controls
-290                               If objCtl.Name = arrData(i, 3) Then
-291                                   Select Case arrData(i, 4)
+291           If arrData(i, 1) = "UserForm" Then
+292               For Each vbc In objWB.VBProject.VBComponents
+293                   If Not vbc.Designer Is Nothing And vbc.Type = vbext_ct_MSForm Then
+294                       If vbc.Name = arrData(i, 2) Then
+295                           vbc.Properties(arrData(i, 4)) = ""
+296                           Exit For
+297                       End If
+298                   End If
+299               Next
+300           Else
+301               For Each vbc In objWB.VBProject.VBComponents
+302                   If Not vbc.Designer Is Nothing And vbc.Type = vbext_ct_MSForm Then
+303                       If vbc.Name = arrData(i, 2) Then
+304                           For Each objCtl In vbc.Designer.Controls
+305                               If objCtl.Name = arrData(i, 3) Then
+306                                   Select Case arrData(i, 4)
                                           Case "ControlTipText"
-292                                           objCtl.ControlTipText = ""
-293                                       Case "Tag"
-294                                           objCtl.Tag = ""
-295                                       Case "Text"
-296                                           Set objTxtBox = objCtl
-297                                           objTxtBox.Text = ""
-298                                       Case "Caption"
-299                                           Select Case arrData(i, 1)
+307                                           objCtl.ControlTipText = ""
+308                                       Case "Tag"
+309                                           objCtl.Tag = ""
+310                                       Case "Text"
+311                                           Set objTxtBox = objCtl
+312                                           objTxtBox.Text = ""
+313                                       Case "Caption"
+314                                           Select Case arrData(i, 1)
                                                   Case "CommandButton"
-300                                                   Set objCmdBtn = objCtl
-301                                                   objCmdBtn.Caption = ""
-302                                               Case "Label"
-303                                                   Set objLbl = objCtl
-304                                                   objLbl.Caption = ""
-305                                               Case "Frame"
-306                                                   Set objFrame = objCtl
-307                                                   objFrame.Caption = ""
-308                                               Case "CheckBox"
-309                                                   Set objChkBox = objCtl
-310                                                   objChkBox.Caption = ""
-311                                               Case "OptionButton"
-312                                                   Set objOptBtn = objCtl
-313                                                   objOptBtn.Caption = ""
-314                                               Case "ToggleButton"
-315                                                   Set objTglBtn = objCtl
-316                                                   objTglBtn.Caption = ""
-317                                           End Select
-318                                       Case "Width"
-319                                           objCtl.Width = 0
-320                                       Case "Height"
-321                                           objCtl.Height = 0
-322                                       Case "Left"
-323                                           objCtl.Left = -32768
-324                                       Case "Top"
-325                                           objCtl.top = -32768
-326                                   End Select
-327                                   Exit For
-328                               End If
-329                           Next
-330                           Exit For
-331                       End If
-332                   End If
-333               Next
-334           End If
+315                                                   Set objCmdBtn = objCtl
+316                                                   objCmdBtn.Caption = ""
+317                                               Case "Label"
+318                                                   Set objLbl = objCtl
+319                                                   objLbl.Caption = ""
+320                                               Case "Frame"
+321                                                   Set objFrame = objCtl
+322                                                   objFrame.Caption = ""
+323                                               Case "CheckBox"
+324                                                   Set objChkBox = objCtl
+325                                                   objChkBox.Caption = ""
+326                                               Case "OptionButton"
+327                                                   Set objOptBtn = objCtl
+328                                                   objOptBtn.Caption = ""
+329                                               Case "ToggleButton"
+330                                                   Set objTglBtn = objCtl
+331                                                   objTglBtn.Caption = ""
+332                                           End Select
+333                                       Case "Width"
+334                                           objCtl.Width = 0
+335                                       Case "Height"
+336                                           objCtl.Height = 0
+337                                       Case "Left"
+338                                           objCtl.Left = -32768
+339                                       Case "Top"
+340                                           objCtl.top = -32768
+341                                   End Select
+342                                   Exit For
+343                               End If
+344                           Next
+345                           Exit For
+346                       End If
+347                   End If
+348               Next
+349           End If
              
         
-335       Next i
+350       Next i
           
 End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -620,216 +641,216 @@ Private Function Obfuscation(ByRef objWB As Workbook, Optional bEncodeStr As Boo
           
           Dim sCodeLines As String
                     
-336       dTime = Now()
-337       Debug.Print "Start:" & VBA.Format$(Now() - dTime, "Long Time")
+351       dTime = Now()
+352       Debug.Print "Start:" & VBA.Format$(Now() - dTime, "Long Time")
 
-338       Set objDictName = New Scripting.Dictionary
-339       Set objDictFuncAndsub = New Scripting.Dictionary
-340       Set objDictModule = New Scripting.Dictionary
-341       Set objDictModuleOld = New Scripting.Dictionary
+353       Set objDictName = New Scripting.Dictionary
+354       Set objDictFuncAndsub = New Scripting.Dictionary
+355       Set objDictModule = New Scripting.Dictionary
+356       Set objDictModuleOld = New Scripting.Dictionary
           
-342       If bEncodeStr Then
-343           If Not IsArrayEmpty(CryptFunc()) And Not IsArrayEmpty(CryptKey()) Then
-344               If UBound(CryptFunc()) = -1 Or UBound(CryptKey()) = -1 Then
-345                   Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
-346                   Exit Function
-347               End If
-348           Else
-349               Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
-350               Exit Function
-351           End If
-352       End If
+357       If bEncodeStr Then
+358           If Not IsArrayEmpty(CryptFunc()) And Not IsArrayEmpty(CryptKey()) Then
+359               If UBound(CryptFunc()) = -1 Or UBound(CryptKey()) = -1 Then
+360                   Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
+361                   Exit Function
+362               End If
+363           Else
+364               Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
+365               Exit Function
+366           End If
+367       End If
           
-353       If Not IsArrayEmpty(AddCtrlProp()) Then
-354           If UBound(AddCtrlProp()) = -1 Then
-355               Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
-356               Exit Function
-357           Else
-358           End If
-359       Else
-360           Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
-361           Exit Function
-362       End If
+368       If Not IsArrayEmpty(AddCtrlProp()) Then
+369           If UBound(AddCtrlProp()) = -1 Then
+370               Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
+371               Exit Function
+372           Else
+373           End If
+374       Else
+375           Call MsgBox("Please start the VBA code parser before !", vbCritical, "Run VBA code parser")
+376           Exit Function
+377       End If
           
           'save and Load
-363       If Not sFolderHave(objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH) Then MkDir (objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH)
-364       objWB.SaveAs Filename:=objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH & Application.PathSeparator & C_PublicFunctions.sGetBaseName(objWB.FullName) & "_obf_" & Replace(Now(), ":", ".") & "." & C_PublicFunctions.sGetExtensionName(objWB.FullName)    ', FileFormat:=objWB.FileFormat
+378       If Not sFolderHave(objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH) Then MkDir (objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH)
+379       objWB.SaveAs Filename:=objWB.Path & Application.PathSeparator & OBF_RELEASE_PATH & Application.PathSeparator & C_PublicFunctions.sGetBaseName(objWB.FullName) & "_obf_" & Replace(Now(), ":", ".") & "." & C_PublicFunctions.sGetExtensionName(objWB.FullName)    ', FileFormat:=objWB.FileFormat
 
-365       Debug.Print "File saving - completed:" & VBA.Format$(Now() - dTime, "Long Time")
+380       Debug.Print "File saving - completed:" & VBA.Format$(Now() - dTime, "Long Time")
               
-366       If bEncodeStr Then
+381       If bEncodeStr Then
               ' Insert constant with the key
-367           AddGlobalVarsToVBProject objWB, CryptKey()
+382           AddGlobalVarsToVBProject objWB, CryptKey()
               
               ' Insert string encryption function
-368           AddProcsToVBProject objWB, CryptFunc()
-369       End If
+383           AddProcsToVBProject objWB, CryptFunc()
+384       End If
           
           'Insert Control Properties
-370       AddProcsToVBProject objWB, AddCtrlProp()
+385       AddProcsToVBProject objWB, AddCtrlProp()
           
           'Obfuscate Control Properties
-371       ObfuscateCtlProperties objWB
+386       ObfuscateCtlProperties objWB
           
           'Filtern
-372       Call FelterAdd
+387       Call FelterAdd
 
           'Einlesen der Daten
-373       With objWB.Worksheets(NAME_SH)
-374           .Activate
-375           i = .Cells(Rows.Count, 1).End(xlUp).Row
-376           arrData = .Range(Cells(2, 1), Cells(i, 10)).Value2
-377       End With
+388       With objWB.Worksheets(NAME_SH)
+389           .Activate
+390           i = .Cells(Rows.Count, 1).End(xlUp).Row
+391           arrData = .Range(Cells(2, 1), Cells(i, 10)).Value2
+392       End With
 
           'Sammlung verschlьsselter Namen und Subs / Functions
-378       For i = LBound(arrData) To UBound(arrData)
-379           If arrData(i, 9) = "yes" Then
+393       For i = LBound(arrData) To UBound(arrData)
+394           If arrData(i, 9) = "yes" Then
                   'Sammlung verschlьsselter Namen
-380               If objDictName.Exists(arrData(i, 8)) = False Then objDictName.Add arrData(i, 8), arrData(i, 10)
+395               If objDictName.Exists(arrData(i, 8)) = False Then objDictName.Add arrData(i, 8), arrData(i, 10)
                   'Sammlung der Subs und Functions
-381               If objDictFuncAndsub.Exists(arrData(i, 6)) = False Then objDictFuncAndsub.Add arrData(i, 6), arrData(i, 5)
-382           End If
-383       Next i
+396               If objDictFuncAndsub.Exists(arrData(i, 6)) = False Then objDictFuncAndsub.Add arrData(i, 6), arrData(i, 5)
+397           End If
+398       Next i
 
           'Codesammlung aus Modulen
-384       For Each objVBCitem In objWB.VBProject.VBComponents
-385           If objDictModule.Exists(objVBCitem.Name) = False Then
-386               sCode = GetCodeFromModule(objVBCitem)
+399       For Each objVBCitem In objWB.VBProject.VBComponents
+400           If objDictModule.Exists(objVBCitem.Name) = False Then
+401               sCode = GetCodeFromModule(objVBCitem)
                   'Beseitigung von Zeilenumbrьchen
-387               sCode = VBA.Replace(sCode, " _" & vbNewLine, " XXXXX") 'changed : am 24.04 CalDymos
-388               objDictModule.Add objVBCitem.Name, sCode
-389               objDictModuleOld.Add objVBCitem.Name, sCode
-390               sCode = vbNullString
-391           End If
-392       Next objVBCitem
+402               sCode = VBA.Replace(sCode, " _" & vbNewLine, " XXXXX") 'changed : am 24.04 CalDymos
+403               objDictModule.Add objVBCitem.Name, sCode
+404               objDictModuleOld.Add objVBCitem.Name, sCode
+405               sCode = vbNullString
+406           End If
+407       Next objVBCitem
           'Ende der Sammlung
 
-393       Debug.Print "Data collection - completed:" & VBA.Format$(Now() - dTime, "Long Time")
+408       Debug.Print "Data collection - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 
           'Schleifen
-394       sCode = vbNullString
-395       With objDictName
-396           For i = 0 To .Count - 1
-397               For j = 0 To objDictModule.Count - 1
-398                   sFinde = .Keys(i)
-399                   sReplace = .Items(i)
-400                   skey = objDictModule.Keys(j)
-401                   sCode = objDictModule.Item(skey)
-402                   If sCode Like "*" & sFinde & "*" And VBA.Len(sFinde) > 1 Then
+409       sCode = vbNullString
+410       With objDictName
+411           For i = 0 To .Count - 1
+412               For j = 0 To objDictModule.Count - 1
+413                   sFinde = .Keys(i)
+414                   sReplace = .Items(i)
+415                   skey = objDictModule.Keys(j)
+416                   sCode = objDictModule.Item(skey)
+417                   If sCode Like "*" & sFinde & "*" And VBA.Len(sFinde) > 1 Then
                           '------------------------------------------------ changed: 31.08 CalDymos
-403                       sPattern = "([\*\.\^\*\+\#\(\)\-\=\/\,\:\;\s])" & sFinde & "([\*\.\^\*\+\!\@\#\$\%\&\(\)\-\=\/\,\:\;\s]|$)"
-404                       sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
-405                       If InStr(sCode, "Application.OnTime") <> 0 And InStr(sCode, sFinde) <> 0 Then
-406                           If objDictFuncAndsub.Exists(sFinde) Then
-407                               sPattern = "([\" & VBA.Chr$(34) & "])" & sFinde & "([\" & VBA.Chr$(34) & "]|$)"
-408                               sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
-409                               If WorksheetExist(NAME_SH_STR, objWB) Then
+418                       sPattern = "([\*\.\^\*\+\#\(\)\-\=\/\,\:\;\s])" & sFinde & "([\*\.\^\*\+\!\@\#\$\%\&\(\)\-\=\/\,\:\;\s]|$)"
+419                       sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
+420                       If InStr(sCode, "Application.OnTime") <> 0 And InStr(sCode, sFinde) <> 0 Then
+421                           If objDictFuncAndsub.Exists(sFinde) Then
+422                               sPattern = "([\" & VBA.Chr$(34) & "])" & sFinde & "([\" & VBA.Chr$(34) & "]|$)"
+423                               sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
+424                               If WorksheetExist(NAME_SH_STR, objWB) Then
                                       'Replace the string in the Excel sheet with coded
-410                                   With objWB.Worksheets(NAME_SH_STR)
-411                                       .Activate
-412                                       For k = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
-413                                           If .Cells(k, 2).Value2 = skey And .Cells(k, 5).Value = Chr$(34) & sFinde & Chr$(34) Then
-414                                               .Cells(k, 5).Value = Chr$(34) & sReplace & Chr$(34)
-415                                           End If
-416                                       Next
-417                                   End With
-418                               End If
-419                           End If
-420                       End If
+425                                   With objWB.Worksheets(NAME_SH_STR)
+426                                       .Activate
+427                                       For k = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+428                                           If .Cells(k, 2).Value2 = skey And .Cells(k, 5).Value = Chr$(34) & sFinde & Chr$(34) Then
+429                                               .Cells(k, 5).Value = Chr$(34) & sReplace & Chr$(34)
+430                                           End If
+431                                       Next
+432                                   End With
+433                               End If
+434                           End If
+435                       End If
                           '------------------------------------------------
-421                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
-422                   End If
+436                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
+437                   End If
                       'Regulierungsrahmen fьr Events, vor allem fьr Formulare
-423                   If sCode Like "* " & Chr$(83) & "ub *" & sFinde & "_*(*)*" Then
-424                       sPattern = "([\s])(Sub)([\s])" & sFinde & "(\_{1}[A-Za-zА-Яа-яЁё]{4,40}\([A-Za-zА-Яа-яЁё\s\.\,]{0,100}\))"
-425                       sCode = RegExpFindReplace(sCode, sPattern, "$1$2$3" & sReplace & "$4", True, False, False)
-426                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
-427                       sPattern = "([\s])" & sFinde & "(\_{1}[A-Za-zА-Яа-яЁё]{4,40}(?:\:\s|\n|\r))"
-428                       sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
-429                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
-430                   End If
-431                   sCode = vbNullString
-432               Next j
-433               DoEvents
-434               If .Count > 1 Then
-435                   Application.StatusBar = "Data encryption - completed:" & Format(i / (.Count - 1), "Percent") & ", " & i & "from" & .Count - 1
-436               Else
-437                   Application.StatusBar = "Data encryption - completed:" & Format(i / .Count, "Percent") & ", " & i & "from" & .Count
-438               End If
-439           Next i
-440       End With
-441       Application.StatusBar = False
+438                   If sCode Like "* " & Chr$(83) & "ub *" & sFinde & "_*(*)*" Then
+439                       sPattern = "([\s])(Sub)([\s])" & sFinde & "(\_{1}[A-Za-zА-Яа-яЁё]{4,40}\([A-Za-zА-Яа-яЁё\s\.\,]{0,100}\))"
+440                       sCode = RegExpFindReplace(sCode, sPattern, "$1$2$3" & sReplace & "$4", True, False, False)
+441                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
+442                       sPattern = "([\s])" & sFinde & "(\_{1}[A-Za-zА-Яа-яЁё]{4,40}(?:\:\s|\n|\r))"
+443                       sCode = RegExpFindReplace(sCode, sPattern, "$1" & sReplace & "$2", True, False, False)
+444                       If sCode <> vbNullString Then objDictModule.Item(skey) = sCode
+445                   End If
+446                   sCode = vbNullString
+447               Next j
+448               DoEvents
+449               If .Count > 1 Then
+450                   Application.StatusBar = "Data encryption - completed:" & Format(i / (.Count - 1), "Percent") & ", " & i & "from" & .Count - 1
+451               Else
+452                   Application.StatusBar = "Data encryption - completed:" & Format(i / .Count, "Percent") & ", " & i & "from" & .Count
+453               End If
+454           Next i
+455       End With
+456       Application.StatusBar = False
           'Ende
 
           'Ьbertragung
-442       sCode = vbNullString
+457       sCode = vbNullString
 
-443       For j = 0 To objDictModule.Count - 1
+458       For j = 0 To objDictModule.Count - 1
               Dim arrNew  As Variant
               Dim arrOld  As Variant
               Dim sTemp   As String
-444           arrNew = VBA.Split(objDictModule.Items(j), vbNewLine)
-445           arrOld = VBA.Split(objDictModuleOld.Items(j), vbNewLine)
-446           For i = LBound(arrNew) To UBound(arrNew)
-447               If arrNew(i) = vbNullString Or VBA.Left$(VBA.Trim$(arrNew(i)), 1) = "'" Then
-448                   sTemp = vbNullString
-449               Else
-450                   sTemp = "'" & arrOld(i) & vbNewLine
-451               End If
-452               sCode = sCode & sTemp & arrNew(i) & vbNewLine
-453               sTemp = vbNullString
-454           Next i
-455           skey = objDictModule.Keys(j)
-456           objDictModule.Item(skey) = sCode
-457           sCode = vbNullString
-458       Next j
-459       Debug.Print "String alternation - completed:" & VBA.Format$(Now() - dTime, "Long Time")
+459           arrNew = VBA.Split(objDictModule.Items(j), vbNewLine)
+460           arrOld = VBA.Split(objDictModuleOld.Items(j), vbNewLine)
+461           For i = LBound(arrNew) To UBound(arrNew)
+462               If arrNew(i) = vbNullString Or VBA.Left$(VBA.Trim$(arrNew(i)), 1) = "'" Then
+463                   sTemp = vbNullString
+464               Else
+465                   sTemp = "'" & arrOld(i) & vbNewLine
+466               End If
+467               sCode = sCode & sTemp & arrNew(i) & vbNewLine
+468               sTemp = vbNullString
+469           Next i
+470           skey = objDictModule.Keys(j)
+471           objDictModule.Item(skey) = sCode
+472           sCode = vbNullString
+473       Next j
+474       Debug.Print "String alternation - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 
 
-460       Debug.Print "Data encryption - completed:" & VBA.Format$(Now() - dTime, "Long Time")
+475       Debug.Print "Data encryption - completed:" & VBA.Format$(Now() - dTime, "Long Time")
           'code laden
-461       For j = 0 To objDictModule.Count - 1
-462           Set objVBCitem = objWB.VBProject.VBComponents(objDictModule.Keys(j))
-463           sCode = objDictModule.Items(j)
+476       For j = 0 To objDictModule.Count - 1
+477           Set objVBCitem = objWB.VBProject.VBComponents(objDictModule.Keys(j))
+478           sCode = objDictModule.Items(j)
               'возврат перенос строк
-464           sCode = VBA.Replace(sCode, " XXXXX", " _" & vbNewLine) 'changed : am 24.04 CalDymos
-465           Call SetCodeInModule(objVBCitem, sCode)
-466       Next j
+479           sCode = VBA.Replace(sCode, " XXXXX", " _" & vbNewLine) 'changed : am 24.04 CalDymos
+480           Call SetCodeInModule(objVBCitem, sCode)
+481       Next j
 
-467       Debug.Print "Code loading- completed:" & VBA.Format$(Now() - dTime, "Long Time")
+482       Debug.Print "Code loading- completed:" & VBA.Format$(Now() - dTime, "Long Time")
 
           'Controls umbenennen
-468       For i = LBound(arrData) To UBound(arrData)
-469           If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
-470               If arrData(i, 1) = "Control" Then
-471                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
-472                   objVBCitem.Designer.Controls(arrData(i, 8)).Name = arrData(i, 10)
-473               End If
-474           End If
-475       Next i
+483       For i = LBound(arrData) To UBound(arrData)
+484           If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
+485               If arrData(i, 1) = "Control" Then
+486                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
+487                   objVBCitem.Designer.Controls(arrData(i, 8)).Name = arrData(i, 10)
+488               End If
+489           End If
+490       Next i
 
-476       Debug.Print "Renaming of controls - completed:" & VBA.Format$(Now() - dTime, "Long Time")
+491       Debug.Print "Renaming of controls - completed:" & VBA.Format$(Now() - dTime, "Long Time")
 
           'Дndern von Modulen
-477       For i = LBound(arrData) To UBound(arrData)
-478           If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
-479               If arrData(i, 1) = "Module" And VBA.CByte(arrData(i, 2)) <> 100 Then
-480                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
-481                   objVBCitem.Name = arrData(i, 10)
-482               ElseIf arrData(i, 1) = "Module" And VBA.CByte(arrData(i, 2)) = 100 Then
-483                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
-484                   objVBCitem.Name = arrData(i, 10)
-485               End If
-486           End If
-487       Next i
+492       For i = LBound(arrData) To UBound(arrData)
+493           If arrData(i, 9) = "yes" And objDictName.Exists(arrData(i, 8)) Then
+494               If arrData(i, 1) = "Module" And VBA.CByte(arrData(i, 2)) <> 100 Then
+495                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
+496                   objVBCitem.Name = arrData(i, 10)
+497               ElseIf arrData(i, 1) = "Module" And VBA.CByte(arrData(i, 2)) = 100 Then
+498                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 3))
+499                   objVBCitem.Name = arrData(i, 10)
+500               End If
+501           End If
+502       Next i
 
           'шифрование строк
-488       If bEncodeStr Then Call EncodedStringCode(objWB)
+503       If bEncodeStr Then Call EncodedStringCode(objWB)
 
-489       Debug.Print "Renaming modules- completed:" & VBA.Format$(Now() - dTime, "Long Time")
-490       objWB.Save
+504       Debug.Print "Renaming modules- completed:" & VBA.Format$(Now() - dTime, "Long Time")
+505       objWB.Save
           
-491       Obfuscation = True
+506       Obfuscation = True
 End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -859,82 +880,82 @@ Private Sub EncodedStringCode(ByRef objWB As Workbook)
           Dim strKey As String
 
           'Datenverarbeitung
-492       With objWB.Worksheets(NAME_SH_STR)
-493           .Activate
-494           arrData = .Range(Cells(2, 1), Cells(.Cells(Rows.Count, 1).End(xlUp).Row, 9)).Value2
-495           strCryptFuncCipher = .Cells(2, 18).Value
-496           strCryptKeyCipher = .Cells(2, 15).Value
-497           strKey = .Cells(2, 13).Value
-498       End With
+507       With objWB.Worksheets(NAME_SH_STR)
+508           .Activate
+509           arrData = .Range(Cells(2, 1), Cells(.Cells(Rows.Count, 1).End(xlUp).Row, 9)).Value2
+510           strCryptFuncCipher = .Cells(2, 18).Value
+511           strCryptKeyCipher = .Cells(2, 15).Value
+512           strKey = .Cells(2, 13).Value
+513       End With
           'Zeilenzusammenstellung
-499       sCodeString = "Option Explicit" & VBA.Chr$(13)
-500       For i = LBound(arrData) To UBound(arrData)
-501           If arrData(i, 7) = "yes" Then
-502               sCodeString = sCodeString & "Public Const " & arrData(i, 8) & " as String = " & Chr$(34) & StringCrypt(TrimA(arrData(i, 5), Chr$(34)), strKey, True) & Chr$(34) & VBA.Chr$(13)
-503           End If
-504       Next i
+514       sCodeString = "Option Explicit" & VBA.Chr$(13)
+515       For i = LBound(arrData) To UBound(arrData)
+516           If arrData(i, 7) = "yes" Then
+517               sCodeString = sCodeString & "Public Const " & arrData(i, 8) & " as String = " & Chr$(34) & StringCrypt(TrimA(arrData(i, 5), Chr$(34)), strKey, True) & Chr$(34) & VBA.Chr$(13)
+518           End If
+519       Next i
           Dim NameOldMOdule As String
-505       For i = LBound(arrData) To UBound(arrData)
-506           If arrData(i, 7) = "yes" Then
-507               If NameOldMOdule <> arrData(i, 9) Then
-508                   sCode = vbNullString
-509                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 9))
-510                   sCode = GetCodeFromModule(objVBCitem)
-511                   If sCode <> vbNullString Then
-512                       varStr = VBA.Split(sCode, vbNewLine)
-513                       For k = 0 To UBound(varStr())
-514                           If CStr(varStr(k)) = "" Then
+520       For i = LBound(arrData) To UBound(arrData)
+521           If arrData(i, 7) = "yes" Then
+522               If NameOldMOdule <> arrData(i, 9) Then
+523                   sCode = vbNullString
+524                   Set objVBCitem = objWB.VBProject.VBComponents(arrData(i, 9))
+525                   sCode = GetCodeFromModule(objVBCitem)
+526                   If sCode <> vbNullString Then
+527                       varStr = VBA.Split(sCode, vbNewLine)
+528                       For k = 0 To UBound(varStr())
+529                           If CStr(varStr(k)) = "" Then
                                   'Do Nothing
-515                           ElseIf Left$(CStr(varStr(k)), 1) = "'" Then
+530                           ElseIf Left$(CStr(varStr(k)), 1) = "'" Then
                                   'Do Nothing
-516                           ElseIf IsSubOrFunc(varStr(k)) Then
+531                           ElseIf IsSubOrFunc(varStr(k)) Then
                                   'Do Nothing
-517                           ElseIf VBA.InStr(1, CStr(varStr(k)), arrData(i, 5)) <> 0 Then
-518                               varStr(k) = VBA.Trim$(VBA.Replace(CStr(varStr(k)), arrData(i, 5), strCryptFuncCipher & "(" & arrData(i, 8) & ", " & strCryptKeyCipher & ")"))
-519                           End If
-520                       Next
-521                       sCode = Join(varStr, vbNewLine)
-522                   End If
-523                   NameOldMOdule = arrData(i, 9)
-524               Else
-525                   If sCode <> vbNullString Then
-526                       varStr = VBA.Split(sCode, vbNewLine)
-527                       For k = 0 To UBound(varStr)
-528                           If CStr(varStr(k)) = "" Then
+532                           ElseIf VBA.InStr(1, CStr(varStr(k)), arrData(i, 5)) <> 0 Then
+533                               varStr(k) = VBA.Trim$(VBA.Replace(CStr(varStr(k)), arrData(i, 5), strCryptFuncCipher & "(" & arrData(i, 8) & ", " & strCryptKeyCipher & ")"))
+534                           End If
+535                       Next
+536                       sCode = Join(varStr, vbNewLine)
+537                   End If
+538                   NameOldMOdule = arrData(i, 9)
+539               Else
+540                   If sCode <> vbNullString Then
+541                       varStr = VBA.Split(sCode, vbNewLine)
+542                       For k = 0 To UBound(varStr)
+543                           If CStr(varStr(k)) = "" Then
                                   'Do Nothing
-529                           ElseIf Left$(CStr(varStr(k)), 1) = "'" Then
+544                           ElseIf Left$(CStr(varStr(k)), 1) = "'" Then
                                   'Do Nothing
-530                           ElseIf IsSubOrFunc(varStr(k)) Then
+545                           ElseIf IsSubOrFunc(varStr(k)) Then
                                   'Do Nothing
-531                           ElseIf VBA.InStr(1, CStr(varStr(k)), arrData(i, 5)) <> 0 Then
-532                               varStr(k) = VBA.Trim$(VBA.Replace(CStr(varStr(k)), arrData(i, 5), strCryptFuncCipher & "(" & arrData(i, 8) & ", " & strCryptKeyCipher & ")"))
-533                           End If
-534                       Next
-535                       sCode = Join(varStr, vbNewLine)
-536                   End If
-537               End If
-538               If i = UBound(arrData) Then
-539                   Call SetCodeInModule(objVBCitem, sCode)
-540                   Set objVBCitem = Nothing
-541               Else
-542                   If arrData(i + 1, 9) <> arrData(i, 9) Then
-543                       Call SetCodeInModule(objVBCitem, sCode)
-544                       Set objVBCitem = Nothing
-545                   End If
-546               End If
+546                           ElseIf VBA.InStr(1, CStr(varStr(k)), arrData(i, 5)) <> 0 Then
+547                               varStr(k) = VBA.Trim$(VBA.Replace(CStr(varStr(k)), arrData(i, 5), strCryptFuncCipher & "(" & arrData(i, 8) & ", " & strCryptKeyCipher & ")"))
+548                           End If
+549                       Next
+550                       sCode = Join(varStr, vbNewLine)
+551                   End If
+552               End If
+553               If i = UBound(arrData) Then
+554                   Call SetCodeInModule(objVBCitem, sCode)
+555                   Set objVBCitem = Nothing
+556               Else
+557                   If arrData(i + 1, 9) <> arrData(i, 9) Then
+558                       Call SetCodeInModule(objVBCitem, sCode)
+559                       Set objVBCitem = Nothing
+560                   End If
+561               End If
 
-547           End If
-548           DoEvents
-549           If i Mod 100 = 0 Then Application.StatusBar = "String encryption - completed:" & Format(i / UBound(arrData), "Percent") & ", " & i & "from" & UBound(arrData)
-550       Next i
-551       Application.StatusBar = False
+562           End If
+563           DoEvents
+564           If i Mod 100 = 0 Then Application.StatusBar = "String encryption - completed:" & Format(i / UBound(arrData), "Percent") & ", " & i & "from" & UBound(arrData)
+565       Next i
+566       Application.StatusBar = False
           Dim sName       As String
-552       sName = objWB.Worksheets(NAME_SH_STR).Cells(2, 11).Value
-553       If sName <> vbNullString Then
-554           Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
-555           objVBCitem.Name = sName
-556           Call SetCodeInModule(objVBCitem, sCodeString)
-557       End If
+567       sName = objWB.Worksheets(NAME_SH_STR).Cells(2, 11).Value
+568       If sName <> vbNullString Then
+569           Set objVBCitem = objWB.VBProject.VBComponents.Add(vbext_ct_StdModule)
+570           objVBCitem.Name = sName
+571           Call SetCodeInModule(objVBCitem, sCodeString)
+572       End If
 End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : GetCodeFromModule - получить код из модуля в строковую переменную
@@ -948,12 +969,12 @@ End Sub
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Function GetCodeFromModule(ByRef objVBComp As VBIDE.VBComponent) As String
-558       GetCodeFromModule = vbNullString
-559       With objVBComp.CodeModule
-560           If .CountOfLines > 0 Then
-561               GetCodeFromModule = .Lines(1, .CountOfLines)
-562           End If
-563       End With
+573       GetCodeFromModule = vbNullString
+574       With objVBComp.CodeModule
+575           If .CountOfLines > 0 Then
+576               GetCodeFromModule = .Lines(1, .CountOfLines)
+577           End If
+578       End With
 End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -969,14 +990,14 @@ End Function
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub SetCodeInModule(ByRef objVBComp As VBIDE.VBComponent, ByVal sCode As String)
-564       With objVBComp.CodeModule
-565           If .CountOfLines > 0 Then
+579       With objVBComp.CodeModule
+580           If .CountOfLines > 0 Then
                   'Debug.Print .CountOfLines
-566               Call .DeleteLines(1, .CountOfLines)
+581               Call .DeleteLines(1, .CountOfLines)
                   'Debug.Print sCode
-567               Call .InsertLines(1, VBA.Trim$(sCode))
-568           End If
-569       End With
+582               Call .InsertLines(1, VBA.Trim$(sCode))
+583           End If
+584       End With
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -994,28 +1015,28 @@ End Sub
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Private Sub SortTabel(ByRef ws As Worksheet, ByVal sRng As String, sKey1 As String, Optional bOrder As Byte = 2)
-570       With ws
-571           On Error GoTo errMsg
-572           .Activate
-573           .Range(sRng).AutoFilter
+585       With ws
+586           On Error GoTo errMsg
+587           .Activate
+588           .Range(sRng).AutoFilter
 Repeatnext:
-574           .AutoFilter.Sort.SortFields.Clear
-575           .AutoFilter.Sort.SortFields.Add Key:=Range(sKey1), SortOn:=xlSortOnValues, Order:=bOrder, DataOption:=xlSortNormal
-576           With .AutoFilter.Sort
-577               .Header = xlYes
-578               .MatchCase = False
-579               .Orientation = xlTopToBottom
-580               .SortMethod = xlPinYin
-581               .Apply
-582           End With
-583       End With
-584       Exit Sub
+589           .AutoFilter.Sort.SortFields.Clear
+590           .AutoFilter.Sort.SortFields.Add Key:=Range(sKey1), SortOn:=xlSortOnValues, Order:=bOrder, DataOption:=xlSortNormal
+591           With .AutoFilter.Sort
+592               .Header = xlYes
+593               .MatchCase = False
+594               .Orientation = xlTopToBottom
+595               .SortMethod = xlPinYin
+596               .Apply
+597           End With
+598       End With
+599       Exit Sub
 errMsg:
-585       If Err.Number = 91 Then
-586           ws.Range(sRng).AutoFilter
-587           Err.Clear
-588           GoTo Repeatnext
-589       Else
-590           Call MsgBox(Err.Description, vbCritical, "Mistake:")
-591       End If
+600       If Err.Number = 91 Then
+601           ws.Range(sRng).AutoFilter
+602           Err.Clear
+603           GoTo Repeatnext
+604       Else
+605           Call MsgBox(Err.Description, vbCritical, "Mistake:")
+606       End If
 End Sub
