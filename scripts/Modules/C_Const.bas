@@ -1,3 +1,4 @@
+Attribute VB_Name = "C_Const"
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Module     : C_Const - Global constants and variables
 '* Created    : 15-09-2019 15:48
@@ -8,9 +9,10 @@
 '* Modified   : Date and Time       Author              Description
 '* Updated    : 05-03-2023 08:34    CalDymos            Added const for release path of OBF-file
 '* Updated    : 07-09-2023 07:35    CalDymos            Added vars for string encryption
+'* Updated    : 12-09-2023 10:25    CalDymos            Added constants / enums and vars for the UserFom obfuscation
 
-Option Private Module
 Option Explicit
+Option Private Module
 
 'Types
 '....
@@ -129,6 +131,7 @@ Public Const MOVECONTBOTTOMRIGHT As String = "Bottom Right"
 
 Public Const NAME_SH          As String = "DATA_OBF_VBATools"
 Public Const NAME_SH_STR      As String = "STRING_OBF_VBATools"
+Public Const NAME_SH_CTL      As String = "CTRL_PROPS_OBF_VBATools"
 
 Public Const FILE_NAME_HOT_KEYS     As String = ""
 
@@ -143,8 +146,30 @@ Public Enum enumAnchorStyles
     enumAnchorStyleRight = 8
 End Enum
 
+Public Enum enumBehavProcExist
+    enumBehavProcExistInsCodeAtBegin = 0
+    enumBehavProcExistInsCodeAtEnd = 1
+    enumBehavProcExistIgnoreCode = 2
+End Enum
+
+Public Enum enumDataType
+    enumDataTypeString = 0 'String
+    enumDataTypeInt = 1 'Integer
+    enumDataTypeLong = 2 'Long
+    enumDataTypeBool = 4 'Boolean
+    enumDataTypeByte = 8 'Byte
+End Enum
+    
+Public Enum enumVisibility
+    enumVisibilityPublic = 0 'Public
+    enumVisibilityPrivate = 1 'Private
+End Enum
+
 'Vars
 Public FlagVisible As Boolean
 
-Public varStrCryptFunc As Variant
-Public asCryptKey(1) As String
+Public CryptFunc() As CAddProc
+Public CryptKey() As CAddGlobalVar
+Public AddCtrlProp() As CAddProc
+
+
