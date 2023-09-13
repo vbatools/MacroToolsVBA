@@ -1,3 +1,4 @@
+Attribute VB_Name = "N_ObfParserVBA"
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Module     : N_ObfParserVBA - VBA-Code-Parser
 '* Created    : 08-10-2020 14:12
@@ -5,6 +6,9 @@
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Modified   : Date and Time       Author              Description
+'* Updated    : 25-04-2023 10:20    CalDymos
+'* Updated    : 13-09-2023 13:33    CalDymos            Parser functions changed / added
 
 Option Explicit
 Option Private Module
@@ -16,6 +20,7 @@ Private Type obfModule
     objName         As Scripting.Dictionary
     objNameGlobVar  As Scripting.Dictionary
     objContr        As Scripting.Dictionary
+    objCtrlProps    As Scripting.Dictionary
     objSubFun       As Scripting.Dictionary
     objDimVar       As Scripting.Dictionary
     objTypeEnum     As Scripting.Dictionary
@@ -23,47 +28,47 @@ Private Type obfModule
     objStringCode   As Scripting.Dictionary
 End Type
 
-    Public Sub StartParser()
-       Dim Form        As AddStatistic
-       Dim sNameWB     As String
-       Dim objWB       As Object
+Public Sub StartParser()
+          Dim Form        As AddStatistic
+          Dim sNameWB     As String
+          Dim objWB       As Object
 
-1      On Error GoTo ErrStartParser
-2      Application.Calculation = xlCalculationManual
-3      Set Form = New AddStatistic
-4      With Form
-5          .Caption = "Code base data collection:"
-6          .lbOK.Caption = "Parse code"
-7          .chQuestion.visible = True
-8          .chQuestion2.visible = True 'added: 25.04.2023
-9          .chQuestion.Value = False
-10         .chQuestion2.Value = True 'added: 25.04.2023
-11         .chQuestion.Caption = "Collect string values?"
-12         .chQuestion2.Caption = "Use safe mode" 'added: 25.04.2023
-13         .chQuestion2.ControlTipText = "Excel objects and APIs are excluded" 'changed: 25.04.2023
-14         .lbWord.Caption = 1
-15         .Show
-16         sNameWB = .cmbMain.Value
-17     End With
-18     If sNameWB = vbNullString Then Exit Sub
-19     If sNameWB Like "*.docm" Or sNameWB Like "*.DOCM" Then
-           Dim objWrdApp As Object
-20         Set objWrdApp = GetObject(, "Word.Application")
-21         Set objWB = objWrdApp.Documents(sNameWB)
-22     Else
-23         Set objWB = Workbooks(sNameWB)
-24     End If
+1         On Error GoTo ErrStartParser
+2         Application.Calculation = xlCalculationManual
+3         Set Form = New AddStatistic
+4         With Form
+5             .Caption = "Code base data collection:"
+6             .lbOK.Caption = "Parse code"
+7             .chQuestion.visible = True
+8             .chQuestion2.visible = True 'added: 25.04.2023
+9             .chQuestion.Value = True
+10            .chQuestion2.Value = True 'added: 25.04.2023
+11            .chQuestion.Caption = "Collect string values?"
+12            .chQuestion2.Caption = "Use safe mode" 'added: 25.04.2023
+13            .chQuestion2.ControlTipText = "Excel objects and APIs are excluded" 'changed: 25.04.2023
+14            .lbWord.Caption = 1
+15            .Show
+16            sNameWB = .cmbMain.Value
+17        End With
+18        If sNameWB = vbNullString Then Exit Sub
+19        If sNameWB Like "*.docm" Or sNameWB Like "*.DOCM" Then
+              Dim objWrdApp As Object
+20            Set objWrdApp = GetObject(, "Word.Application")
+21            Set objWB = objWrdApp.Documents(sNameWB)
+22        Else
+23            Set objWB = Workbooks(sNameWB)
+24        End If
 
-25     Call MainObfParser(objWB, Form.chQuestion.Value, Form.chQuestion2.Value)
-26     Set Form = Nothing
-27     Application.Calculation = xlCalculationAutomatic
-28     Exit Sub
+25        Call MainObfParser(objWB, Form.chQuestion.Value, Form.chQuestion2.Value)
+26        Set Form = Nothing
+27        Application.Calculation = xlCalculationAutomatic
+28        Exit Sub
 ErrStartParser:
-29     Application.Calculation = xlCalculationAutomatic
-30     Application.ScreenUpdating = True
-31     Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
-32     Call WriteErrorLog("N_ObfParserVBA.StartParser")
-34    End Sub
+29        Application.Calculation = xlCalculationAutomatic
+30        Application.ScreenUpdating = True
+31        Call MsgBox("Error in N_ObfParserVBA.StartParser" & vbLf & Err.Number & vbLf & Err.Description & vbCrLf & "in the line" & Erl, vbCritical, "Mistake:")
+32        Call WriteErrorLog("N_ObfParserVBA.StartParser")
+End Sub
 
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -87,7 +92,7 @@ End Sub
 '* Updated    : 25-04-2023 08:11    CalDymos            Safe mode option added
 '* Updated    : 25-04-2023 08:11    CalDymos            Added option to disable finished message
 
-    Private Sub MainObfParser(ByRef objWB As Object, Optional bEncodeStr As Boolean = False, Optional bSafeMode As Boolean = False, Optional bNoFinishMessage As Boolean = False)
+Private Sub MainObfParser(ByRef objWB As Object, Optional bEncodeStr As Boolean = False, Optional bSafeMode As Boolean = False, Optional bNoFinishMessage As Boolean = False)
 34        If objWB.VBProject.Protection = vbext_pp_locked Then
 35            Call MsgBox("The project is protected, remove the password!", vbCritical, "The project is protected:")
 36        Else
@@ -96,7 +101,7 @@ End Sub
 39                Call MsgBox("Book code [" & objWB.Name & "] assembled!", vbInformation, "Code parsing:")
 40            End If
 41        End If
-44    End Sub
+End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : ParserProjectVBA - The main code parser, collects module names and assigns ciphers to them
@@ -113,6 +118,7 @@ End Sub
 '* Updated    : 25-04-2023 08:09    CalDymos            Safe mode option added
 '* Updated    : 30-05-2023 08:32    CalDymos            Del Worksheets NAME_SH and NAME_SH_STR before parsing
 '* Updated    : 07-09-2023 08:16    CalDymos            modify for String Encryption
+'* Updated    : 13-09-2023 13:35    CalDymos
 
 Private Sub ParserProjectVBA(ByRef objWB As Object, Optional bEncodeStr As Boolean = False, Optional bSafeMode As Boolean = False)
           Dim objVBComp   As VBIDE.VBComponent
@@ -120,239 +126,227 @@ Private Sub ParserProjectVBA(ByRef objWB As Object, Optional bEncodeStr As Boole
           Dim i           As Long
           Dim k           As Long
           Dim objDict     As Scripting.Dictionary
-          Dim objTmpName As Scripting.Dictionary
+          Dim objTmpModuleName As Scripting.Dictionary
+          Dim asSplitKey() As String
           Dim z1 As Integer
           Dim z2 As Integer
-          Dim lSize As Long
-          Dim strCryptFuncCipher As String
-          Dim strCryptKeyCipher As String
           
           'del old Data
-42        If IsArray(varStrCryptFunc) Then varStrCryptFunc = Empty
-43        Erase asCryptKey()
+42        If Not IsArrayEmpty(AddCtrlProp()) Then
+43            For i = 0 To UBound(AddCtrlProp())
+44                Set AddCtrlProp(i) = Nothing
+45            Next
+46            Erase AddCtrlProp()
+47        End If
           
-          'Store function for string decryption in array
-          'Here you must define the encryption function.
-          'This should be individual, i.e. customized by the user.
-44        varStrCryptFunc = Array("Public Function MACROTools_DeCryptStr(ByVal Inp As String, sKey As String) As String", _
-              "Dim strEnc as String", _
-              "strEnc = Inp", _
-              "'code line", _
-              "......", _
-              "'.....", _
-              "'.....", _
-              "'code line", _
-              "MACROTools_DeCryptStr = strEnc", _
-              "End Function")
+48        If bEncodeStr Then
+49            If Not IsArrayEmpty(CryptFunc()) Then
+50                For i = 0 To UBound(CryptFunc())
+51                    Set CryptFunc(i) = Nothing
+52                Next
+53                Erase CryptFunc()
+54            End If
+55            If Not IsArrayEmpty(CryptKey()) Then
+56                For i = 0 To UBound(CryptKey())
+57                    Set CryptKey(i) = Nothing
+58                Next
+59                Erase CryptKey()
+60            End If
+              'Store function for string decryption in array
+              'Here you must define the encryption function.
+              'This should be individual, i.e. customized by the respective user.
+61            ReDim CryptFunc(0)
+62            Set CryptFunc(0) = New CAddProc
+63            CryptFunc(0).BehavProcExists = enumBehavProcExistIgnoreCode
+64            CryptFunc(0).Name = "MACROTools_DeCryptStr"
+65            CryptFunc(0).AddCodeLine "Public Function " & CryptFunc(0).Name & "(ByVal Inp As String, sKey As String) As String"
+66            CryptFunc(0).AddCodeLine "Dim strZ As String"
+67            CryptFunc(0).AddCodeLine "Dim iCount As Integer, iPos As Integer"
+68            CryptFunc(0).AddCodeLine "Dim cptZahl As Long, orgZahl As Long"
+69            CryptFunc(0).AddCodeLine "Dim keyZahl As Long, cptString As String"
+70            CryptFunc(0).AddCodeLine "For iCount = 1 To Len(Inp)"
+71            CryptFunc(0).AddCodeLine "iPos = iPos + 1"
+72            CryptFunc(0).AddCodeLine "If iPos > Len(sKey) Then iPos = 1"
+73            CryptFunc(0).AddCodeLine "keyZahl = Asc(Mid(sKey, iPos, 1))"
+74            CryptFunc(0).AddCodeLine "If iCount > Len(Inp) \ 2 Then Exit For"
+75            CryptFunc(0).AddCodeLine "cptZahl = CByte(Chr$(38) & Chr$(72) & Mid$(Inp, iCount * 2 - 1, 2))"
+76            CryptFunc(0).AddCodeLine "orgZahl = cptZahl Xor keyZahl"
+77            CryptFunc(0).AddCodeLine "strZ = strZ & Chr$(orgZahl)"
+78            CryptFunc(0).AddCodeLine "Next iCount"
+79            CryptFunc(0).AddCodeLine CryptFunc(0).Name & " = strZ"
+80            CryptFunc(0).AddCodeLine "End Function"
               
-          'Generate and store random key
-45        asCryptKey(0) = "MACROTools_DeCryptKey"
-46        asCryptKey(1) = GenerateKey
-            
+              'Generate and store random key
+81            ReDim CryptKey(0)
+82            Set CryptKey(0) = New CAddGlobalVar
+83            CryptKey(0).IsConstant = True
+84            CryptKey(0).DateType = enumDataTypeString
+85            CryptKey(0).Name = "MACROTools_DeCryptKey"
+86            CryptKey(0).Value = GenerateKey
+87            CryptKey(0).Visibility = enumVisibilityPublic
+88        End If
           'Delete old worksheets, otherwise they will be captured / parsed as well
-47        DelWorksheet NAME_SH, ActiveWorkbook
-48        DelWorksheet NAME_SH_STR, ActiveWorkbook
+89        DelWorksheet NAME_SH, objWB
+90        DelWorksheet NAME_SH_STR, objWB
+91        DelWorksheet NAME_SH_CTL, objWB
           
-49        With varModule
-              'ãëàâíûé ïàðñåð
-50            Set .objName = AddNewDictionary(.objName)
-51            Set .objDimVar = AddNewDictionary(.objDimVar)
-52            Set .objSubFun = AddNewDictionary(.objSubFun)
-53            Set .objContr = AddNewDictionary(.objContr)
-54            Set .objTypeEnum = AddNewDictionary(.objTypeEnum)
-55            Set .objNameGlobVar = AddNewDictionary(.objNameGlobVar)
-56            Set .objStringCode = AddNewDictionary(.objStringCode)
-57            Set .objAPI = AddNewDictionary(.objAPI)
+92        With varModule
+              'главный парсер
+93            Set .objName = AddNewDictionary(.objName)
+94            Set .objDimVar = AddNewDictionary(.objDimVar)
+95            Set .objSubFun = AddNewDictionary(.objSubFun)
+96            Set .objContr = AddNewDictionary(.objContr)
+97            Set .objCtrlProps = AddNewDictionary(.objCtrlProps)
+98            Set .objTypeEnum = AddNewDictionary(.objTypeEnum)
+99            Set .objNameGlobVar = AddNewDictionary(.objNameGlobVar)
+100           Set .objStringCode = AddNewDictionary(.objStringCode)
+101           Set .objAPI = AddNewDictionary(.objAPI)
+              
 
-58            If bEncodeStr Then
+              'Collect all control properties that contain text and all position properties
+102           For Each objVBComp In objWB.VBProject.VBComponents
+103               Call ParserPropertiesControlsForm(objVBComp.Name, objVBComp, AddCtrlProp(), .objCtrlProps)
+104           Next
+              
+105           If bEncodeStr Then
                   'temporarily collect all module names
                   'to randomly place the MACROTools_DeCryptStr() function,
                   'which is needed to decrypt the strings, in a module.
-59                Set objTmpName = AddNewDictionary(objTmpName)
+106               Set objTmpModuleName = AddNewDictionary(objTmpModuleName)
                   
-60                For Each objVBComp In objWB.VBProject.VBComponents
-61                    If objVBComp.Type = vbext_ct_StdModule Then
-62                        If Not objTmpName.Exists(objVBComp.Name) Then objTmpName.Add objVBComp.Name, 1
-63                    End If
-64                Next objVBComp
+107               For Each objVBComp In objWB.VBProject.VBComponents
+108                   If objVBComp.Type = vbext_ct_StdModule Then
+109                       If Not objTmpModuleName.Exists(objVBComp.Name) Then objTmpModuleName.Add objVBComp.Name, 1
+110                   End If
+111               Next objVBComp
 
                   'If no module exist
-65                If objTmpName.Count = 0 Then objTmpName.Add "Modul1", 1
+112               If objTmpModuleName.Count = 0 Then objTmpModuleName.Add "Modul1", 1
                   
                   
-66                Randomize Timer
-67                z1 = Int(Rnd * objTmpName.Count) 'Random number for the selection of the module for the function
-68                z2 = Int(Rnd * objTmpName.Count) 'Random number for the selection of the module for the key
+113               Randomize Timer
+114               z1 = Int(Rnd * objTmpModuleName.Count) 'Random number for the selection of the module for the function
+115               z2 = Int(Rnd * objTmpModuleName.Count) 'Random number for the selection of the module for the key
                   
+116               CryptFunc(0).ModuleName = objTmpModuleName.Keys(z1)
+117               CryptKey(0).ModuleName = objTmpModuleName.Keys(z2)
                               
-69            End If
-70            For Each objVBComp In objWB.VBProject.VBComponents
+118           End If
+119           For Each objVBComp In objWB.VBProject.VBComponents
                   'Collect module names
                   Dim skey As String
-71                skey = objVBComp.Type & CHR_TO & objVBComp.Name
-72                If Not .objName.Exists(skey) Then .objName.Add skey, 0
-                  'Collecting all controls in the forms
-73                Call ParserNameControlsForm(objVBComp.Name, objVBComp, .objContr)
+120               skey = objVBComp.Type & CHR_TO & objVBComp.Name
+121               If Not .objName.Exists(skey) Then .objName.Add skey, 0
                   
-74                If Not bEncodeStr Then
-                      'Capture procedures and functions
-75                    Call ParserNameSubFunc(objVBComp.Name, objVBComp, .objSubFun)
-                      'Capture of global variables
-76                    Call ParserNameGlobalVariable(objVBComp.Name, objVBComp, .objNameGlobVar, .objTypeEnum, .objAPI)
-                      'Collect variables in procedures and functions
-77                    Call ParserVariebleSubFunc(objVBComp, .objDimVar, .objStringCode)
-78                Else
-                      'Capture procedures and functions
-79                    If objVBComp.Name = objTmpName.Keys(z1) Then
-80                        Call ParserNameSubFunc(objVBComp.Name, objVBComp, .objSubFun, varStrCryptFunc)
-81                    Else
-82                        Call ParserNameSubFunc(objVBComp.Name, objVBComp, .objSubFun)
-83                    End If
-                      'Capture of global variables
-84                    If objVBComp.Name = objTmpName.Keys(z2) Then
-85                        Call ParserNameGlobalVariable(objVBComp.Name, objVBComp, .objNameGlobVar, .objTypeEnum, .objAPI, asCryptKey())
-86                    Else
-87                        Call ParserNameGlobalVariable(objVBComp.Name, objVBComp, .objNameGlobVar, .objTypeEnum, .objAPI)
-88                    End If
-                      'Collect variables in procedures and functions
-89                    If objVBComp.Name = objTmpName.Keys(z1) Then
-90                        Call ParserVariebleSubFunc(objVBComp, .objDimVar, .objStringCode, varStrCryptFunc)
-91                    Else
-92                        Call ParserVariebleSubFunc(objVBComp, .objDimVar, .objStringCode)
-93                    End If
-94                End If
-95            Next objVBComp
-              'êîíåö ïàðñåðà
-96        End With
+                  'Collecting all controls in the forms
+122               Call ParserNameControlsForm(objVBComp.Name, objVBComp, .objContr)
+                  
+                  'Capture procedures and functions
+123               Call ParserNameSubFunc(objVBComp.Name, objVBComp, .objSubFun)
+124               Call ParserNameSubFuncFromAddProc(objVBComp.Name, objVBComp, .objSubFun, AddCtrlProp())
+125               If bEncodeStr Then Call ParserNameSubFuncFromAddProc(objVBComp.Name, objVBComp, .objSubFun, CryptFunc())
+                  
+                  'Capture of global variables
+126               Call ParserNameGlobalVariable(objVBComp.Name, objVBComp, .objNameGlobVar, .objTypeEnum, .objAPI)
+127               If bEncodeStr Then Call ParserNameGlobalVariableFromAddVar(objVBComp.Name, objVBComp, .objNameGlobVar, .objTypeEnum, .objAPI, CryptKey())
+                  
+                  'Collect variables in procedures and functions
+128               Call ParserVariebleSubFunc(objVBComp, .objDimVar, .objStringCode)
+129               Call ParserVariebleSubFuncFromAddProc(objVBComp, .objDimVar, .objStringCode, AddCtrlProp())
+130               If bEncodeStr Then Call ParserVariebleSubFuncFromAddProc(objVBComp, .objDimVar, .objStringCode, CryptFunc())
+                  
+131           Next objVBComp
+              'конец парсера
+132       End With
 
-          'Erstellen einer Liste in der aktiven Arbeitsmappe
-97        Call AddSheetInWBook(NAME_SH, ActiveWorkbook)
+          'Create a Sheet in the active workbook
+133       Call AddSheetInWBook(NAME_SH, objWB)
 
-98        ReDim arrRange(1 To varModule.objName.Count + varModule.objNameGlobVar.Count + varModule.objSubFun.Count + varModule.objContr.Count + varModule.objDimVar.Count + varModule.objTypeEnum.Count + varModule.objAPI.Count, 1 To 10) As String
+134       ReDim arrRange(1 To varModule.objName.Count + varModule.objNameGlobVar.Count + varModule.objSubFun.Count + varModule.objContr.Count + varModule.objDimVar.Count + varModule.objTypeEnum.Count + varModule.objAPI.Count, 1 To 10) As String
 
-99        Set objDict = New Scripting.Dictionary
+135       Set objDict = New Scripting.Dictionary
           
           'Set comparison to insensitive, since var and Sub names in VBA are also insensitive,
           'i.e. no matter whether the var name is written in upper or lower case, it is the same var.
-100       objDict.CompareMode = TextCompare 'added 04.09.2023 CalDymos
+136       objDict.CompareMode = TextCompare 'added 04.09.2023 CalDymos
 
-101       For i = 1 To varModule.objName.Count
-102           arrRange(i, 1) = "Module"
-103           arrRange(i, 2) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(0)
-104           arrRange(i, 3) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(1)
-105           arrRange(i, 4) = "Public"
-106           arrRange(i, 8) = arrRange(i, 3)
-107           arrRange(i, 9) = "yes"
+137       For i = 1 To varModule.objName.Count
+138           arrRange(i, 1) = "Module"
+139           arrRange(i, 2) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(0)
+140           arrRange(i, 3) = VBA.Split(varModule.objName.Keys(i - 1), CHR_TO)(1)
+141           arrRange(i, 4) = "Public"
+142           arrRange(i, 8) = arrRange(i, 3)
+143           arrRange(i, 9) = "yes"
 
-108           If objDict.Exists(arrRange(i, 8)) = False Then
-109               objDict.Add arrRange(i, 8), AddEncodeName()
-110           End If
-111           arrRange(i, 10) = objDict.Item(arrRange(i, 8))
-112       Next i
-113       k = i
-114       Application.StatusBar = "Data collection: Module names, completed:" & VBA.Format(1 / 7, "Percent")
-115       For i = 1 To varModule.objNameGlobVar.Count
-116           arrRange(k, 1) = "Global variable"
-117           arrRange(k, 2) = varModule.objNameGlobVar.Items(i - 1)
-118           arrRange(k, 3) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(0)
-119           arrRange(k, 4) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(1)
-120           arrRange(k, 6) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(2)
-121           arrRange(k, 7) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(3)
-122           arrRange(k, 8) = arrRange(k, 7)
-123           arrRange(k, 9) = "yes"
+144           If objDict.Exists(arrRange(i, 8)) = False Then
+145               objDict.Add arrRange(i, 8), AddEncodeName()
+146           End If
+147           arrRange(i, 10) = objDict.Item(arrRange(i, 8))
+148       Next i
+149       k = i
+150       Application.StatusBar = "Data collection: Module names, completed:" & VBA.Format(1 / 7, "Percent")
+151       For i = 1 To varModule.objNameGlobVar.Count
+152           arrRange(k, 1) = "Global variable"
+153           arrRange(k, 2) = varModule.objNameGlobVar.Items(i - 1)
+154           arrRange(k, 3) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(0)
+155           arrRange(k, 4) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(1)
+156           arrRange(k, 6) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(2)
+157           arrRange(k, 7) = VBA.Split(varModule.objNameGlobVar.Keys(i - 1), CHR_TO)(3)
+158           arrRange(k, 8) = arrRange(k, 7)
+159           arrRange(k, 9) = "yes"
 
-124           If objDict.Exists(arrRange(k, 8)) = False Then
-125               objDict.Add arrRange(k, 8), AddEncodeName()
-126           End If
-127           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
+160           If objDict.Exists(arrRange(k, 8)) = False Then
+161               objDict.Add arrRange(k, 8), AddEncodeName()
+162           End If
+163           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
               
-              'store temporarily the cipher for the constant that contains the key
-128           If bEncodeStr Then
-129               If arrRange(k, 1) <> "Global variable" Then
-130               ElseIf arrRange(k, 2) <> 1 Then
-131               ElseIf arrRange(k, 6) <> "Const" Then
-132               ElseIf arrRange(k, 7) = asCryptKey(0) Then
-133                   strCryptKeyCipher = arrRange(k, 10)
-134               End If
-135           End If
-136           k = k + 1
-137       Next i
+              'store the cipher for the constant that contains the key
+164           If bEncodeStr Then
+165               If arrRange(k, 1) <> "Global variable" Then
+166               ElseIf arrRange(k, 2) <> 1 Then
+167               ElseIf arrRange(k, 6) <> "Const" Then
+168               ElseIf arrRange(k, 7) = CryptKey(0).Name Then
+169                   CryptKey(0).CipherName = arrRange(k, 10)
+170               End If
+171           End If
+172           k = k + 1
+173       Next i
 
-138       Application.StatusBar = "Data collection: Global variables, completed:" & VBA.Format(2 / 7, "Percent")
-139       For i = 1 To varModule.objSubFun.Count
-140           arrRange(k, 1) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(1)
-141           arrRange(k, 2) = varModule.objSubFun.Items(i - 1)
-142           arrRange(k, 3) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(0)
-143           arrRange(k, 4) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(2)
-144           arrRange(k, 5) = arrRange(k, 1)
-145           arrRange(k, 6) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(3)
-146           arrRange(k, 8) = arrRange(k, 6)
-147           arrRange(k, 9) = "yes"
+174       Application.StatusBar = "Data collection: Global variables, completed:" & VBA.Format(2 / 7, "Percent")
+175       For i = 1 To varModule.objSubFun.Count
+176           arrRange(k, 1) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(1)
+177           arrRange(k, 2) = varModule.objSubFun.Items(i - 1)
+178           arrRange(k, 3) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(0)
+179           arrRange(k, 4) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(2)
+180           arrRange(k, 5) = arrRange(k, 1)
+181           arrRange(k, 6) = VBA.Split(varModule.objSubFun.Keys(i - 1), CHR_TO)(3)
+182           arrRange(k, 8) = arrRange(k, 6)
+183           arrRange(k, 9) = "yes"
 
-148           If objDict.Exists(arrRange(k, 8)) = False Then
-149               objDict.Add arrRange(k, 8), AddEncodeName()
-150           End If
-151           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
+184           If objDict.Exists(arrRange(k, 8)) = False Then
+185               objDict.Add arrRange(k, 8), AddEncodeName()
+186           End If
+187           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
               
-              'store temporarily the cipher for the function for the string encryption
-152           If bEncodeStr Then
-153               If arrRange(k, 1) <> "Sub" And arrRange(k, 1) <> "Function" And Left$(arrRange(k, 1), 8) <> "Property" Then
-154               ElseIf arrRange(k, 2) <> 1 Then
-155               ElseIf arrRange(k, 6) = GetNameSubFromString(CStr(varStrCryptFunc(0))) Then
-156                   strCryptFuncCipher = arrRange(k, 10)
-157               End If
-158           End If
+              'store the cipher for the function for the string encryption
+188           If bEncodeStr Then
+189               If arrRange(k, 1) <> "Sub" And arrRange(k, 1) <> "Function" And Left$(arrRange(k, 1), 8) <> "Property" Then
+190               ElseIf arrRange(k, 2) <> 1 Then
+191               ElseIf arrRange(k, 6) = GetNameSubFromString(CStr(CryptFunc(0).GetCodeLine(0))) Then
+192                   CryptFunc(0).CipherName = arrRange(k, 10)
+193               End If
+194           End If
               
-159           k = k + 1
-160       Next i
-
-161       Application.StatusBar = "Data collection: Procedure names, completed:" & VBA.Format(3 / 7, "Percent")
-162       For i = 1 To varModule.objContr.Count
-163           arrRange(k, 1) = "Control"
-164           arrRange(k, 2) = varModule.objContr.Items(i - 1)
-165           arrRange(k, 3) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(0)
-166           arrRange(k, 4) = "Private"
-167           arrRange(k, 6) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(1)
-168           arrRange(k, 8) = arrRange(k, 6)
-169           arrRange(k, 9) = "yes"
-
-170           If objDict.Exists(arrRange(k, 8)) = False Then
-171               objDict.Add arrRange(k, 8), AddEncodeName()
-172           End If
-173           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
-174           k = k + 1
-175       Next i
-
-176       Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(4 / 7, "Percent")
-177       For i = 1 To varModule.objDimVar.Count
-178           arrRange(k, 1) = "Variable"
-179           arrRange(k, 2) = varModule.objDimVar.Items(i - 1)
-180           arrRange(k, 3) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(0)
-181           arrRange(k, 4) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(3)
-182           arrRange(k, 5) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(1)
-183           arrRange(k, 6) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(2)
-184           arrRange(k, 7) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(4)
-185           arrRange(k, 8) = arrRange(k, 7)
-186           arrRange(k, 9) = "yes"
-
-187           If objDict.Exists(arrRange(k, 8)) = False Then
-188               objDict.Add arrRange(k, 8), AddEncodeName()
-189           End If
-190           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
-191           k = k + 1
-192           If i Mod 50 = 0 Then
-193               Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(i / varModule.objDimVar.Count, "Percent")
-194               DoEvents
-195           End If
+195           k = k + 1
 196       Next i
 
-197       Application.StatusBar = "Data collection: Variable names, completed:" & VBA.Format(5 / 7, "Percent")
-198       For i = 1 To varModule.objTypeEnum.Count
-199           arrRange(k, 1) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(2)
-200           arrRange(k, 2) = varModule.objTypeEnum.Items(i - 1)
-201           arrRange(k, 3) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(0)
-202           arrRange(k, 4) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(1)
-203           arrRange(k, 6) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(3)
+197       Application.StatusBar = "Data collection: Procedure names, completed:" & VBA.Format(3 / 7, "Percent")
+198       For i = 1 To varModule.objContr.Count
+199           arrRange(k, 1) = "Control"
+200           arrRange(k, 2) = varModule.objContr.Items(i - 1)
+201           arrRange(k, 3) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(0)
+202           arrRange(k, 4) = "Private"
+203           arrRange(k, 6) = VBA.Split(varModule.objContr.Keys(i - 1), CHR_TO)(1)
 204           arrRange(k, 8) = arrRange(k, 6)
 205           arrRange(k, 9) = "yes"
 
@@ -363,135 +357,212 @@ Private Sub ParserProjectVBA(ByRef objWB As Object, Optional bEncodeStr As Boole
 210           k = k + 1
 211       Next i
 
-212       Application.StatusBar = "Data collection: Names of enumerations and types, completed:" & VBA.Format(6 / 7, "Percent")
-213       For i = 1 To varModule.objAPI.Count
-214           arrRange(k, 1) = "API"
-215           arrRange(k, 2) = varModule.objAPI.Items(i - 1)
-216           arrRange(k, 3) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(0)
-217           arrRange(k, 4) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(1)
-218           arrRange(k, 5) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(2)
-219           arrRange(k, 6) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(3)
-220           arrRange(k, 8) = arrRange(k, 6)
-221           arrRange(k, 9) = "yes"
+212       Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(4 / 7, "Percent")
+213       For i = 1 To varModule.objDimVar.Count
+214           arrRange(k, 1) = "Variable"
+215           arrRange(k, 2) = varModule.objDimVar.Items(i - 1)
+216           arrRange(k, 3) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(0)
+217           arrRange(k, 4) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(3)
+218           arrRange(k, 5) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(1)
+219           arrRange(k, 6) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(2)
+220           arrRange(k, 7) = VBA.Split(varModule.objDimVar.Keys(i - 1), CHR_TO)(4)
+221           arrRange(k, 8) = arrRange(k, 7)
+222           arrRange(k, 9) = "yes"
 
-222           If objDict.Exists(arrRange(k, 8)) = False Then
-223               objDict.Add arrRange(k, 8), AddEncodeName()
-224           End If
-225           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
-226           k = k + 1
-227       Next i
-228       Application.StatusBar = "Data collection: API names, completed:" & VBA.Format(7 / 7, "Percent")
+223           If objDict.Exists(arrRange(k, 8)) = False Then
+224               objDict.Add arrRange(k, 8), AddEncodeName()
+225           End If
+226           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
+227           k = k + 1
+228           If i Mod 50 = 0 Then
+229               Application.StatusBar = "Data collection: Names of controls, completed:" & VBA.Format(i / varModule.objDimVar.Count, "Percent")
+230               DoEvents
+231           End If
+232       Next i
 
-229       With ActiveSheet
-230           Application.StatusBar = "Application of formats"
-231           .Cells.ClearContents
-232           .Cells(1, 1).Value = "Type"
-233           .Cells(1, 2).Value = "Module type"
-234           .Cells(1, 3).Value = "Module name"
-235           .Cells(1, 4).Value = "Access Modifiers"
-236           .Cells(1, 5).Value = "Percentage type. and funk."
-237           .Cells(1, 6).Value = "The name of the percentage. and funk."
-238           .Cells(1, 7).Value = "Name of variables"
-239           .Cells(1, 8).Value = "Encryption Object"
-240           .Cells(1, 9).Value = "Encrypt yes/No"
-241           .Cells(1, 10).Value = "Code"
-242           .Cells(1, 11).Value = "Mistakes"
+233       Application.StatusBar = "Data collection: Variable names, completed:" & VBA.Format(5 / 7, "Percent")
+234       For i = 1 To varModule.objTypeEnum.Count
+235           arrRange(k, 1) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(2)
+236           arrRange(k, 2) = varModule.objTypeEnum.Items(i - 1)
+237           arrRange(k, 3) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(0)
+238           arrRange(k, 4) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(1)
+239           arrRange(k, 6) = VBA.Split(varModule.objTypeEnum.Keys(i - 1), CHR_TO)(3)
+240           arrRange(k, 8) = arrRange(k, 6)
+241           arrRange(k, 9) = "yes"
 
-243           .Cells(2, 1).Resize(UBound(arrRange), 10) = arrRange
+242           If objDict.Exists(arrRange(k, 8)) = False Then
+243               objDict.Add arrRange(k, 8), AddEncodeName()
+244           End If
+245           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
+246           k = k + 1
+247       Next i
 
-244           .Range(.Cells(2, 11), .Cells(k, 11)).FormulaR1C1 = "=IFERROR(VLOOKUP(RC[-3]," & SHSNIPPETS.ListObjects(C_Const.TB_SERVICEWORDS).DataBodyRange.Address(ReferenceStyle:=xlR1C1, External:=True) & ",1,0),"""")"
-245           .Range(.Cells(2, 9), .Cells(k, 9)).FormulaR1C1 = "=IF(RC[2]="""",""yes"",""no"")"
-246           .Columns("A:K").AutoFilter
-247           .Columns("A:K").EntireColumn.AutoFit
-248           .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
+248       Application.StatusBar = "Data collection: Names of enumerations and types, completed:" & VBA.Format(6 / 7, "Percent")
+249       For i = 1 To varModule.objAPI.Count
+250           arrRange(k, 1) = "API"
+251           arrRange(k, 2) = varModule.objAPI.Items(i - 1)
+252           arrRange(k, 3) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(0)
+253           arrRange(k, 4) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(1)
+254           arrRange(k, 5) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(2)
+255           arrRange(k, 6) = VBA.Split(varModule.objAPI.Keys(i - 1), CHR_TO)(3)
+256           arrRange(k, 8) = arrRange(k, 6)
+257           arrRange(k, 9) = "yes"
+
+258           If objDict.Exists(arrRange(k, 8)) = False Then
+259               objDict.Add arrRange(k, 8), AddEncodeName()
+260           End If
+261           arrRange(k, 10) = objDict.Item(arrRange(k, 8))
+262           k = k + 1
+263       Next i
+264       Application.StatusBar = "Data collection: API names, completed:" & VBA.Format(7 / 7, "Percent")
+
+265       With ActiveSheet
+266           Application.StatusBar = "Application of formats"
+267           .Cells.ClearContents
+268           .Cells(1, 1).Value = "Type"
+269           .Cells(1, 2).Value = "Module type"
+270           .Cells(1, 3).Value = "Module name"
+271           .Cells(1, 4).Value = "Access Modifiers"
+272           .Cells(1, 5).Value = "Percentage type. and funk."
+273           .Cells(1, 6).Value = "The name of the percentage. and funk."
+274           .Cells(1, 7).Value = "Name of variables"
+275           .Cells(1, 8).Value = "Encryption Object"
+276           .Cells(1, 9).Value = "Encrypt yes/No"
+277           .Cells(1, 10).Value = "Code"
+278           .Cells(1, 11).Value = "Mistakes"
+
+279           .Cells(2, 1).Resize(UBound(arrRange), 10) = arrRange
+
+280           .Range(.Cells(2, 11), .Cells(k, 11)).FormulaR1C1 = "=IFERROR(VLOOKUP(RC[-3]," & SHSNIPPETS.ListObjects(C_Const.TB_SERVICEWORDS).DataBodyRange.Address(ReferenceStyle:=xlR1C1, External:=True) & ",1,0),"""")"
+281           .Range(.Cells(2, 9), .Cells(k, 9)).FormulaR1C1 = "=IF(RC[2]="""",""yes"",""no"")"
+282           .Columns("A:K").AutoFilter
+283           .Columns("A:K").EntireColumn.AutoFit
+284           .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
               
               '
-249           If bSafeMode Then
-250               For i = 2 To UBound(arrRange) + 1
+285           If bSafeMode Then
+286               For i = 2 To UBound(arrRange) + 1
                       'exclude Excel Objects
-251                   If .Cells(i, 2).Value = "100" Then
+287                   If .Cells(i, 2).Value = "100" Then
                           'Debug.Print .Cells(i, 5).Value
-252                       If .Cells(i, 1).Value = "Module" And _
+288                       If .Cells(i, 1).Value = "Module" And _
                               .Cells(i, 5).Value = "" Then 'changed 31.08 CalDymos
-253                           .Cells(i, 9).Value = "NO"
-254                       End If
-                      'exclude API
-255                   ElseIf .Cells(i, 1).Value = "API" Then
-256                       .Cells(i, 9).Value = "NO"
-257                   End If
-258               Next i
-259           End If
-260           Application.StatusBar = "Application of formats, finished"
-261       End With
+289                           .Cells(i, 9).Value = "NO"
+290                       End If
+                          'exclude API
+291                   ElseIf .Cells(i, 1).Value = "API" Then
+292                       .Cells(i, 9).Value = "NO"
+293                   End If
+294               Next i
+295           End If
+296           Application.StatusBar = "Application of formats, finished"
+297       End With
 
-          'Laden der String-Variablen
-262       If bEncodeStr Then
-263           Call AddSheetInWBook(NAME_SH_STR, ActiveWorkbook)
-264           Application.StatusBar = "Collecting String variables"
-265           If varModule.objStringCode.Count <> 0 Then
-266               ReDim arrRange(1 To varModule.objStringCode.Count, 1 To 8) As String
-267               For i = 1 To varModule.objStringCode.Count
-268                   arrRange(i, 1) = varModule.objStringCode.Items(i - 1)
-269                   arrRange(i, 2) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(0)
-270                   arrRange(i, 3) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(1)
-271                   arrRange(i, 4) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(2)
-272                   arrRange(i, 5) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(3)
-273                   arrRange(i, 6) = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)(4)
-274                   arrRange(i, 7) = "yes"
-275                   arrRange(i, 8) = AddEncodeName() ' Modulname für String Konstanten
+          'Load String Vars
+298       If bEncodeStr Then
+299           Call AddSheetInWBook(NAME_SH_STR, objWB)
+300           Application.StatusBar = "Collecting String variables"
+301           If varModule.objStringCode.Count <> 0 Then
+302               ReDim arrRange(1 To varModule.objStringCode.Count, 1 To 8) As String
+303               For i = 1 To varModule.objStringCode.Count
+304                   asSplitKey() = VBA.Split(varModule.objStringCode.Keys(i - 1), CHR_TO)
+305                   arrRange(i, 1) = varModule.objStringCode.Items(i - 1)
+306                   arrRange(i, 2) = asSplitKey(0)
+307                   arrRange(i, 3) = asSplitKey(1)
+308                   arrRange(i, 4) = asSplitKey(2)
+309                   arrRange(i, 5) = asSplitKey(3)
+310                   arrRange(i, 6) = asSplitKey(4)
+311                   arrRange(i, 7) = LCase$(asSplitKey(5)) ' changed 13.09
+312                   arrRange(i, 8) = AddEncodeName()
 
-276                   If i Mod 50 = 0 Then
-277                       Application.StatusBar = "Collecting String variables, completed:" & VBA.Format(i / varModule.objStringCode.Count, "Percent")
-278                       DoEvents
-279                   End If
-280               Next i
-281               Application.StatusBar = "Collecting String variables, completed"
-282               With ActiveSheet
-283                   .Cells(1, 1).Value = "Module type"
-284                   .Cells(1, 2).Value = "Module name"
-285                   .Cells(1, 3).Value = "Type Sub or Fun"
-286                   .Cells(1, 4).Value = "Name Sub or Fun"
-287                   .Cells(1, 5).Value = "Line"
-288                   .Cells(1, 6).Value = "Array Strings"
-289                   .Cells(1, 7).Value = "Encrypt yes/No"
-290                   .Cells(1, 8).Value = "Code"
-291                   .Cells(1, 9).Value = "Module cipher"
+313                   If i Mod 50 = 0 Then
+314                       Application.StatusBar = "Collecting String variables, completed:" & VBA.Format(i / varModule.objStringCode.Count, "Percent")
+315                       DoEvents
+316                   End If
+317               Next i
+318               Application.StatusBar = "Collecting String variables, completed"
+319               With ActiveSheet
+320                   .Cells(1, 1).Value = "Module type"
+321                   .Cells(1, 2).Value = "Module name"
+322                   .Cells(1, 3).Value = "Type Sub or Fun"
+323                   .Cells(1, 4).Value = "Name Sub or Fun"
+324                   .Cells(1, 5).Value = "Line"
+325                   .Cells(1, 6).Value = "Array Strings"
+326                   .Cells(1, 7).Value = "Encrypt yes/No"
+327                   .Cells(1, 8).Value = "Code"
+328                   .Cells(1, 9).Value = "Module cipher"
                       
-292                   .Cells(1, 11).Value = "The cipher of the Const module"
-293                   .Cells(2, 11).Value = AddEncodeName()
+329                   .Cells(1, 11).Value = "The cipher of the Const module"
+330                   .Cells(2, 11).Value = AddEncodeName()
                       
                       'Add additional information for string encryption
-294                   .Cells(1, 12).Value = "The name of the Key constant"
-295                   .Cells(2, 12).Value = asCryptKey(0) ' Schlüssel für die Stringverschlüsselung
-296                   .Cells(1, 13).Value = "The Key value"
-297                   .Cells(2, 13).Value = asCryptKey(1) ' Schlüssel für die Stringverschlüsselung
-298                   .Cells(1, 14).Value = "The module for the key"
-299                   .Cells(2, 14).Value = objTmpName.Keys(z2)
-300                   .Cells(1, 15).Value = "The cipher of Key constant"
-301                   .Cells(2, 15).Value = strCryptKeyCipher
-302                   .Cells(1, 16).Value = "Name of Crypt Func"
-303                   .Cells(2, 16).Value = GetNameSubFromString(CStr(varStrCryptFunc(0)))
-304                   .Cells(1, 17).Value = "The module for die Crypt Func"
-305                   .Cells(2, 17).Value = objTmpName.Keys(z1)
-306                   .Cells(1, 18).Value = "The cipher of Crypt Func"
-307                   .Cells(2, 18).Value = strCryptFuncCipher
+331                   .Cells(1, 12).Value = "The name of the Key constant"
+332                   .Cells(2, 12).Value = CryptKey(0).Name
+333                   .Cells(1, 13).Value = "The Key value"
+334                   .Cells(2, 13).Value = CryptKey(0).Value ' Key for string encryption
+335                   .Cells(1, 14).Value = "The module for the key"
+336                   .Cells(2, 14).Value = CryptKey(0).ModuleName
+337                   .Cells(1, 15).Value = "The cipher of Key constant"
+338                   .Cells(2, 15).Value = CryptKey(0).CipherName
+339                   .Cells(1, 16).Value = "Name of Crypt Func"
+340                   .Cells(2, 16).Value = CryptFunc(0).Name
+341                   .Cells(1, 17).Value = "The module for die Crypt Func"
+342                   .Cells(2, 17).Value = CryptFunc(0).ModuleName
+343                   .Cells(1, 18).Value = "The cipher of Crypt Func"
+344                   .Cells(2, 18).Value = CryptFunc(0).CipherName
 
-308                   .Cells(2, 1).Resize(UBound(arrRange), 8) = arrRange
+345                   .Cells(2, 1).Resize(UBound(arrRange), 8) = arrRange
 
-309                   .Range(Cells(2, 7), Cells(UBound(arrRange) + 1, 7)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
-310                   .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).FormulaR1C1 = "=IF(RC1*1=100,RC2,VLOOKUP(RC2,DATA_OBF_VBATools!R2C3:R" & k & "C10,8,0))"
-311                   .Columns("A:I").AutoFilter
-312                   .Columns("A:D").EntireColumn.AutoFit
-313                   .Columns("E").ColumnWidth = 60
-314                   .Columns("F:S").EntireColumn.AutoFit
-315                   .Columns("A:S").HorizontalAlignment = xlCenter
-316                   .Rows("2:" & UBound(arrRange) + 1).RowHeight = 12
-317               End With
-318           End If
-319       End If
-320       ActiveWorkbook.Worksheets(NAME_SH).Activate
+346                   .Range(Cells(2, 7), Cells(UBound(arrRange) + 1, 7)).Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="YES, NO"
+347                   .Range(Cells(2, 9), Cells(UBound(arrRange) + 1, 9)).FormulaR1C1 = "=IF(RC1*1=100,RC2,VLOOKUP(RC2,DATA_OBF_VBATools!R2C3:R" & k & "C10,8,0))"
+348                   .Columns("A:I").AutoFilter
+349                   .Columns("A:D").EntireColumn.AutoFit
+350                   .Columns("E").ColumnWidth = 60
+351                   .Columns("F:S").EntireColumn.AutoFit
+352                   .Columns("A:S").HorizontalAlignment = xlCenter
+353                   .Rows("2:" & UBound(arrRange) + 1).RowHeight = 12
+354               End With
+355           End If
+356       End If
+          
+          'Loading the control properties
+357       Call AddSheetInWBook(NAME_SH_CTL, objWB)
+358       Application.StatusBar = "Collecting Ctrl Properties"
+359       If varModule.objStringCode.Count <> 0 Then
+360           ReDim arrRange(1 To varModule.objCtrlProps.Count, 1 To 5) As String
+361           For i = 1 To varModule.objCtrlProps.Count
+362               asSplitKey() = VBA.Split(varModule.objCtrlProps.Keys(i - 1), CHR_TO)
+363               arrRange(i, 1) = varModule.objCtrlProps.Items(i - 1)
+364               arrRange(i, 2) = asSplitKey(0)
+365               arrRange(i, 3) = asSplitKey(1)
+366               arrRange(i, 4) = asSplitKey(2)
+367               arrRange(i, 5) = asSplitKey(3)
 
-321       Application.StatusBar = False
+368               If i Mod 50 = 0 Then
+369                   Application.StatusBar = "Collecting Ctrl Properties, completed:" & VBA.Format(i / varModule.objStringCode.Count, "Percent")
+370                   DoEvents
+371               End If
+372           Next i
+373           Application.StatusBar = "Collecting String variables, completed"
+374           With objWB.ActiveSheet
+375               .Cells(1, 1).Value = "Control Type"
+376               .Cells(1, 2).Value = "Module name"
+377               .Cells(1, 3).Value = "Name of Control"
+378               .Cells(1, 4).Value = "Name of Property"
+379               .Cells(1, 5).Value = "Value of Property"
+                  
+380               .Cells(2, 1).Resize(UBound(arrRange), 5) = arrRange
+381               .Columns("A:E").NumberFormat = "@"
+382               .Columns("A:E").AutoFilter
+383               .Columns("A:E").EntireColumn.AutoFit
+384               .Columns("A:E").HorizontalAlignment = xlCenter
+385               .Rows("2:" & UBound(arrRange) + 1).RowHeight = 12
+386           End With
+387       End If
+              
+388       objWB.Worksheets(NAME_SH).Activate
+
+389       Application.StatusBar = False
 End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : AddShhetInWBook - Creating a Sheet in active Workbook
@@ -507,13 +578,13 @@ End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Public Sub AddSheetInWBook(ByVal WSheetName As String, ByRef wb As Workbook)
           'Creating a Sheet in active Workbook
-322       Application.DisplayAlerts = False
-323       On Error Resume Next
-324       wb.Worksheets(WSheetName).Delete
-325       On Error GoTo 0
-326       Application.DisplayAlerts = True
-327       wb.Sheets.Add Before:=ActiveSheet
-328       ActiveSheet.Name = WSheetName
+390       Application.DisplayAlerts = False
+391       On Error Resume Next
+392       wb.Worksheets(WSheetName).Delete
+393       On Error GoTo 0
+394       Application.DisplayAlerts = True
+395       wb.Sheets.Add Before:=ActiveSheet
+396       ActiveSheet.Name = WSheetName
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -527,12 +598,14 @@ End Sub
 '* ByRef objVBC As VBIDE.VBComponent             :
 '* ByRef objDic As Scripting.Dictionary          :
 '* ByRef objDicStr As Scripting.Dictionary       :
-'* Optional varStrCryptFunc As Variant = Nothing :
+'* Optional varAddProc As Variant = Nothing :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Modified   : Date and Time       Author              Description
+'* Modified   : Date and Time       Author              Description
 '* Updated    : 07-09-2023 10:19    CalDymos
-Private Sub ParserVariebleSubFunc(ByRef objVBC As VBIDE.VBComponent, ByRef objDic As Scripting.Dictionary, ByRef objDicStr As Scripting.Dictionary, Optional varStrCryptFunc As Variant = Nothing)
+'* Updated    : 13-09-2023 13:38    CalDymos
+Private Sub ParserVariebleSubFunc(ByRef objVBC As VBIDE.VBComponent, ByRef objDic As Scripting.Dictionary, ByRef objDicStr As Scripting.Dictionary)
           Dim lLine       As Long
           Dim sCode       As String
           Dim sVar        As String
@@ -544,133 +617,171 @@ Private Sub ParserVariebleSubFunc(ByRef objVBC As VBIDE.VBComponent, ByRef objDi
           Dim itemArr     As Variant
           Dim itemVar     As Variant
           Dim arrVar      As Variant
-
-329       With objVBC.CodeModule
-330           lLine = .CountOfLines
-331           If lLine > 0 Then
-332               sCode = .Lines(1, lLine)
-333               If sCode <> vbNullString Then
+          Dim i As Long
+          Dim k As Long
+          
+397       With objVBC.CodeModule
+398           lLine = .CountOfLines
+399           If lLine > 0 Then
+400               sCode = .Lines(1, lLine)
+401               If sCode <> vbNullString Then
                       'remove the line breaks.
-334                   sCode = VBA.Replace(sCode, " _" & vbNewLine, vbNullString)
-335                   arrStrCode = VBA.Split(sCode, vbNewLine)
-336                   For Each itemArr In arrStrCode
-337                       itemArr = C_PublicFunctions.TrimSpace(itemArr)
-338                       If itemArr <> vbNullString And VBA.Left$(itemArr, 1) <> "'" Then
-339                           sVar = vbNullString
+402                   sCode = VBA.Replace(sCode, " _" & vbNewLine, vbNullString)
+403                   arrStrCode = VBA.Split(sCode, vbNewLine)
+404                   For Each itemArr In arrStrCode
+405                       itemArr = C_PublicFunctions.TrimSpace(itemArr)
+406                       If itemArr <> vbNullString And VBA.Left$(itemArr, 1) <> "'" Then
+407                           sVar = vbNullString
                               'If the code contains a comment, delete it.
-340                           itemArr = DeleteCommentString(itemArr)
+408                           itemArr = DeleteCommentString(itemArr)
                               'Extract from the declaration clause and determine what is included in the process
-341                           If (itemArr Like "* Sub *(*)*" Or itemArr Like "* Function *(*)*" Or itemArr Like "* Property Let *(*)*" Or itemArr Like "* Property Set *(*)*" Or itemArr Like "* Property Get *(*)*" Or _
+409                           If (itemArr Like "* Sub *(*)*" Or itemArr Like "* Function *(*)*" Or itemArr Like "* Property Let *(*)*" Or itemArr Like "* Property Set *(*)*" Or itemArr Like "* Property Get *(*)*" Or _
                                   itemArr Like "Sub *(*)*" Or itemArr Like "Function *(*)*" Or itemArr Like "Property Let *(*)*" Or itemArr Like "Property Set *(*)*" Or itemArr Like "Property Get *(*)*") _
                                   And (Not itemArr Like "*As IRibbonControl*" And Not itemArr Like "* Declare *(*)*") Then
 
-342                               sSubName = TypeProcedure(VBA.CStr(itemArr))
-343                               sSubName = sSubName & CHR_TO & GetNameSubFromString(itemArr)
-344                               sVar = ParserStrDimConst(itemArr, sSubName, .Name)
+410                               sSubName = TypeProcedure(VBA.CStr(itemArr))
+411                               sSubName = sSubName & CHR_TO & GetNameSubFromString(itemArr)
+412                               sVar = ParserStrDimConst(itemArr, sSubName, .Name)
 
-345                           End If
-                              'Wenn in der Aufzählung und im Datentyp
-346                           If itemArr Like "Private Enum *" Or itemArr Like "Public Enum *" Or itemArr Like "Enum *" Or itemArr Like "Private Type *" Or itemArr Like "Public Type *" Or itemArr Like "Type *" Then
-347                               arrEnum = VBA.Split(itemArr, " ")
-348                               If VBA.CStr(itemArr) Like "Private *" Then
-349                                   sNumTypeName = "Private"
-350                               Else
-351                                   sNumTypeName = "Public"
-352                               End If
-353                               sNumTypeName = arrEnum(UBound(arrEnum)) & CHR_TO & sNumTypeName
-354                               If itemArr Like "* Enum *" Or itemArr Like "Enum *" Then
-355                                   sType = "Enum"
-356                               Else
-357                                   sType = "Type"
-358                               End If
-359                           End If
-                              'aus dem Prozess oder der Aufzählung herausgehen
-360                           If itemArr Like "*End Sub" Or itemArr Like "*End Function" Or itemArr Like "*End Property" Or itemArr Like "*End Enum" Or itemArr Like "*End Type" Then
-361                               sSubName = vbNullString
-362                               sNumTypeName = vbNullString
-363                           End If
-                              'Falls innerhalb des Typs oder der Aufzählung
-364                           If sNumTypeName <> vbNullString And Not itemArr Like "* Enum *" And Not itemArr Like "Enum *" And Not itemArr Like "* Type *" And Not itemArr Like "Type *" Then
-365                               arrEnum = VBA.Split(VBA.Trim$(itemArr), " ")
-366                               sVar = arrEnum(0)
-367                               If sVar Like "*(*" Then sVar = VBA.Left$(sVar, VBA.InStr(1, sVar, "(") - 1)
-368                               sVar = .Name & CHR_TO & sType & CHR_TO & sNumTypeName & CHR_TO & ReplaceType(sVar)
-369                           End If
-                              'wenn wir uns nur innerhalb der Prozedur befinden
-370                           If (itemArr Like "* Dim *" Or itemArr Like "* Const *" Or itemArr Like "Dim *" Or itemArr Like "Const *") And sSubName <> vbNullString Then
-371                               sVar = ParserStrDimConst(itemArr, sSubName, .Name)
-372                           End If
-373                           arrVar = VBA.Split(sVar, vbNewLine)
-374                           For Each itemVar In arrVar
-375                               If itemVar <> vbNullString And objDic.Exists(itemVar) = False Then
-376                                   objDic.Add itemVar, objVBC.Type
-377                               End If
-378                           Next itemVar
-379                           Call ParserStringInCode(itemArr, sSubName, objVBC, objDicStr)
-380                       End If
-381                   Next itemArr
-382               End If
-383           End If
-              
-384           If IsArray(varStrCryptFunc) Then
-385               For Each itemArr In varStrCryptFunc
-386                   itemArr = C_PublicFunctions.TrimSpace(itemArr)
-387                   If itemArr <> vbNullString And VBA.Left$(itemArr, 1) <> "'" Then
-388                       sVar = vbNullString
-                          'If the code contains a comment, delete it.
-389                       itemArr = DeleteCommentString(itemArr)
-                          'aus der Deklarationsklausel entnehmen und feststellen, was in das Verfahren aufgenommen wurde
-390                       If (itemArr Like "* Sub *(*)*" Or itemArr Like "* Function *(*)*" Or itemArr Like "* Property Let *(*)*" Or itemArr Like "* Property Set *(*)*" Or itemArr Like "* Property Get *(*)*" Or _
-                              itemArr Like "Sub *(*)*" Or itemArr Like "Function *(*)*" Or itemArr Like "Property Let *(*)*" Or itemArr Like "Property Set *(*)*" Or itemArr Like "Property Get *(*)*") _
-                              And (Not itemArr Like "*As IRibbonControl*" And Not itemArr Like "* Declare *(*)*") Then
+413                           End If
+                              'If in enumeration or in data type
+414                           If itemArr Like "Private Enum *" Or itemArr Like "Public Enum *" Or itemArr Like "Enum *" Or itemArr Like "Private Type *" Or itemArr Like "Public Type *" Or itemArr Like "Type *" Then
+415                               arrEnum = VBA.Split(itemArr, " ")
+416                               If VBA.CStr(itemArr) Like "Private *" Then
+417                                   sNumTypeName = "Private"
+418                               Else
+419                                   sNumTypeName = "Public"
+420                               End If
+421                               sNumTypeName = arrEnum(UBound(arrEnum)) & CHR_TO & sNumTypeName
+422                               If itemArr Like "* Enum *" Or itemArr Like "Enum *" Then
+423                                   sType = "Enum"
+424                               Else
+425                                   sType = "Type"
+426                               End If
+427                           End If
+                              'go out of the process or enumeration
+428                           If itemArr Like "*End Sub" Or itemArr Like "*End Function" Or itemArr Like "*End Property" Or itemArr Like "*End Enum" Or itemArr Like "*End Type" Then
+429                               sSubName = vbNullString
+430                               sNumTypeName = vbNullString
+431                           End If
+                              'If within a type or enumeration
+432                           If sNumTypeName <> vbNullString And Not itemArr Like "* Enum *" And Not itemArr Like "Enum *" And Not itemArr Like "* Type *" And Not itemArr Like "Type *" Then
+433                               arrEnum = VBA.Split(VBA.Trim$(itemArr), " ")
+434                               sVar = arrEnum(0)
+435                               If sVar Like "*(*" Then sVar = VBA.Left$(sVar, VBA.InStr(1, sVar, "(") - 1)
+436                               sVar = .Name & CHR_TO & sType & CHR_TO & sNumTypeName & CHR_TO & ReplaceType(sVar)
+437                           End If
+                              'when we are only inside the procedure
+438                           If (itemArr Like "* Dim *" Or itemArr Like "* Const *" Or itemArr Like "Dim *" Or itemArr Like "Const *") And sSubName <> vbNullString Then
+439                               sVar = ParserStrDimConst(itemArr, sSubName, .Name)
+440                           End If
+441                           arrVar = VBA.Split(sVar, vbNewLine)
+442                           For Each itemVar In arrVar
+443                               If itemVar <> vbNullString And objDic.Exists(itemVar) = False Then
+444                                   objDic.Add itemVar, objVBC.Type
+445                               End If
+446                           Next itemVar
+447                           Call ParserStringInCode(itemArr, sSubName, objVBC, objDicStr)
+448                       End If
+449                   Next itemArr
+450               End If
+451           End If
+452       End With
+End Sub
 
-391                           sSubName = TypeProcedure(VBA.CStr(itemArr))
-392                           sSubName = sSubName & CHR_TO & GetNameSubFromString(itemArr)
-393                           sVar = ParserStrDimConst(itemArr, sSubName, .Name)
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Sub        : ParserVariebleSubFuncFromAddProc
+'* Created    : 13-09-2023 13:40
+'* Author     : CalDymos
+'* Copyright  : Byte Ranger Software
+'* Argument(s):                             Description
+'*
+'* ByRef objVBC As VBIDE.VBComponent       :
+'* ByRef objDic As Scripting.Dictionary    :
+'* ByRef objDicStr As Scripting.Dictionary :
+'* AddProcs(                               :
+'*
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Private Sub ParserVariebleSubFuncFromAddProc(ByRef objVBC As VBIDE.VBComponent, ByRef objDic As Scripting.Dictionary, ByRef objDicStr As Scripting.Dictionary, AddProcs() As CAddProc)
+          Dim lLine       As Long
+          Dim sCode       As String
+          Dim sVar        As String
+          Dim sSubName    As String
+          Dim sNumTypeName As String
+          Dim sType       As String
+          Dim arrStrCode  As Variant
+          Dim arrEnum     As Variant
+          Dim itemArr     As Variant
+          Dim itemVar     As Variant
+          Dim arrVar      As Variant
+          Dim i As Long
+          Dim k As Long
+          
+          
+453       With objVBC.CodeModule
+454           If Not IsArrayEmpty(AddProcs()) Then
+455               For i = 0 To UBound(AddProcs())
+456                   If AddProcs(i).ModuleName = .Name Then
+457                       For Each itemArr In AddProcs(i).CodeLines
+458                           itemArr = C_PublicFunctions.TrimSpace(itemArr)
+459                           If itemArr <> vbNullString And VBA.Left$(itemArr, 1) <> "'" Then
+460                               sVar = vbNullString
+                                  'If the code contains a comment, delete it.
+461                               itemArr = DeleteCommentString(itemArr)
+                                  'aus der Deklarationsklausel entnehmen und feststellen, was in das Verfahren aufgenommen wurde
+462                               If (itemArr Like "* Sub *(*)*" Or itemArr Like "* Function *(*)*" Or itemArr Like "* Property Let *(*)*" Or itemArr Like "* Property Set *(*)*" Or itemArr Like "* Property Get *(*)*" Or _
+                                      itemArr Like "Sub *(*)*" Or itemArr Like "Function *(*)*" Or itemArr Like "Property Let *(*)*" Or itemArr Like "Property Set *(*)*" Or itemArr Like "Property Get *(*)*") _
+                                      And (Not itemArr Like "*As IRibbonControl*" And Not itemArr Like "* Declare *(*)*") Then
 
-394                       End If
-                          'Wenn in der Aufzählung und im Datentyp
-395                       If itemArr Like "Private Enum *" Or itemArr Like "Public Enum *" Or itemArr Like "Enum *" Or itemArr Like "Private Type *" Or itemArr Like "Public Type *" Or itemArr Like "Type *" Then
-396                           arrEnum = VBA.Split(itemArr, " ")
-397                           If VBA.CStr(itemArr) Like "Private *" Then
-398                               sNumTypeName = "Private"
-399                           Else
-400                               sNumTypeName = "Public"
-401                           End If
-402                           sNumTypeName = arrEnum(UBound(arrEnum)) & CHR_TO & sNumTypeName
-403                           If itemArr Like "* Enum *" Or itemArr Like "Enum *" Then
-404                               sType = "Enum"
-405                           Else
-406                               sType = "Type"
-407                           End If
-408                       End If
-                          'aus dem Prozess oder der Aufzählung herausgehen
-409                       If itemArr Like "*End Sub" Or itemArr Like "*End Function" Or itemArr Like "*End Property" Or itemArr Like "*End Enum" Or itemArr Like "*End Type" Then
-410                           sSubName = vbNullString
-411                           sNumTypeName = vbNullString
-412                       End If
-                          'Falls innerhalb des Typs oder der Aufzählung
-413                       If sNumTypeName <> vbNullString And Not itemArr Like "* Enum *" And Not itemArr Like "Enum *" And Not itemArr Like "* Type *" And Not itemArr Like "Type *" Then
-414                           arrEnum = VBA.Split(VBA.Trim$(itemArr), " ")
-415                           sVar = arrEnum(0)
-416                           If sVar Like "*(*" Then sVar = VBA.Left$(sVar, VBA.InStr(1, sVar, "(") - 1)
-417                           sVar = .Name & CHR_TO & sType & CHR_TO & sNumTypeName & CHR_TO & ReplaceType(sVar)
-418                       End If
-                          'wenn wir uns nur innerhalb der Prozedur befinden
-419                       If (itemArr Like "* Dim *" Or itemArr Like "* Const *" Or itemArr Like "Dim *" Or itemArr Like "Const *") And sSubName <> vbNullString Then
-420                           sVar = ParserStrDimConst(itemArr, sSubName, .Name)
-421                       End If
-422                       arrVar = VBA.Split(sVar, vbNewLine)
-423                       For Each itemVar In arrVar
-424                           If itemVar <> vbNullString And objDic.Exists(itemVar) = False Then
-425                               objDic.Add itemVar, objVBC.Type
-426                           End If
-427                       Next itemVar
-428                       Call ParserStringInCode(itemArr, sSubName, objVBC, objDicStr)
-429                   End If
-430               Next itemArr
-431           End If
-432       End With
+463                                   sSubName = TypeProcedure(VBA.CStr(itemArr))
+464                                   sSubName = sSubName & CHR_TO & GetNameSubFromString(itemArr)
+465                                   sVar = ParserStrDimConst(itemArr, sSubName, .Name)
+
+466                               End If
+                                  'Wenn in der Aufzдhlung und im Datentyp
+467                               If itemArr Like "Private Enum *" Or itemArr Like "Public Enum *" Or itemArr Like "Enum *" Or itemArr Like "Private Type *" Or itemArr Like "Public Type *" Or itemArr Like "Type *" Then
+468                                   arrEnum = VBA.Split(itemArr, " ")
+469                                   If VBA.CStr(itemArr) Like "Private *" Then
+470                                       sNumTypeName = "Private"
+471                                   Else
+472                                       sNumTypeName = "Public"
+473                                   End If
+474                                   sNumTypeName = arrEnum(UBound(arrEnum)) & CHR_TO & sNumTypeName
+475                                   If itemArr Like "* Enum *" Or itemArr Like "Enum *" Then
+476                                       sType = "Enum"
+477                                   Else
+478                                       sType = "Type"
+479                                   End If
+480                               End If
+                                  'aus dem Prozess oder der Aufzдhlung herausgehen
+481                               If itemArr Like "*End Sub" Or itemArr Like "*End Function" Or itemArr Like "*End Property" Or itemArr Like "*End Enum" Or itemArr Like "*End Type" Then
+482                                   sSubName = vbNullString
+483                                   sNumTypeName = vbNullString
+484                               End If
+                                  'Falls innerhalb des Typs oder der Aufzдhlung
+485                               If sNumTypeName <> vbNullString And Not itemArr Like "* Enum *" And Not itemArr Like "Enum *" And Not itemArr Like "* Type *" And Not itemArr Like "Type *" Then
+486                                   arrEnum = VBA.Split(VBA.Trim$(itemArr), " ")
+487                                   sVar = arrEnum(0)
+488                                   If sVar Like "*(*" Then sVar = VBA.Left$(sVar, VBA.InStr(1, sVar, "(") - 1)
+489                                   sVar = .Name & CHR_TO & sType & CHR_TO & sNumTypeName & CHR_TO & ReplaceType(sVar)
+490                               End If
+                                  'wenn wir uns nur innerhalb der Prozedur befinden
+491                               If (itemArr Like "* Dim *" Or itemArr Like "* Const *" Or itemArr Like "Dim *" Or itemArr Like "Const *") And sSubName <> vbNullString Then
+492                                   sVar = ParserStrDimConst(itemArr, sSubName, .Name)
+493                               End If
+494                               arrVar = VBA.Split(sVar, vbNewLine)
+495                               For Each itemVar In arrVar
+496                                   If itemVar <> vbNullString And objDic.Exists(itemVar) = False Then
+497                                       objDic.Add itemVar, objVBC.Type
+498                                   End If
+499                               Next itemVar
+500                               Call ParserStringInCode(itemArr, sSubName, objVBC, objDicStr)
+501                           End If
+502                       Next itemArr
+503                   End If
+504               Next
+505           End If
+506       End With
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -681,21 +792,29 @@ End Sub
 '* Copyright  : VBATools.ru
 '* Argument(s):                 Description
 '*
-'* ByVal sStrCode As String : ñòðîêà
+'* ByVal sStrCode As String : строка
 '*
+'* Modified   : Date and Time       Author              Description
+'* Updated    : 13-09-2023 13:41    CalDymos
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function GetNameSubFromString(ByVal sStrCode As String) As String
-        Dim sTemp       As String
-433     sTemp = VBA.Trim$(VBA.Left$(sStrCode, VBA.InStr(1, sStrCode, "(") - 1))
-434     Select Case True
-        Case sTemp Like "*Sub *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Sub ") - 3)
-435         Case sTemp Like "*Function *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Function ") - 8)
-436         Case sTemp Like "*Property Let *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Let ") - 12)
-437         Case sTemp Like "*Property Set *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Set ") - 12)
-438         Case sTemp Like "*Property Get *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Get ") - 12)
-439     End Select
-440     GetNameSubFromString = VBA.Trim$(sTemp)
-  End Function
+Private Function GetNameSubFromString(ByVal sStrCode As String) As String
+          Dim sTemp       As String
+          Dim Pos1 As Long
+          
+507       Pos1 = VBA.InStr(1, sStrCode, "(")
+          
+508       If Pos1 <> 0 Then
+509           sTemp = VBA.Trim$(VBA.Left$(sStrCode, Pos1 - 1))
+510           Select Case True
+                  Case sTemp Like "*Sub *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Sub ") - 3)
+511               Case sTemp Like "*Function *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Function ") - 8)
+512               Case sTemp Like "*Property Let *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Let ") - 12)
+513               Case sTemp Like "*Property Set *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Set ") - 12)
+514               Case sTemp Like "*Property Get *": sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Property Get ") - 12)
+515           End Select
+516       End If
+517       GetNameSubFromString = VBA.Trim$(sTemp)
+End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Sub        : ParserStringInCode - Sammlung von String-Konstanten aus dem Code
@@ -712,53 +831,60 @@ End Sub
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Modified   : Date and Time       Author              Description
+'* Updated    : 13-09-2023 13:41    CalDymos
 '* Updated    : 31-08-2023 08:07    CalDymos
-     Private Sub ParserStringInCode(ByVal sSTR As String, ByVal sNameSub As String, ByRef objVBC As VBIDE.VBComponent, ByRef objDicStr As Scripting.Dictionary)
-        Dim sTxt        As String
-        Dim arrStr      As Variant
-        Dim Arr         As Variant
-        Dim sReplace    As String
-        Dim i           As Integer
-        Dim sArray      As String
-        Const CHAR_REPLACE As String = "XXXXX"
+Private Sub ParserStringInCode(ByVal sSTR As String, ByVal sNameSub As String, ByRef objVBC As VBIDE.VBComponent, ByRef objDicStr As Scripting.Dictionary)
+          Dim sTxt        As String
+          Dim arrStr      As Variant
+          Dim arr         As Variant
+          Dim sReplace    As String
+          Dim i           As Integer
+          Dim sArray      As String
+          Dim sYesNo      As String
+          Const CHAR_REPLACE As String = "XXXXX"
+          
 
-441     sSTR = VBA.Trim$(sSTR)
+518       sSTR = VBA.Trim$(sSTR)
 
-442     If sSTR Like "*" & VBA.Chr$(34) & "*" And _
-           sSTR <> vbNullString And _
-           Not sSTR Like "*Declare * Lib *(*)*" And _
-           Not sSTR Like "* Const * = " & VBA.Chr$(34) & "*" Then 'changed : am 31.08 CalDymos
+519       If sSTR Like "*" & VBA.Chr$(34) & "*" And _
+              sSTR <> vbNullString And _
+              Not sSTR Like "*Declare * Lib *(*)*" Then
 
-443         sTxt = VBA.Right$(sSTR, VBA.Len(sSTR) - VBA.InStr(1, sSTR, VBA.Chr$(34)) + 1)
-444         sTxt = VBA.Replace(sTxt, VBA.Chr$(34) & VBA.Chr$(34), CHAR_REPLACE)
-445         arrStr = VBA.Split(sTxt, VBA.Chr$(34))
+520           If sSTR Like "*Const *" Or sSTR Like "Const *" Then 'changed 13.09 - Constants must not be encrypted
+521               sYesNo = "No"
+522           Else
+523               sYesNo = "Yes"
+524           End If
+525           sTxt = VBA.Right$(sSTR, VBA.Len(sSTR) - VBA.InStr(1, sSTR, VBA.Chr$(34)) + 1)
+526           sTxt = VBA.Replace(sTxt, VBA.Chr$(34) & VBA.Chr$(34), CHAR_REPLACE)
+527           arrStr = VBA.Split(sTxt, VBA.Chr$(34))
 
-446         sArray = VBA.Left$(sSTR, VBA.InStr(1, sSTR, VBA.Chr$(34)) - 1)
-447         If sArray Like "* = Array(" Then
-448             sArray = VBA.Replace(sArray, " = Array(", vbNullString)
-449             Arr = VBA.Split(sArray, " ")
-450             sArray = Arr(UBound(Arr))
-451         Else
-452             sArray = vbNullString
-453         End If
-454         For i = 1 To UBound(arrStr) Step 2
-455             If arrStr(i) <> vbNullString Then
-456                 If sNameSub = vbNullString Then sNameSub = "Declaration" & CHR_TO
+528           sArray = VBA.Left$(sSTR, VBA.InStr(1, sSTR, VBA.Chr$(34)) - 1)
+529           If sArray Like "* = Array(" Then
+530               sArray = VBA.Replace(sArray, " = Array(", vbNullString)
+531               arr = VBA.Split(sArray, " ")
+532               sArray = arr(UBound(arr))
+533           Else
+534               sArray = vbNullString
+535           End If
+536           For i = 1 To UBound(arrStr) Step 2
+537               If arrStr(i) <> vbNullString Then
+538                   If sNameSub = vbNullString Then sNameSub = "Declaration" & CHR_TO
 
-457                 sReplace = VBA.Replace(arrStr(i), CHAR_REPLACE, VBA.Chr$(34) & VBA.Chr$(34))
-458                 sTxt = objVBC.Name & CHR_TO & sNameSub & CHR_TO & VBA.Chr$(34) & sReplace & VBA.Chr$(34) & CHR_TO & sArray    '& CHR_TO & sYesNo
-459                 If arrStr(i + 1) Like "*: * = *" Then sArray = vbNullString
-460                 If arrStr(i + 1) Like "*: * = Array(*" Then
-461                     sArray = VBA.Replace(arrStr(i + 1), ": ", vbNullString)
-462                     sArray = VBA.Replace(sArray, " = Array(", vbNullString)
-463                     sArray = VBA.Replace(sArray, ")", vbNullString)
-464                 End If
-465                 If objDicStr.Exists(sTxt) = False Then objDicStr.Add sTxt, objVBC.Type
-466             End If
-467         Next i
-468         sArray = vbNullString
-469     End If
-   End Sub
+539                   sReplace = VBA.Replace(arrStr(i), CHAR_REPLACE, VBA.Chr$(34) & VBA.Chr$(34))
+540                   sTxt = objVBC.Name & CHR_TO & sNameSub & CHR_TO & VBA.Chr$(34) & sReplace & VBA.Chr$(34) & CHR_TO & sArray & CHR_TO & sYesNo 'changed 13.09
+541                   If arrStr(i + 1) Like "*: * = *" Then sArray = vbNullString
+542                   If arrStr(i + 1) Like "*: * = Array(*" Then
+543                       sArray = VBA.Replace(arrStr(i + 1), ": ", vbNullString)
+544                       sArray = VBA.Replace(sArray, " = Array(", vbNullString)
+545                       sArray = VBA.Replace(sArray, ")", vbNullString)
+546                   End If
+547                   If objDicStr.Exists(sTxt) = False Then objDicStr.Add sTxt, objVBC.Type
+548               End If
+549           Next i
+550           sArray = vbNullString
+551       End If
+End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Function   : ParserStrDimConst - String parser for initialization of variables and constants
@@ -771,156 +897,316 @@ End Sub
 '* ByVal sTxt As String : - code line
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function ParserStrDimConst(ByVal sTxt As String, ByVal sNameSub As String, ByVal sNameMod As String) As String
-        Dim sTemp       As String
-        Dim sWord       As String
-        Dim sWordTemp   As String
-        Dim arrStr      As Variant
-        Dim itemArr     As Variant
-        Dim arrWord     As Variant
-        Dim sType       As String
+Private Function ParserStrDimConst(ByVal sTxt As String, ByVal sNameSub As String, ByVal sNameMod As String) As String
+          Dim sTemp       As String
+          Dim sWord       As String
+          Dim sWordTemp   As String
+          Dim arrStr      As Variant
+          Dim itemArr     As Variant
+          Dim arrWord     As Variant
+          Dim sType       As String
 
-470     sTemp = C_PublicFunctions.TrimSpace(sTxt)
-471     sType = "Dim"
-472     If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
-            'åñëè åñòü êîìåíòàðèé â ñòðîêå êîäà òî óäàëÿåì åãî
-473         sTemp = DeleteCommentString(sTemp)
-474         If sTemp Like "*Sub *(*)*" Or sTemp Like "*Function *(*)*" Or sTemp Like "*Property Let *(*)*" Or sTemp Like "*Property Set *(*)*" Or sTemp Like "*Property Get *(*)*" Then
-475             If VBA.InStr(1, sTemp, ")") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, ")") - 1)
-476             If VBA.InStr(1, sTemp, " = ") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ") - 1)
-477             If VBA.Len(sTemp) - VBA.InStr(1, sTemp, "(") >= 0 Then
-478                 sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "("))
-479             End If
-480         ElseIf sTemp Like "* Dim *" Or sTemp Like Chr$(68) & "im *" Then
-481             sType = "Dim"
-482             If VBA.InStr(1, sTemp, "Dim ") >= 3 Then sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Dim ") - 3)
-483         ElseIf sTemp Like "* Const *" Or sTemp Like Chr$(67) & "onst *" Then
-484             sType = "Const"
-485             If VBA.InStr(1, sTemp, "Const ") >= 5 Then sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Const ") - 5)
-486             If VBA.InStr(1, sTemp, " = ") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ") - 1)
-487         Else
-488             sTemp = vbNullString
-489         End If
-490     End If
+552       sTemp = C_PublicFunctions.TrimSpace(sTxt)
+553       sType = "Dim"
+554       If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
+              'If there is a comment in the code string, delete it.
+555           sTemp = DeleteCommentString(sTemp)
+556           If sTemp Like "*Sub *(*)*" Or sTemp Like "*Function *(*)*" Or sTemp Like "*Property Let *(*)*" Or sTemp Like "*Property Set *(*)*" Or sTemp Like "*Property Get *(*)*" Then
+557               If VBA.InStr(1, sTemp, ")") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, ")") - 1)
+558               If VBA.InStr(1, sTemp, " = ") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ") - 1)
+559               If VBA.Len(sTemp) - VBA.InStr(1, sTemp, "(") >= 0 Then
+560                   sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "("))
+561               End If
+562           ElseIf sTemp Like "* Dim *" Or sTemp Like Chr$(68) & "im *" Then
+563               sType = "Dim"
+564               If VBA.InStr(1, sTemp, "Dim ") >= 3 Then sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Dim ") - 3)
+565           ElseIf sTemp Like "* Const *" Or sTemp Like Chr$(67) & "onst *" Then
+566               sType = "Const"
+567               If VBA.InStr(1, sTemp, "Const ") >= 5 Then sTemp = VBA.Right$(sTemp, VBA.Len(sTemp) - VBA.InStr(1, sTemp, "Const ") - 5)
+568               If VBA.InStr(1, sTemp, " = ") >= 1 Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ") - 1)
+569           Else
+570               sTemp = vbNullString
+571           End If
+572       End If
 
-491     If sTemp Like "*: *" Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, ": ") - 1)
-492     If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
-493         arrStr = VBA.Split(sTemp, ",")
-494         For Each itemArr In arrStr
-495             If itemArr Like "*(*" Then itemArr = VBA.Left$(itemArr, VBA.InStr(1, itemArr, "(") - 1)
-496             If Not itemArr Like "*)*" And Not itemArr Like "* To *" Then
-497                 arrWord = VBA.Split(itemArr, " As ")
-498                 arrWord = VBA.Split(VBA.Trim$(arrWord(0)), " ")
-499                 If UBound(arrWord) = -1 Then
-500                     sWord = vbNullString
-501                 Else
-502                     sWordTemp = VBA.Trim$(arrWord(UBound(arrWord)))
-503                     sWordTemp = ReplaceType(sWordTemp)
-504                     sWord = sWord & vbNewLine & sNameMod & CHR_TO & sNameSub & CHR_TO & sType & CHR_TO & sWordTemp
-505                 End If
-506             End If
-507         Next itemArr
-508     End If
-509     sWord = VBA.Trim$(sWord)
-510     If VBA.Len(sWord) = 0 Then
-511         sWord = vbNullString
-512     Else
-513         sWord = VBA.Trim$(VBA.Right$(sWord, VBA.Len(sWord) - 2))
-514     End If
-515     ParserStrDimConst = sWord
-   End Function
+573       If sTemp Like "*: *" Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, ": ") - 1)
+574       If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
+575           arrStr = VBA.Split(sTemp, ",")
+576           For Each itemArr In arrStr
+577               If itemArr Like "*(*" Then itemArr = VBA.Left$(itemArr, VBA.InStr(1, itemArr, "(") - 1)
+578               If Not itemArr Like "*)*" And Not itemArr Like "* To *" Then
+579                   arrWord = VBA.Split(itemArr, " As ")
+580                   arrWord = VBA.Split(VBA.Trim$(arrWord(0)), " ")
+581                   If UBound(arrWord) = -1 Then
+582                       sWord = vbNullString
+583                   Else
+584                       sWordTemp = VBA.Trim$(arrWord(UBound(arrWord)))
+585                       sWordTemp = ReplaceType(sWordTemp)
+586                       sWord = sWord & vbNewLine & sNameMod & CHR_TO & sNameSub & CHR_TO & sType & CHR_TO & sWordTemp
+587                   End If
+588               End If
+589           Next itemArr
+590       End If
+591       sWord = VBA.Trim$(sWord)
+592       If VBA.Len(sWord) = 0 Then
+593           sWord = vbNullString
+594       Else
+595           sWord = VBA.Trim$(VBA.Right$(sWord, VBA.Len(sWord) - 2))
+596       End If
+597       ParserStrDimConst = sWord
+End Function
 
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Sub        : ParserNameSubFunc - ñáîð íàçâàíèé ïðîöåäóð è ôóíêöèé
+'* Sub        : ParserNameSubFunc - сбор названий процедур и функций
 '* Created    : 27-03-2020 13:20
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* Argument(s):                             Description
 '*
-'* ByRef objCodeModule As VBIDE.CodeModule : îáúåêò ìîäóëü
+'* ByRef objCodeModule As VBIDE.CodeModule : объект модуль
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Modified   : Date and Time       Author              Description
 '* Updated    : 07-09-2023 10:22    CalDymos
+'* Updated    : 13-09-2023 13:42    CalDymos
 
-     Private Sub ParserNameSubFunc(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef varSubFun As Scripting.Dictionary, Optional varStrCryptFunc As Variant = Nothing)
+Private Sub ParserNameSubFunc(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef varSubFun As Scripting.Dictionary)
           Dim ProcKind    As VBIDE.vbext_ProcKind
           Dim lLine       As Long
           Dim lineOld     As Long
           Dim sNameSub    As String
           Dim strFunctionBody As String
-                        Dim skey As String
-                        
-516       With objVBC.CodeModule
-517           If .CountOfLines > 0 Then
-518               lLine = .CountOfDeclarationLines
-519               If lLine = 0 Then lLine = 2
-520               Do Until lLine >= .CountOfLines
+          Dim skey As String
+          
+598       With objVBC.CodeModule
+599           If .CountOfLines > 0 Then
+600               lLine = .CountOfDeclarationLines
+601               If lLine = 0 Then lLine = 2
+602               Do Until lLine >= .CountOfLines
 
                       'Sammeln von Namen von Prozeduren und Funktionen
-521                   sNameSub = .ProcOfLine(lLine, ProcKind)
-522                   If sNameSub <> vbNullString Then
-523                       strFunctionBody = C_PublicFunctions.TrimSpace(.Lines(lLine - 1, .ProcCountLines(sNameSub, ProcKind)))
-                            'Debug.Print strFunctionBody
-                            'Debug.Print .Lines(lLine - 1, .ProcCountLines(sNameSub, ProcKind))
-524                       If (Not strFunctionBody Like "*As IRibbonControl*") And _
+603                   sNameSub = .ProcOfLine(lLine, ProcKind)
+604                   If sNameSub <> vbNullString Then
+605                       strFunctionBody = C_PublicFunctions.TrimSpace(.Lines(lLine - 1, .ProcCountLines(sNameSub, ProcKind)))
+                          'Debug.Print strFunctionBody
+                          'Debug.Print .Lines(lLine - 1, .ProcCountLines(sNameSub, ProcKind))
+606                       If (Not strFunctionBody Like "*As IRibbonControl*") And _
                               (Not strFunctionBody Like "*As IRibbonUI*") And _
                               (Not WorkBookAndSheetsEvents(strFunctionBody, objVBC.Type)) And _
                               (Not (strFunctionBody Like "* UserForm_*" And objVBC.Type = vbext_ct_MSForm)) And _
                               (Not UserFormsEvents(strFunctionBody, objVBC.Type)) Then
-525                           skey = sNameVBC & CHR_TO & TypeProcedure(strFunctionBody) & CHR_TO & TypeOfAccessModifier(strFunctionBody) & CHR_TO & sNameSub
+607                           skey = sNameVBC & CHR_TO & TypeProcedure(strFunctionBody) & CHR_TO & TypeOfAccessModifier(strFunctionBody) & CHR_TO & sNameSub
                               'Debug.Print skey
-526                           If Not varSubFun.Exists(skey) Then
-527                               varSubFun.Add skey, objVBC.Type
-528                           End If
-529                       End If
-530                       lLine = .ProcStartLine(sNameSub, ProcKind) + .ProcCountLines(sNameSub, ProcKind) + 1
-531                   Else
-532                       lLine = lLine + 1
-533                   End If
-534                   If lineOld > lLine Then Exit Do
-535                   lineOld = lLine
-536               Loop
-537           End If
-538       End With
-539       If IsArray(varStrCryptFunc) Then
+608                           If Not varSubFun.Exists(skey) Then
+609                               varSubFun.Add skey, objVBC.Type
+610                           End If
+611                       End If
+612                       lLine = .ProcStartLine(sNameSub, ProcKind) + .ProcCountLines(sNameSub, ProcKind) + 1
+613                   Else
+614                       lLine = lLine + 1
+615                   End If
+616                   If lineOld > lLine Then Exit Do
+617                   lineOld = lLine
+618               Loop
+619           End If
+620       End With
+            
+End Sub
 
-540               skey = sNameVBC & CHR_TO & TypeProcedure(CStr(varStrCryptFunc(0))) & CHR_TO & TypeOfAccessModifier(CStr(varStrCryptFunc(0))) & CHR_TO & GetNameSubFromString(CStr(varStrCryptFunc(0)))
-                  'Debug.Print skey
-541                 If Not varSubFun.Exists(skey) Then
-542                     varSubFun.Add skey, objVBC.Type
-543                 End If
-544       End If
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Sub        : ParserNameSubFuncFromAddProc
+'* Created    : 13-09-2023 13:42
+'* Author     : CalDymos
+'* Copyright  : Byte Ranger Software
+'* Argument(s):                             Description
+'*
+'* ByVal sNameVBC As String                :
+'* ByRef objVBC As VBIDE.VBComponent       :
+'* ByRef varSubFun As Scripting.Dictionary :
+'* AddProcs(                               :
+'*
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Private Sub ParserNameSubFuncFromAddProc(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef varSubFun As Scripting.Dictionary, AddProcs() As CAddProc)
+          Dim skey As String
+          Dim i As Long
+          
+             
+621       If Not IsArrayEmpty(AddProcs()) Then
+622           For i = 0 To UBound(AddProcs())
+623               If AddProcs(i).ModuleName = sNameVBC Then
+624                   If Not UserFormsEvents(AddProcs(i).GetCodeLine(0), objVBC.Type) Then
+625                       skey = sNameVBC & CHR_TO & TypeProcedure(CStr(AddProcs(i).GetCodeLine(0))) & CHR_TO & _
+                              TypeOfAccessModifier(CStr(AddProcs(i).GetCodeLine(0))) & CHR_TO & AddProcs(i).Name
+                          'Debug.Print skey
+626                       If Not varSubFun.Exists(skey) Then
+627                           varSubFun.Add skey, objVBC.Type
+628                       End If
+629                   End If
+630               End If
+631           Next
+632       End If
         
 End Sub
 
-'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Function   : ParserNameControlsForm - ñáîð íàçâàíèé êîíòðîëîâ þçåðôîðì
-'* Created    : 27-03-2020 13:50
-'* Author     : VBATools
-'* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
-'* Copyright  : VBATools.ru
-'* Argument(s):                         Description
-'*
-'* ByRef objVBC As VBIDE.VBComponent :
-'*
-'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Sub ParserNameControlsForm(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef obfNewDict As Scripting.Dictionary)
-        Dim objCont     As MSForms.control
-545     If Not objVBC.Designer Is Nothing Then
-546         With objVBC.Designer
-547             For Each objCont In .Controls
-                    'Debug.Print sNameVBC & CHR_TO & objCont.Name, objVBC.Type
-548                 obfNewDict.Add sNameVBC & CHR_TO & objCont.Name, objVBC.Type
-549             Next objCont
-550         End With
-551     End If
+Private Sub ParserNameControlsForm(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef obfNewDict As Scripting.Dictionary)
+          Dim objCont     As MSForms.control
+633       If Not objVBC.Designer Is Nothing Then
+634           With objVBC.Designer
+635               For Each objCont In .Controls
+                      'Debug.Print sNameVBC & CHR_TO & objCont.Name, objVBC.Type
+636                   obfNewDict.Add sNameVBC & CHR_TO & objCont.Name, objVBC.Type
+637               Next objCont
+638           End With
+639       End If
 End Sub
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Sub        : ParserNameGlobalVariable - ñáîð ãëîáàëüíûõ ïåðåìåííûõ
+'* Sub        : ParserPropertiesControlsForm
+'* Created    : 13-09-2023 13:42
+'* Author     : CalDymos
+'* Copyright  : Byte Ranger Software
+'* Argument(s):                         Description
+'*
+'* ByVal sNameVBC As String          :
+'* ByRef objVBC As VBIDE.VBComponent :
+'* ByRef varAddCtrlProp(             :
+'*
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Private Sub ParserPropertiesControlsForm(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef varAddCtrlProp() As CAddProc, ByRef obfNewDict As Scripting.Dictionary)
+          Dim objCtl     As MSForms.control
+          Dim objTxtBox As MSForms.TextBox
+          Dim objLbl As MSForms.Label
+          Dim objCmdBtn As MSForms.CommandButton
+          Dim objFrame As MSForms.Frame
+          Dim objChkBox As MSForms.CheckBox
+          Dim objOptBtn As MSForms.OptionButton
+          Dim objTglBtn As MSForms.ToggleButton
+
+          Dim i1 As Long
+          Dim i2 As Long
+
+640       If Not objVBC.Designer Is Nothing And objVBC.Type = vbext_ct_MSForm Then
+641           If Not IsArrayEmpty(varAddCtrlProp()) Then
+642               i1 = UBound(varAddCtrlProp()) + 1
+643               ReDim Preserve varAddCtrlProp(i1)
+644           Else
+645               ReDim varAddCtrlProp(0)
+646               i1 = 0
+647           End If
+648           Set varAddCtrlProp(i1) = New CAddProc
+              
+649           i2 = 0
+                    
+650           varAddCtrlProp(i1).ModuleName = sNameVBC
+651           varAddCtrlProp(i1).BehavProcExists = enumBehavProcExistInsCodeAtBegin
+652           varAddCtrlProp(i1).Name = "UserForm_Initialize"
+653           varAddCtrlProp(i1).AddCodeLine "Private Sub " & varAddCtrlProp(i1).Name & "()"
+654           i2 = i2 + 1
+
+655           If objVBC.Properties("Caption") <> "" Then
+656               varAddCtrlProp(i1).AddCodeLine "Me.Caption = " & Chr$(34) & objVBC.Properties("Caption") & Chr$(34)
+657               i2 = i2 + 1
+658               obfNewDict.Add sNameVBC & CHR_TO & "" & CHR_TO & "Caption" & CHR_TO & objVBC.Properties("Caption"), "UserForm"
+659           End If
+660           If objVBC.Properties("Tag") <> "" Then
+661               varAddCtrlProp(i1).AddCodeLine "Me.Tag= " & Chr$(34) & objVBC.Properties("Tag") & Chr$(34)
+662               i2 = i2 + 1
+663               obfNewDict.Add sNameVBC & CHR_TO & "" & CHR_TO & "Tag" & CHR_TO & objVBC.Properties("Tag"), "UserForm"
+664           End If
+665           With objVBC.Designer
+666               For Each objCtl In .Controls
+667                   If TypeOf objCtl Is MSForms.TextBox Then
+668                       Set objTxtBox = objCtl
+669                       If objTxtBox.Text <> "" Then
+670                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Text = " & Chr$(34) & objTxtBox.Text & Chr$(34)
+671                           i2 = i2 + 1
+672                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Text" & CHR_TO & objTxtBox.Text, TypeName(objCtl)
+673                       End If
+674                   ElseIf TypeOf objCtl Is MSForms.Label Then
+675                       Set objLbl = objCtl
+676                       If objLbl.Caption <> "" Then
+677                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objLbl.Caption & Chr$(34)
+678                           i2 = i2 + 1
+679                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objLbl.Caption, TypeName(objCtl)
+680                       End If
+681                   ElseIf TypeOf objCtl Is MSForms.CommandButton Then
+682                       Set objCmdBtn = objCtl
+683                       If objCmdBtn.Caption <> "" Then
+684                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objCmdBtn.Caption & Chr$(34)
+685                           i2 = i2 + 1
+686                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objCmdBtn.Caption, TypeName(objCtl)
+687                       End If
+688                   ElseIf TypeOf objCtl Is MSForms.Frame Then
+689                       Set objFrame = objCtl
+690                       If objFrame.Caption <> "" Then
+691                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objFrame.Caption & Chr$(34)
+692                           i2 = i2 + 1
+693                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objFrame.Caption, TypeName(objCtl)
+694                       End If
+695                   ElseIf TypeOf objCtl Is MSForms.CheckBox Then
+696                       Set objChkBox = objCtl
+697                       If objChkBox.Caption <> "" Then
+698                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objChkBox.Caption & Chr$(34)
+699                           i2 = i2 + 1
+700                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objChkBox.Caption, TypeName(objCtl)
+701                       End If
+702                   ElseIf TypeOf objCtl Is MSForms.OptionButton Then
+703                       Set objOptBtn = objCtl
+704                       If objOptBtn.Caption <> "" Then
+705                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objOptBtn.Caption & Chr$(34)
+706                           i2 = i2 + 1
+707                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objOptBtn.Caption, TypeName(objCtl)
+708                       End If
+709                   ElseIf TypeOf objCtl Is MSForms.ToggleButton Then
+710                       Set objTglBtn = objCtl
+711                       If objTglBtn.Caption <> "" Then
+712                           varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Caption = " & Chr$(34) & objTglBtn.Caption & Chr$(34)
+713                           i2 = i2 + 1
+714                           obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Caption" & CHR_TO & objTglBtn.Caption, TypeName(objCtl)
+715                       End If
+716                   End If
+717                   If objCtl.Tag <> "" Then
+718                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Tag = " & Chr$(34) & objCtl.Tag & Chr$(34)
+719                       i2 = i2 + 1
+720                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Tag" & CHR_TO & objCtl.Tag, TypeName(objCtl)
+721                   End If
+722                   If objCtl.ControlTipText <> "" Then
+723                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".ControlTipText = " & Chr$(34) & objCtl.ControlTipText & Chr$(34)
+724                       i2 = i2 + 1
+725                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "ControlTipText" & CHR_TO & objCtl.ControlTipText, TypeName(objCtl)
+726                   End If
+727                   If objCtl.Height > 0 Then
+728                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Height = " & Replace$(CStr(objCtl.Height), ",", ".")
+729                       i2 = i2 + 1
+730                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Height" & CHR_TO & objCtl.Height, TypeName(objCtl)
+731                   End If
+732                   If objCtl.Width > 0 Then
+733                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Width = " & Replace$(CStr(objCtl.Width), ",", ".")
+734                       i2 = i2 + 1
+735                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Width" & CHR_TO & objCtl.Width, TypeName(objCtl)
+736                   End If
+737                   If objCtl.Left > 0 Then
+738                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Left = " & Replace$(CStr(objCtl.Left), ",", ".")
+739                       i2 = i2 + 1
+740                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Left" & CHR_TO & objCtl.Left, TypeName(objCtl)
+741                   End If
+742                   If objCtl.top > 0 Then
+743                       varAddCtrlProp(i1).AddCodeLine "Me." & objCtl.Name & ".Top = " & Replace$(CStr(objCtl.top), ",", ".")
+744                       i2 = i2 + 1
+745                       obfNewDict.Add sNameVBC & CHR_TO & objCtl.Name & CHR_TO & "Top" & CHR_TO & objCtl.top, TypeName(objCtl)
+746                   End If
+                          
+747               Next objCtl
+748               varAddCtrlProp(i1).AddCodeLine "End Sub"
+749               varAddCtrlProp(i1).SetCodeLinesSize (i2)
+750           End With
+751       End If
+End Sub
+
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Sub        : ParserNameGlobalVariable - сбор глобальных переменных
 '* Created    : 27-03-2020 15:38
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
@@ -932,8 +1218,9 @@ End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 '* Modified   : Date and Time       Author              Description
 '* Updated    : 07-09-2023 10:23    CalDymos
+'* Updated    : 13-09-2023 13:43    CalDymos
 
-     Private Sub ParserNameGlobalVariable(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef dicGloblVar As Scripting.Dictionary, ByRef dicTypeEnum As Scripting.Dictionary, ByRef dicAPI As Scripting.Dictionary, Optional asCryptKey As Variant = Nothing)
+Private Sub ParserNameGlobalVariable(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef dicGloblVar As Scripting.Dictionary, ByRef dicTypeEnum As Scripting.Dictionary, ByRef dicAPI As Scripting.Dictionary)
           Dim varArr      As Variant
           Dim varArrWord  As Variant
           Dim varStr      As Variant
@@ -945,115 +1232,165 @@ End Sub
           Dim bFlag       As Boolean
           Dim j           As Byte
           Dim itemArr     As Byte
-552       bFlag = True
-553       If objVBC.CodeModule.CountOfDeclarationLines <> 0 Then
-554           sTemp = objVBC.CodeModule.Lines(1, objVBC.CodeModule.CountOfDeclarationLines)
-555           sTemp = VBA.Replace(sTemp, " _" & vbNewLine, vbNullString)
-556           If sTemp <> vbNullString Then
-557               varArr = VBA.Split(sTemp, vbNewLine)
-558               For i = 0 To UBound(varArr)
-559                   sTemp = C_PublicFunctions.TrimSpace(DeleteCommentString(varArr(i)))
-560                   If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
-561                       If sTemp Like "* Type *" Or sTemp Like "* Enum *" Or sTemp Like "Type *" Or sTemp Like "Enum *" Then
-562                           varArrWord = VBA.Split(sTemp, " ")
-563                           If UBound(varArrWord) = 2 Then
-564                               sTemp = VBA.Trim$(varArrWord(0)) & CHR_TO & VBA.Trim$(varArrWord(1)) & CHR_TO & VBA.Trim$(varArrWord(2))
-565                           ElseIf UBound(varArrWord) = 1 Then
-566                               sTemp = "Public" & CHR_TO & VBA.Trim$(varArrWord(0)) & CHR_TO & VBA.Trim$(varArrWord(1))
-567                           End If
-568                           sTemp = sNameVBC & CHR_TO & sTemp
-569                           If Not dicTypeEnum.Exists(sTemp) Then dicTypeEnum.Add sTemp, objVBC.Type
-570                           bFlag = False
-571                       End If
-572                       If bFlag And Not (sTemp Like "Implements *" Or sTemp Like "Option *" Or VBA.Left$(sTemp, 1) = "'" Or sTemp = vbNullString Or VBA.Left$(sTemp, 1) = "#" Or sTemp Like "*Declare *(*)*" Or sTemp Like "*Event *(*)") Then
+          
+752       bFlag = True
+753       If objVBC.CodeModule.CountOfDeclarationLines <> 0 Then
+754           sTemp = objVBC.CodeModule.Lines(1, objVBC.CodeModule.CountOfDeclarationLines)
+755           sTemp = VBA.Replace(sTemp, " _" & vbNewLine, vbNullString)
+756           If sTemp <> vbNullString Then
+757               varArr = VBA.Split(sTemp, vbNewLine)
+758               For i = 0 To UBound(varArr)
+759                   sTemp = C_PublicFunctions.TrimSpace(DeleteCommentString(varArr(i)))
+760                   If sTemp <> vbNullString And VBA.Left$(sTemp, 1) <> "'" Then
+761                       If sTemp Like "* Type *" Or sTemp Like "* Enum *" Or sTemp Like "Type *" Or sTemp Like "Enum *" Then
+762                           varArrWord = VBA.Split(sTemp, " ")
+763                           If UBound(varArrWord) = 2 Then
+764                               sTemp = VBA.Trim$(varArrWord(0)) & CHR_TO & VBA.Trim$(varArrWord(1)) & CHR_TO & VBA.Trim$(varArrWord(2))
+765                           ElseIf UBound(varArrWord) = 1 Then
+766                               sTemp = "Public" & CHR_TO & VBA.Trim$(varArrWord(0)) & CHR_TO & VBA.Trim$(varArrWord(1))
+767                           End If
+768                           sTemp = sNameVBC & CHR_TO & sTemp
+                              'Debug.Print sTemp
+769                           If Not dicTypeEnum.Exists(sTemp) Then dicTypeEnum.Add sTemp, objVBC.Type
+770                           bFlag = False
+771                       End If
+772                       If bFlag And Not (sTemp Like "Implements *" Or sTemp Like "Option *" Or VBA.Left$(sTemp, 1) = "'" Or sTemp = vbNullString Or VBA.Left$(sTemp, 1) = "#" Or sTemp Like "*Declare *(*)*" Or sTemp Like "*Event *(*)") Then
 
-573                           If sTemp Like "* = *" Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ", vbTextCompare) + 2)
-574                           If sTemp Like "* *(* To *) *" Then
-575                               sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, "(", vbTextCompare) - 1)
-576                           End If
-577                           varStr = VBA.Split(sTemp, ",")
-578                           For Each itemVarStr In varStr
-579                               sTemp = VBA.Trim$(itemVarStr)
-580                               varArrWord = VBA.Split(sTemp, " As ")
-581                               varArrWord = VBA.Split(varArrWord(0), " = ")
-582                               sTemp = varArrWord(0)
-583                               varArrWord = VBA.Split(sTemp, " ")
+773                           If sTemp Like "* = *" Then sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " = ", vbTextCompare) + 2)
+774                           If sTemp Like "* *(* To *) *" Then
+775                               sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, "(", vbTextCompare) - 1)
+776                           End If
+777                           varStr = VBA.Split(sTemp, ",")
+778                           For Each itemVarStr In varStr
+779                               sTemp = VBA.Trim$(itemVarStr)
+780                               varArrWord = VBA.Split(sTemp, " As ")
+781                               varArrWord = VBA.Split(varArrWord(0), " = ")
+782                               sTemp = varArrWord(0)
+783                               varArrWord = VBA.Split(sTemp, " ")
 
-584                               j = UBound(varArrWord)
-585                               If j > 1 Then
-586                                   If varArrWord(0) = "Dim" Or varArrWord(0) = "Const" Then
-587                                       sTemp = "Private" & CHR_TO & varArrWord(0) & CHR_TO
-588                                       sTempArr = varArrWord(1)
-589                                   ElseIf (varArrWord(0) = "Private" Or varArrWord(0) = "Public") And (varArrWord(1) = "Dim" Or varArrWord(1) = "Const" Or varArrWord(1) = "WithEvents") Then
-590                                       sTemp = varArrWord(0) & CHR_TO & varArrWord(1) & CHR_TO
-591                                       sTempArr = varArrWord(2)
-592                                   ElseIf (varArrWord(0) = "Private" Or varArrWord(0) = "Public") And Not (varArrWord(1) = "Dim" Or varArrWord(1) = "Const" Or varArrWord(1) = "WithEvents") Then
-593                                       sTemp = varArrWord(0) & CHR_TO & "Dim" & CHR_TO
-594                                       sTempArr = varArrWord(1)
-595                                   End If
-596                               ElseIf j = 1 And varArrWord(0) = "Global" Then
-597                                   sTemp = "Public" & CHR_TO & varArrWord(0) & CHR_TO
-598                                   sTempArr = varArrWord(1)
-599                               ElseIf j = 1 And (varArrWord(0) = "Private" Or varArrWord(0) = "Public") Then
-600                                   sTemp = varArrWord(0) & CHR_TO & "Dim" & CHR_TO
-601                                   sTempArr = varArrWord(1)
-602                               ElseIf j = 1 And (varArrWord(0) = "Dim" Or varArrWord(0) = "Const") Then
-603                                   sTemp = "Private" & CHR_TO & varArrWord(0) & CHR_TO
-604                                   sTempArr = varArrWord(1)
-605                               ElseIf j = 0 Then
-606                                   sTemp = "Private" & CHR_TO & " Dim" & CHR_TO
-607                                   sTempArr = varArrWord(0)
-608                               End If
+784                               j = UBound(varArrWord)
+785                               If j > 1 Then
+786                                   If varArrWord(0) = "Dim" Or varArrWord(0) = "Const" Then
+787                                       sTemp = "Private" & CHR_TO & varArrWord(0) & CHR_TO
+788                                       sTempArr = varArrWord(1)
+789                                   ElseIf (varArrWord(0) = "Private" Or varArrWord(0) = "Public") And (varArrWord(1) = "Dim" Or varArrWord(1) = "Const" Or varArrWord(1) = "WithEvents") Then
+790                                       sTemp = varArrWord(0) & CHR_TO & varArrWord(1) & CHR_TO
+791                                       sTempArr = varArrWord(2)
+792                                   ElseIf (varArrWord(0) = "Private" Or varArrWord(0) = "Public") And Not (varArrWord(1) = "Dim" Or varArrWord(1) = "Const" Or varArrWord(1) = "WithEvents") Then
+793                                       sTemp = varArrWord(0) & CHR_TO & "Dim" & CHR_TO
+794                                       sTempArr = varArrWord(1)
+795                                   End If
+796                               ElseIf j = 1 And varArrWord(0) = "Global" Then
+797                                   sTemp = "Public" & CHR_TO & varArrWord(0) & CHR_TO
+798                                   sTempArr = varArrWord(1)
+799                               ElseIf j = 1 And (varArrWord(0) = "Private" Or varArrWord(0) = "Public") Then
+800                                   sTemp = varArrWord(0) & CHR_TO & "Dim" & CHR_TO
+801                                   sTempArr = varArrWord(1)
+802                               ElseIf j = 1 And (varArrWord(0) = "Dim" Or varArrWord(0) = "Const") Then
+803                                   sTemp = "Private" & CHR_TO & varArrWord(0) & CHR_TO
+804                                   sTempArr = varArrWord(1)
+805                               ElseIf j = 0 Then
+806                                   sTemp = "Private" & CHR_TO & " Dim" & CHR_TO
+807                                   sTempArr = varArrWord(0)
+808                               End If
 
-609                               sTempArr = ReplaceType(sTempArr)
-610                               If sTempArr Like "*(*" Then sTempArr = VBA.Left$(sTempArr, VBA.InStr(1, sTempArr, "(") - 1)
-611                               sTemp = sNameVBC & CHR_TO & sTemp & sTempArr
-612                               If Not dicGloblVar.Exists(sTemp) Then dicGloblVar.Add sTemp, objVBC.Type
+809                               sTempArr = ReplaceType(sTempArr)
+810                               If sTempArr Like "*(*" Then sTempArr = VBA.Left$(sTempArr, VBA.InStr(1, sTempArr, "(") - 1)
+811                               sTemp = sNameVBC & CHR_TO & sTemp & sTempArr
+                                  'Debug.Print sTemp
+812                               If Not dicGloblVar.Exists(sTemp) Then dicGloblVar.Add sTemp, objVBC.Type
 
-613                               sTemp = vbNullString
-614                           Next itemVarStr
-615                           sTemp = vbNullString
-616                       End If
-617                       If sTemp Like "*End Type" Or sTemp Like "*End Enum" Then
-618                           bFlag = True
-619                       End If
-620                       If sTemp Like "*Declare * Lib " & VBA.Chr$(34) & "*" & VBA.Chr$(34) & " (*)*" Then
-621                           sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " Lib ", vbTextCompare) - 1)
-622                           varAPI = VBA.Split(sTemp, VBA.Chr$(32))
-623                           itemArr = UBound(varAPI)
-624                           sTemp = CHR_TO & varAPI(itemArr - 1) & CHR_TO & varAPI(itemArr)
-625                           If varAPI(1) = "Declare" Then
-626                               sTemp = sNameVBC & CHR_TO & varAPI(0) & sTemp
-627                           Else
-628                               sTemp = sNameVBC & CHR_TO & "Private" & sTemp
-629                           End If
-630                           If Not dicAPI.Exists(sTemp) Then dicAPI.Add sTemp, objVBC.Type
-631                       End If
-632                       If sTemp Like "*Event *(*)" Then
-633                           sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, "(", vbTextCompare) - 1)
-634                           varAPI = VBA.Split(sTemp, VBA.Chr$(32))
-635                           itemArr = UBound(varAPI)
-636                           sTemp = CHR_TO & varAPI(itemArr - 1) & CHR_TO & varAPI(itemArr)
-637                           If varAPI(1) = "Event" Then
-638                               sTemp = sNameVBC & CHR_TO & varAPI(0) & sTemp
-639                           Else
-640                               sTemp = sNameVBC & CHR_TO & "Private" & sTemp
-641                           End If
-642                           If Not dicAPI.Exists(sTemp) Then dicAPI.Add sTemp, objVBC.Type
-643                       End If
-644                   End If
-645               Next i
-646           End If
-647       End If
-648       If IsArray(asCryptKey) Then
-649           sTemp = sNameVBC & CHR_TO & "Public" & CHR_TO & "Const" & CHR_TO & CStr(asCryptKey(0))
-650           If Not dicGloblVar.Exists(sTemp) Then dicGloblVar.Add sTemp, objVBC.Type
+813                               sTemp = vbNullString
+814                           Next itemVarStr
+815                           sTemp = vbNullString
+816                       End If
+817                       If sTemp Like "*End Type" Or sTemp Like "*End Enum" Then
+818                           bFlag = True
+819                       End If
+820                       If sTemp Like "*Declare * Lib " & VBA.Chr$(34) & "*" & VBA.Chr$(34) & " (*)*" Then
+821                           sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, " Lib ", vbTextCompare) - 1)
+822                           varAPI = VBA.Split(sTemp, VBA.Chr$(32))
+823                           itemArr = UBound(varAPI)
+824                           sTemp = CHR_TO & varAPI(itemArr - 1) & CHR_TO & varAPI(itemArr)
+825                           If varAPI(1) = "Declare" Then
+826                               sTemp = sNameVBC & CHR_TO & varAPI(0) & sTemp
+827                           Else
+828                               sTemp = sNameVBC & CHR_TO & "Private" & sTemp
+829                           End If
+830                           If Not dicAPI.Exists(sTemp) Then dicAPI.Add sTemp, objVBC.Type
+831                       End If
+832                       If sTemp Like "*Event *(*)" Then
+833                           sTemp = VBA.Left$(sTemp, VBA.InStr(1, sTemp, "(", vbTextCompare) - 1)
+834                           varAPI = VBA.Split(sTemp, VBA.Chr$(32))
+835                           itemArr = UBound(varAPI)
+836                           sTemp = CHR_TO & varAPI(itemArr - 1) & CHR_TO & varAPI(itemArr)
+837                           If varAPI(1) = "Event" Then
+838                               sTemp = sNameVBC & CHR_TO & varAPI(0) & sTemp
+839                           Else
+840                               sTemp = sNameVBC & CHR_TO & "Private" & sTemp
+841                           End If
+                              'Debug.Print sTemp
+842                           If Not dicAPI.Exists(sTemp) Then dicAPI.Add sTemp, objVBC.Type
+843                       End If
+844                   End If
+845               Next i
+846           End If
+847       End If
+          
+End Sub
 
-651           sTemp = vbNullString
-652       End If
-   End Sub
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Function   : AddNewDictionary -ôóíêöèÿ èíèöèàëèçàöèè ñëîâàðÿ
+'* Sub        : ParserNameGlobalVariableFromAddVar
+'* Created    : 13-09-2023 13:43
+'* Author     : CalDymos
+'* Copyright  : Byte Ranger Software
+'* Argument(s):                                 Description
+'*
+'* ByVal sNameVBC As String                  :
+'* ByRef objVBC As VBIDE.VBComponent         :
+'* ByRef dicGloblVar As Scripting.Dictionary :
+'* ByRef dicTypeEnum As Scripting.Dictionary :
+'* ByRef dicAPI As Scripting.Dictionary      :
+'* AddGlobalVars(                            :
+'*
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Private Sub ParserNameGlobalVariableFromAddVar(ByVal sNameVBC As String, ByRef objVBC As VBIDE.VBComponent, ByRef dicGloblVar As Scripting.Dictionary, ByRef dicTypeEnum As Scripting.Dictionary, ByRef dicAPI As Scripting.Dictionary, AddGlobalVars() As CAddGlobalVar)
+          Dim varArr      As Variant
+          Dim varArrWord  As Variant
+          Dim varStr      As Variant
+          Dim itemVarStr  As Variant
+          Dim varAPI      As Variant
+          Dim sTemp       As String
+          Dim sTempArr    As String
+          Dim i           As Long
+          Dim bFlag       As Boolean
+          Dim j           As Byte
+          Dim itemArr     As Byte
+              
+848       If Not IsArrayEmpty(AddGlobalVars()) Then
+849           For i = 0 To UBound(AddGlobalVars())
+850               If AddGlobalVars(i).ModuleName = sNameVBC Then
+851                   sTemp = sNameVBC & CHR_TO
+852                   Select Case AddGlobalVars(i).Visibility
+                          Case enumVisibility.enumVisibilityPublic
+853                           sTemp = sTemp & "Public" & CHR_TO
+854                       Case enumVisibility.enumVisibilityPrivate
+855                           sTemp = sTemp & "Private" & CHR_TO
+856                   End Select
+857                   If AddGlobalVars(i).IsConstant Then
+858                       sTemp = sTemp & "Const" & CHR_TO
+859                   Else
+860                       sTemp = sTemp & "Dim" & CHR_TO
+861                   End If
+862                   sTemp = sTemp & AddGlobalVars(i).Name
+863                   If Not dicGloblVar.Exists(sTemp) Then dicGloblVar.Add sTemp, objVBC.Type
+864                   sTemp = vbNullString
+865               End If
+866           Next
+867       End If
+End Sub
+'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+'* Function   : AddNewDictionary -функция инициализации словаря
 '* Created    : 27-03-2020 13:21
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
@@ -1063,69 +1400,69 @@ End Sub
 '* ByRef objDict As Scripting.Dictionary :
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function AddNewDictionary(ByRef objDict As Scripting.Dictionary) As Scripting.Dictionary
-653     Set objDict = Nothing
-654     Set objDict = New Scripting.Dictionary
-655     Set AddNewDictionary = objDict
-   End Function
+Private Function AddNewDictionary(ByRef objDict As Scripting.Dictionary) As Scripting.Dictionary
+868       Set objDict = Nothing
+869       Set objDict = New Scripting.Dictionary
+870       Set AddNewDictionary = objDict
+End Function
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Function   : DeleteCommentString - óäàëåíèå â ñòðîêå êîììåíòàðèÿ
+'* Function   : DeleteCommentString - удаление в строке комментария
 '* Created    : 20-04-2020 18:18
 '* Author     : VBATools
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* Argument(s):             Description
 '*
-'* ByVal sWord As String : ñòðîêà
+'* ByVal sWord As String : строка
 '*
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Public Function DeleteCommentString(ByVal sWord As String) As String
-        'åñòü '
-        Dim sTemp       As String
-656     sTemp = sWord
-657     If VBA.InStr(1, sTemp, "'") <> 0 Then
-658         If VBA.InStr(1, sTemp, VBA.Chr(34)) <> 0 Then
-                'åñòü "
-659             If VBA.InStr(1, sTemp, "'") < VBA.InStr(1, sTemp, VBA.Chr(34)) Then
-                    'åñëè òàê -> '"
-660                 sTemp = VBA.Trim$(VBA.Left$(sTemp, VBA.InStr(1, sTemp, "'") - 1))
-661             End If
-662         Else
-                'íåò " -> '
-663             sTemp = VBA.Trim$(VBA.Left$(sTemp, VBA.InStr(1, sTemp, "'") - 1))
-664         End If
-665     End If
-666     DeleteCommentString = sTemp
-   End Function
+Public Function DeleteCommentString(ByVal sWord As String) As String
+          'есть '
+          Dim sTemp       As String
+871       sTemp = sWord
+872       If VBA.InStr(1, sTemp, "'") <> 0 Then
+873           If VBA.InStr(1, sTemp, VBA.Chr(34)) <> 0 Then
+                  'есть "
+874               If VBA.InStr(1, sTemp, "'") < VBA.InStr(1, sTemp, VBA.Chr(34)) Then
+                      'если так -> '"
+875                   sTemp = VBA.Trim$(VBA.Left$(sTemp, VBA.InStr(1, sTemp, "'") - 1))
+876               End If
+877           Else
+                  'нет " -> '
+878               sTemp = VBA.Trim$(VBA.Left$(sTemp, VBA.InStr(1, sTemp, "'") - 1))
+879           End If
+880       End If
+881       DeleteCommentString = sTemp
+End Function
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-'* Function   : AddEncodeName - Die Funktion der zufälligen Zuweisung eines zufällig vergebenen Namens
+'* Function   : AddEncodeName - Die Funktion der zufдlligen Zuweisung eines zufдllig vergebenen Namens
 '* Created    : 27-03-2020 13:22
 '* Contacts   : http://vbatools.ru/ https://vk.com/vbatools
 '* Copyright  : VBATools.ru
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     Private Function AddEncodeName() As String
-        Const CharCount As Integer = 20 ' Possible names = 2^19 = 524288
-        Dim i           As Integer
-        Dim sName       As String
+Private Function AddEncodeName() As String
+          Const CharCount As Integer = 20 ' Possible names = 2^19 = 524288
+          Dim i           As Integer
+          Dim sName       As String
 
-        Const FIRST_CODE_SIGN As String = "1"
-        Const SECOND_CODE_SIGN As String = "0"
+          Const FIRST_CODE_SIGN As String = "1"
+          Const SECOND_CODE_SIGN As String = "0"
 tryAgain:
-667     Err.Clear
-668     sName = vbNullString
-669     Randomize
-670     sName = "o"
-671     For i = 2 To CharCount
-672         If (VBA.Round(VBA.Rnd() * 1000)) Mod 2 = 1 Then sName = sName & FIRST_CODE_SIGN Else sName = sName & SECOND_CODE_SIGN
-673     Next i
-674     On Error Resume Next
-       'add a name to the collection, if the name exists, then
-        'an error is generated, which restarts the generation of the name
-675     objCollUnical.Add sName, sName
-676     If Err.Number <> 0 Then GoTo tryAgain
-677     AddEncodeName = sName
-   End Function
+882       Err.Clear
+883       sName = vbNullString
+884       Randomize
+885       sName = "o"
+886       For i = 2 To CharCount
+887           If (VBA.Round(VBA.Rnd() * 1000)) Mod 2 = 1 Then sName = sName & FIRST_CODE_SIGN Else sName = sName & SECOND_CODE_SIGN
+888       Next i
+889       On Error Resume Next
+          'add a name to the collection, if the name exists, then
+          'an error is generated, which restarts the generation of the name
+890       objCollUnical.Add sName, sName
+891       If Err.Number <> 0 Then GoTo tryAgain
+892       AddEncodeName = sName
+End Function
 
 
 '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -1138,187 +1475,187 @@ tryAgain:
 'to increase the security
 Private Function GenerateKey() As String
 
-      Dim z1 As Integer
-      Dim z2 As Integer
-      Dim Z3 As Integer
-      Dim i As Integer
-      Dim skey As String
+          Dim z1 As Integer
+          Dim z2 As Integer
+          Dim Z3 As Integer
+          Dim i As Integer
+          Dim skey As String
 
-678   Randomize Timer
+893       Randomize Timer
 
-679   For i = 1 To 18
-680   z1 = Int(1 + Rnd * (26 - 1 + 1))
-      'Debug.Print Z1
-681   z2 = Int(Rnd * (9 + 1))
-      'Debug.Print Z2
-682   Z3 = Int(1 + Rnd * (2 - 1 + 1))
-      'Debug.Print Z3
+894       For i = 1 To 18
+895           z1 = Int(1 + Rnd * (26 - 1 + 1))
+              'Debug.Print Z1
+896           z2 = Int(Rnd * (9 + 1))
+              'Debug.Print Z2
+897           Z3 = Int(1 + Rnd * (2 - 1 + 1))
+              'Debug.Print Z3
 
-683   If Z3 = 1 Then
-684       skey = skey & Chr$(64 + z1)
-685   Else
-686       skey = skey & CStr(z2)
-687   End If
+898           If Z3 = 1 Then
+899               skey = skey & Chr$(64 + z1)
+900           Else
+901               skey = skey & CStr(z2)
+902           End If
 
-688   Next i
-      'Debug.Print skey
-689   GenerateKey = skey
+903       Next i
+          'Debug.Print skey
+904       GenerateKey = skey
 
 End Function
 
-'âçÿòî
-     Private Function TypeOfAccessModifier(ByRef StrDeclarationProcedure As String) As String
-690     If StrDeclarationProcedure Like "*Private *(*)*" Then
-691         TypeOfAccessModifier = "Private"
-692     Else
-693         TypeOfAccessModifier = "Public"
-694     End If
-   End Function
-     Private Function TypeProcedure(ByRef StrDeclarationProcedure As String) As String
-695     If StrDeclarationProcedure Like "*Sub *" Then
-696         TypeProcedure = "Sub"
-697     ElseIf StrDeclarationProcedure Like "*Function *" Then
-698         TypeProcedure = "Function"
-699     ElseIf StrDeclarationProcedure Like "*Property Set *" Then
-700         TypeProcedure = "Property Set"
-701     ElseIf StrDeclarationProcedure Like "*Property Get *" Then
-702         TypeProcedure = "Property Get"
-703     ElseIf StrDeclarationProcedure Like "*Property Let *" Then
-704         TypeProcedure = "Property Let"
-705     Else
-706         TypeProcedure = "Unknown Type"
-707     End If
-   End Function
+'взято
+Private Function TypeOfAccessModifier(ByRef StrDeclarationProcedure As String) As String
+905       If StrDeclarationProcedure Like "*Private *(*)*" Then
+906           TypeOfAccessModifier = "Private"
+907       Else
+908           TypeOfAccessModifier = "Public"
+909       End If
+End Function
+Private Function TypeProcedure(ByRef StrDeclarationProcedure As String) As String
+910       If StrDeclarationProcedure Like "*Sub *" Then
+911           TypeProcedure = "Sub"
+912       ElseIf StrDeclarationProcedure Like "*Function *" Then
+913           TypeProcedure = "Function"
+914       ElseIf StrDeclarationProcedure Like "*Property Set *" Then
+915           TypeProcedure = "Property Set"
+916       ElseIf StrDeclarationProcedure Like "*Property Get *" Then
+917           TypeProcedure = "Property Get"
+918       ElseIf StrDeclarationProcedure Like "*Property Let *" Then
+919           TypeProcedure = "Property Let"
+920       Else
+921           TypeProcedure = "Unknown Type"
+922       End If
+End Function
 
-     Private Function ReplaceType(ByVal sVar As String) As String
-708     sVar = Replace(sVar, "%", vbNullString)     'Integer
-709     sVar = Replace(sVar, "&", vbNullString)     'Long
-710     sVar = Replace(sVar, "$", vbNullString)     'String
-711     sVar = Replace(sVar, "!", vbNullString)     'Single
-712     sVar = Replace(sVar, "#", vbNullString)     'Double
-713     sVar = Replace(sVar, "@", vbNullString)     'Currency
-714     ReplaceType = sVar
-   End Function
+Private Function ReplaceType(ByVal sVar As String) As String
+923       sVar = Replace(sVar, "%", vbNullString)     'Integer
+924       sVar = Replace(sVar, "&", vbNullString)     'Long
+925       sVar = Replace(sVar, "$", vbNullString)     'String
+926       sVar = Replace(sVar, "!", vbNullString)     'Single
+927       sVar = Replace(sVar, "#", vbNullString)     'Double
+928       sVar = Replace(sVar, "@", vbNullString)     'Currency
+929       ReplaceType = sVar
+End Function
 
 Private Function WorkBookAndSheetsEvents(ByVal sTxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
           Dim Flag        As Boolean
-715       Flag = False
-          'nur für Sheets, Workbooks und Klassenmodule
-716       If TypeModule = vbext_ct_Document Or TypeModule = vbext_ct_ClassModule Then
-717           Select Case True
+930       Flag = False
+          'nur fьr Sheets, Workbooks und Klassenmodule
+931       If TypeModule = vbext_ct_Document Or TypeModule = vbext_ct_ClassModule Then
+932           Select Case True
                   Case sTxt Like "*_Activate(*": Flag = True
-718               Case sTxt Like "*_AddinInstall(*": Flag = True
-719               Case sTxt Like "*_AddinUninstall(*": Flag = True
-720               Case sTxt Like "*_AfterSave(*": Flag = True
-721               Case sTxt Like "*_AfterXmlExport(*": Flag = True
-722               Case sTxt Like "*_AfterXmlImport(*": Flag = True
-723               Case sTxt Like "*_BeforeClose(*": Flag = True
-724               Case sTxt Like "*_BeforeDoubleClick(*": Flag = True
-725               Case sTxt Like "*_BeforePrint(*": Flag = True
-726               Case sTxt Like "*_BeforeRightClick(*": Flag = True
-727               Case sTxt Like "*_BeforeSave(*": Flag = True
-728               Case sTxt Like "*_BeforeXmlExport(*": Flag = True
-729               Case sTxt Like "*_BeforeXmlImport(*": Flag = True
-730               Case sTxt Like "*_Calculate(*": Flag = True
-731               Case sTxt Like "*_Change(*": Flag = True
-732               Case sTxt Like "*_Deactivate(*": Flag = True
-733               Case sTxt Like "*_FollowHyperlink(*": Flag = True
-734               Case sTxt Like "*_MouseDown(*": Flag = True
-735               Case sTxt Like "*_MouseMove(*": Flag = True
-736               Case sTxt Like "*_MouseUp(*": Flag = True
-737               Case sTxt Like "*_NewChart(*": Flag = True
-738               Case sTxt Like "*_NewSheet(*": Flag = True
-739               Case sTxt Like "*_Open(*": Flag = True
-740               Case sTxt Like "*_PivotTableAfterValueChange(*": Flag = True
-741               Case sTxt Like "*_PivotTableBeforeAllocateChanges(*": Flag = True
-742               Case sTxt Like "*_PivotTableBeforeCommitChanges(*": Flag = True
-743               Case sTxt Like "*_PivotTableBeforeDiscardChanges(*": Flag = True
-744               Case sTxt Like "*_PivotTableChangeSync(*": Flag = True
-745               Case sTxt Like "*_PivotTableCloseConnection(*": Flag = True
-746               Case sTxt Like "*_PivotTableOpenConnection(*": Flag = True
-747               Case sTxt Like "*_PivotTableUpdate(*": Flag = True
-748               Case sTxt Like "*_Resize(*": Flag = True
-749               Case sTxt Like "*_RowsetComplete(*": Flag = True
-750               Case sTxt Like "*_SelectionChange(*": Flag = True
-751               Case sTxt Like "*_SeriesChange(*": Flag = True
-752               Case sTxt Like "*_SheetActivate(*": Flag = True
-753               Case sTxt Like "*_SheetBeforeDoubleClick(*": Flag = True
-754               Case sTxt Like "*_SheetBeforeRightClick(*": Flag = True
-755               Case sTxt Like "*_SheetCalculate(*": Flag = True
-756               Case sTxt Like "*_SheetChange(*": Flag = True
-757               Case sTxt Like "*_SheetDeactivate(*": Flag = True
-758               Case sTxt Like "*_SheetFollowHyperlink(*": Flag = True
-759               Case sTxt Like "*_SheetPivotTableAfterValueChange(*": Flag = True
-760               Case sTxt Like "*_SheetPivotTableBeforeAllocateChanges(*": Flag = True
-761               Case sTxt Like "*_SheetPivotTableBeforeCommitChanges(*": Flag = True
-762               Case sTxt Like "*_SheetPivotTableBeforeDiscardChanges(*": Flag = True
-763               Case sTxt Like "*_SheetPivotTableChangeSync(*": Flag = True
-764               Case sTxt Like "*_SheetPivotTableUpdate(*": Flag = True
-765               Case sTxt Like "*_SheetSelectionChange(*": Flag = True
-766               Case sTxt Like "*_Sync(*": Flag = True
-767               Case sTxt Like "*_WindowActivate(*": Flag = True
-768               Case sTxt Like "*_WindowDeactivate(*": Flag = True
-769               Case sTxt Like "*_WindowResize(*": Flag = True
-770               Case sTxt Like "*_NewWorkbook(*": Flag = True
-771               Case sTxt Like "*_WorkbookActivate(*": Flag = True
-772               Case sTxt Like "*_WorkbookAddinInstall(*": Flag = True
-773               Case sTxt Like "*_WorkbookAddinUninstall(*": Flag = True
-774               Case sTxt Like "*_WorkbookAfterSave(*": Flag = True
-775               Case sTxt Like "*_WorkbookAfterXmlExport(*": Flag = True
-776               Case sTxt Like "*_WorkbookAfterXmlImport(*": Flag = True
-777               Case sTxt Like "*_WorkbookBeforeClose(*": Flag = True
-778               Case sTxt Like "*_WorkbookBeforePrint(*": Flag = True
-779               Case sTxt Like "*_WorkbookBeforeSave(*": Flag = True
-780               Case sTxt Like "*_WorkbookBeforeXmlExport(*": Flag = True
-781               Case sTxt Like "*_WorkbookBeforeXmlImport(*": Flag = True
-782               Case sTxt Like "*_WorkbookDeactivate(*": Flag = True
-783               Case sTxt Like "*_WorkbookModelChange(*": Flag = True
-784               Case sTxt Like "*_WorkbookNewChart(*": Flag = True
-785               Case sTxt Like "*_WorkbookNewSheet(*": Flag = True
-786               Case sTxt Like "*_WorkbookOpen(*": Flag = True
-787               Case sTxt Like "*_WorkbookPivotTableCloseConnection(*": Flag = True
-788               Case sTxt Like "*_WorkbookPivotTableOpenConnection(*": Flag = True
-789               Case sTxt Like "*_WorkbookRowsetComplete(*": Flag = True
-790               Case sTxt Like "*_WorkbookSync(*": Flag = True
-791           End Select
-792       End If
-793       WorkBookAndSheetsEvents = Flag
+933               Case sTxt Like "*_AddinInstall(*": Flag = True
+934               Case sTxt Like "*_AddinUninstall(*": Flag = True
+935               Case sTxt Like "*_AfterSave(*": Flag = True
+936               Case sTxt Like "*_AfterXmlExport(*": Flag = True
+937               Case sTxt Like "*_AfterXmlImport(*": Flag = True
+938               Case sTxt Like "*_BeforeClose(*": Flag = True
+939               Case sTxt Like "*_BeforeDoubleClick(*": Flag = True
+940               Case sTxt Like "*_BeforePrint(*": Flag = True
+941               Case sTxt Like "*_BeforeRightClick(*": Flag = True
+942               Case sTxt Like "*_BeforeSave(*": Flag = True
+943               Case sTxt Like "*_BeforeXmlExport(*": Flag = True
+944               Case sTxt Like "*_BeforeXmlImport(*": Flag = True
+945               Case sTxt Like "*_Calculate(*": Flag = True
+946               Case sTxt Like "*_Change(*": Flag = True
+947               Case sTxt Like "*_Deactivate(*": Flag = True
+948               Case sTxt Like "*_FollowHyperlink(*": Flag = True
+949               Case sTxt Like "*_MouseDown(*": Flag = True
+950               Case sTxt Like "*_MouseMove(*": Flag = True
+951               Case sTxt Like "*_MouseUp(*": Flag = True
+952               Case sTxt Like "*_NewChart(*": Flag = True
+953               Case sTxt Like "*_NewSheet(*": Flag = True
+954               Case sTxt Like "*_Open(*": Flag = True
+955               Case sTxt Like "*_PivotTableAfterValueChange(*": Flag = True
+956               Case sTxt Like "*_PivotTableBeforeAllocateChanges(*": Flag = True
+957               Case sTxt Like "*_PivotTableBeforeCommitChanges(*": Flag = True
+958               Case sTxt Like "*_PivotTableBeforeDiscardChanges(*": Flag = True
+959               Case sTxt Like "*_PivotTableChangeSync(*": Flag = True
+960               Case sTxt Like "*_PivotTableCloseConnection(*": Flag = True
+961               Case sTxt Like "*_PivotTableOpenConnection(*": Flag = True
+962               Case sTxt Like "*_PivotTableUpdate(*": Flag = True
+963               Case sTxt Like "*_Resize(*": Flag = True
+964               Case sTxt Like "*_RowsetComplete(*": Flag = True
+965               Case sTxt Like "*_SelectionChange(*": Flag = True
+966               Case sTxt Like "*_SeriesChange(*": Flag = True
+967               Case sTxt Like "*_SheetActivate(*": Flag = True
+968               Case sTxt Like "*_SheetBeforeDoubleClick(*": Flag = True
+969               Case sTxt Like "*_SheetBeforeRightClick(*": Flag = True
+970               Case sTxt Like "*_SheetCalculate(*": Flag = True
+971               Case sTxt Like "*_SheetChange(*": Flag = True
+972               Case sTxt Like "*_SheetDeactivate(*": Flag = True
+973               Case sTxt Like "*_SheetFollowHyperlink(*": Flag = True
+974               Case sTxt Like "*_SheetPivotTableAfterValueChange(*": Flag = True
+975               Case sTxt Like "*_SheetPivotTableBeforeAllocateChanges(*": Flag = True
+976               Case sTxt Like "*_SheetPivotTableBeforeCommitChanges(*": Flag = True
+977               Case sTxt Like "*_SheetPivotTableBeforeDiscardChanges(*": Flag = True
+978               Case sTxt Like "*_SheetPivotTableChangeSync(*": Flag = True
+979               Case sTxt Like "*_SheetPivotTableUpdate(*": Flag = True
+980               Case sTxt Like "*_SheetSelectionChange(*": Flag = True
+981               Case sTxt Like "*_Sync(*": Flag = True
+982               Case sTxt Like "*_WindowActivate(*": Flag = True
+983               Case sTxt Like "*_WindowDeactivate(*": Flag = True
+984               Case sTxt Like "*_WindowResize(*": Flag = True
+985               Case sTxt Like "*_NewWorkbook(*": Flag = True
+986               Case sTxt Like "*_WorkbookActivate(*": Flag = True
+987               Case sTxt Like "*_WorkbookAddinInstall(*": Flag = True
+988               Case sTxt Like "*_WorkbookAddinUninstall(*": Flag = True
+989               Case sTxt Like "*_WorkbookAfterSave(*": Flag = True
+990               Case sTxt Like "*_WorkbookAfterXmlExport(*": Flag = True
+991               Case sTxt Like "*_WorkbookAfterXmlImport(*": Flag = True
+992               Case sTxt Like "*_WorkbookBeforeClose(*": Flag = True
+993               Case sTxt Like "*_WorkbookBeforePrint(*": Flag = True
+994               Case sTxt Like "*_WorkbookBeforeSave(*": Flag = True
+995               Case sTxt Like "*_WorkbookBeforeXmlExport(*": Flag = True
+996               Case sTxt Like "*_WorkbookBeforeXmlImport(*": Flag = True
+997               Case sTxt Like "*_WorkbookDeactivate(*": Flag = True
+998               Case sTxt Like "*_WorkbookModelChange(*": Flag = True
+999               Case sTxt Like "*_WorkbookNewChart(*": Flag = True
+1000              Case sTxt Like "*_WorkbookNewSheet(*": Flag = True
+1001              Case sTxt Like "*_WorkbookOpen(*": Flag = True
+1002              Case sTxt Like "*_WorkbookPivotTableCloseConnection(*": Flag = True
+1003              Case sTxt Like "*_WorkbookPivotTableOpenConnection(*": Flag = True
+1004              Case sTxt Like "*_WorkbookRowsetComplete(*": Flag = True
+1005              Case sTxt Like "*_WorkbookSync(*": Flag = True
+1006          End Select
+1007      End If
+1008      WorkBookAndSheetsEvents = Flag
 End Function
 
 Private Function UserFormsEvents(ByVal sTxt As String, ByVal TypeModule As VBIDE.vbext_ComponentType) As Boolean
-        Dim Flag        As Boolean
-794     Flag = False
-        'Nur für Events, der Forms und Klassen
-795     If TypeModule = vbext_ct_MSForm Or TypeModule = vbext_ct_ClassModule Then
-796         Select Case True
-            Case sTxt Like "*_AfterUpdate(*": Flag = True
-797             Case sTxt Like "*_BeforeDragOver(*": Flag = True
-798             Case sTxt Like "*_BeforeDropOrPaste(*": Flag = True
-799             Case sTxt Like "*_BeforeUpdate(*": Flag = True
-800             Case sTxt Like "*_Change(*": Flag = True
-801             Case sTxt Like "*_Click(*": Flag = True
-802             Case sTxt Like "*_DblClick(*": Flag = True
-803             Case sTxt Like "*_Deactivate(*": Flag = True
-804             Case sTxt Like "*_DropButtonClick(*": Flag = True
-805             Case sTxt Like "*_Enter(*": Flag = True
-806             Case sTxt Like "*_Error(*": Flag = True
-807             Case sTxt Like "*_Exit(*": Flag = True
-808             Case sTxt Like "*_Initialize(*": Flag = True
-809             Case sTxt Like "*_KeyDown(*": Flag = True
-810             Case sTxt Like "*_KeyPress(*": Flag = True
-811             Case sTxt Like "*_KeyUp(*": Flag = True
-812             Case sTxt Like "*_Layout(*": Flag = True
-813             Case sTxt Like "*_MouseDown(*": Flag = True
-814             Case sTxt Like "*_MouseMove(*": Flag = True
-815             Case sTxt Like "*_MouseUp(*": Flag = True
-816             Case sTxt Like "*_QueryClose(*": Flag = True
-817             Case sTxt Like "*_RemoveControl(*": Flag = True
-818             Case sTxt Like "*_Resize(*": Flag = True
-819             Case sTxt Like "*_Scroll(*": Flag = True
-820             Case sTxt Like "*_Terminate(*": Flag = True
-821             Case sTxt Like "*_Zoom(*": Flag = True
-822         End Select
-823     End If
-824     UserFormsEvents = Flag
+          Dim Flag        As Boolean
+1009      Flag = False
+          'Nur fьr Events, der Forms und Klassen
+1010      If TypeModule = vbext_ct_MSForm Or TypeModule = vbext_ct_ClassModule Then
+1011          Select Case True
+                  Case sTxt Like "*_AfterUpdate(*": Flag = True
+1012              Case sTxt Like "*_BeforeDragOver(*": Flag = True
+1013              Case sTxt Like "*_BeforeDropOrPaste(*": Flag = True
+1014              Case sTxt Like "*_BeforeUpdate(*": Flag = True
+1015              Case sTxt Like "*_Change(*": Flag = True
+1016              Case sTxt Like "*_Click(*": Flag = True
+1017              Case sTxt Like "*_DblClick(*": Flag = True
+1018              Case sTxt Like "*_Deactivate(*": Flag = True
+1019              Case sTxt Like "*_DropButtonClick(*": Flag = True
+1020              Case sTxt Like "*_Enter(*": Flag = True
+1021              Case sTxt Like "*_Error(*": Flag = True
+1022              Case sTxt Like "*_Exit(*": Flag = True
+1023              Case sTxt Like "*_Initialize(*": Flag = True
+1024              Case sTxt Like "*_KeyDown(*": Flag = True
+1025              Case sTxt Like "*_KeyPress(*": Flag = True
+1026              Case sTxt Like "*_KeyUp(*": Flag = True
+1027              Case sTxt Like "*_Layout(*": Flag = True
+1028              Case sTxt Like "*_MouseDown(*": Flag = True
+1029              Case sTxt Like "*_MouseMove(*": Flag = True
+1030              Case sTxt Like "*_MouseUp(*": Flag = True
+1031              Case sTxt Like "*_QueryClose(*": Flag = True
+1032              Case sTxt Like "*_RemoveControl(*": Flag = True
+1033              Case sTxt Like "*_Resize(*": Flag = True
+1034              Case sTxt Like "*_Scroll(*": Flag = True
+1035              Case sTxt Like "*_Terminate(*": Flag = True
+1036              Case sTxt Like "*_Zoom(*": Flag = True
+1037          End Select
+1038      End If
+1039      UserFormsEvents = Flag
 End Function
 
