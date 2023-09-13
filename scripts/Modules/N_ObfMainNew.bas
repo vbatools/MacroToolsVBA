@@ -9,7 +9,7 @@ Attribute VB_Name = "N_ObfMainNew"
 '* Modified   : Date and Time       Author              Description
 '* Updated    : 07-09-2023 11:26    CalDymos
 '* Updated    : 12-09-2023 13:29    CalDymos
-'* Updated    : 13-09-2023 13:29    CalDymos            Parser functions changed / added
+'* Updated    : 13-09-2023 13:29    CalDymos            
 
 Option Explicit
 Option Private Module
