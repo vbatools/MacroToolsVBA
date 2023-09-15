@@ -1,3 +1,9 @@
+<strong>In this fork the source code was extended with the following features:</strong>
+
+- Improved strings encryption (real encryption)
+- additional obfuscation of the forms.
+
+
 # MacroToolsVBA https://vbatools.ru/
 **Macro Tools VBA** - a tool for automating the development of macros in the Visual Basic Editor (VBE) MS Excel and Word
 Add-in 
@@ -34,6 +40,3 @@ Add-in
 - open source
 - work in all versions of Excel and Word-32 and 64-bit
 
-## YouTube - use tools add-in
-https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd
-[![Use Tools Macro Tools VBA](https://vbatools.ru/wp-content/uploads/2020/01/macrotoolsvbadocument.gif)](https://www.youtube.com/playlist?list=PLYcZpZtN5HUMpReyXlF2Au2BV1Hk0l_hd)
